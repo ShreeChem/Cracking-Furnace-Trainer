@@ -1,7 +1,7 @@
-# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+# Build index.html from src/ and run the engine test on every push and pull request.
+# The project has no npm dependencies, so this runs the README's two commands directly.
 
-name: Node.js CI
+name: Build and test
 
 on:
   push:
@@ -16,8 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x, 20.x, 22.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+        node-version: [20.x, 22.x]
 
     steps:
     - uses: actions/checkout@v4
@@ -25,7 +24,12 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm ci
-    - run: npm run build --if-present
-    - run: npm test
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+    - name: Build index.html from src/
+      run: python3 tools/build.py
+    - name: Check the committed index.html is up to date
+      run: git diff --exit-code -- index.html || (echo "::error::index.html is out of date. Run python3 tools/build.py and commit it." && exit 1)
+    - name: Run every scenario (no action and good operator)
+      run: node tests/engine-test.js
