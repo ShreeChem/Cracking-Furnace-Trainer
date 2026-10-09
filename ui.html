@@ -1,0 +1,1107 @@
+<title>Cracking Furnace Trainer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Oswald:wght@500;600&family=Montserrat:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: brand-book shell (teal cover, paper pages) around a bright control-room HMI; one committed light look. */
+:root{
+  color-scheme: light;
+  --teal:#7FC8C3; --deep:#4FA8A2; --mint:#B5E2DE; --mist:#E4F4F2;
+  --paper:#FAFAF8; --cloud:#E6E8E8; --slate:#3B4049; --ink:#23262B;
+  --line:#5E6570; --muted:#6B727C; --hmi:#F3F6F6; --hmi2:#FFFFFE;
+  --alm-hi:#C8372D; --alm-hi-bg:#FBE4E1; --alm-med:#D99A06; --alm-med-bg:#FFF4D6; --info:#5B6BA8; --ok:#2F8F6B;
+  --serif:"Playfair Display", Georgia, serif; --display:"Oswald", "Arial Narrow", Impact, sans-serif;
+  --sans:"Montserrat", Arial, sans-serif; --mono:"IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+*{box-sizing:border-box}
+html,body{background:var(--paper);color:var(--ink)}
+body{font-family:var(--sans);font-weight:300;font-size:14px;line-height:1.55}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--deep);outline-offset:2px}
+.wrap{padding-inline:clamp(16px,3vw,40px)}
+/* top bar */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--paper);border-bottom:1px solid var(--cloud)}
+.top .wrap{display:flex;align-items:center;gap:20px;flex-wrap:wrap;padding-block:12px}
+.brand{display:flex;flex-direction:column;line-height:1.1;margin-right:auto}
+.brand b{font-family:var(--serif);font-weight:500;letter-spacing:.32em;font-size:19px}
+.brand small{font-weight:500;font-size:9.5px;letter-spacing:.24em;color:var(--deep);margin-top:4px}
+.nav{display:flex;gap:4px;flex-wrap:wrap}
+.nav button{border:0;background:none;padding:8px 12px;font-weight:500;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);border-bottom:2px solid transparent}
+.nav button.on{color:var(--ink);border-color:var(--deep)}
+.lang{display:inline-flex;border:1px solid var(--cloud);border-radius:2px;overflow:hidden}
+.lang button{border:0;background:var(--paper);padding:5px 9px;font-weight:500;font-size:10.5px;letter-spacing:.14em;color:var(--muted)}
+.lang button.on{background:var(--slate);color:var(--paper)}
+.pill{font-weight:500;font-size:10px;letter-spacing:.2em;text-transform:uppercase;padding:5px 10px;border-radius:2px;background:var(--mist);color:var(--slate)}
+.view[hidden]{display:none!important}
+/* ---------- briefing: brand-book pages ---------- */
+.lbl{font-weight:500;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--deep)}
+.pno{position:absolute;right:clamp(16px,3vw,40px);bottom:14px;font-family:var(--serif);font-weight:600;font-size:13px;letter-spacing:.2em;color:var(--muted);font-variant-numeric:tabular-nums}
+.pno.light{color:var(--paper);opacity:.85}
+/* cover */
+.cover{background:var(--teal);color:var(--ink);overflow:hidden;position:relative}
+.cover .wrap{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:36px 48px;padding-block:52px 56px;position:relative;z-index:1}
+.cover .lbl{color:var(--ink)}
+.cover h1{font-family:var(--serif);font-weight:500;font-size:clamp(34px,5vw,64px);line-height:1;margin:16px 0 18px;color:var(--paper);text-transform:uppercase;letter-spacing:.08em;text-wrap:balance}
+.cover h1 small{display:block;font-size:clamp(13px,1.4vw,17px);letter-spacing:.32em;margin-bottom:12px;color:var(--ink);font-weight:500}
+.cover p.lede{font-size:15.5px;max-width:52ch;color:var(--ink);margin:0}
+.statement{position:absolute;right:-24px;top:-40px;font-family:var(--display);font-weight:600;font-size:clamp(150px,24vw,330px);line-height:.8;color:var(--mint);opacity:.6;letter-spacing:-.01em;pointer-events:none;z-index:0}
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:26px;max-width:560px}
+.mode{border:1px solid rgba(250,250,248,.75);background:transparent;border-radius:2px;padding:14px 16px;text-align:left;color:var(--ink)}
+.mode.on{background:var(--slate);color:var(--paper);border-color:var(--slate)}
+.mode small{display:block;font-weight:500;font-size:10px;letter-spacing:.24em;text-transform:uppercase;opacity:.85}
+.mode b{display:block;font-family:var(--serif);font-weight:500;font-size:20px;margin:4px 0}
+.mode span{font-size:13px}
+.mode.locked{opacity:.62}
+.mode em{display:block;font-style:normal;font-weight:500;font-size:10px;letter-spacing:.14em;text-transform:uppercase;margin-top:6px;color:var(--slate)}
+.mode.on em{color:var(--mint)}
+.glance{background:var(--paper);border-radius:2px;padding:18px 20px;align-self:start}
+.glance svg{display:block;width:100%;height:auto;margin-top:8px}
+.frames{grid-column:1 / -1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;border:1px solid rgba(250,250,248,.8)}
+.frames div{padding:16px 18px;border-right:1px solid rgba(250,250,248,.8);display:flex;align-items:baseline;gap:12px}
+.frames div:last-child{border-right:0}
+.frames b{font-family:var(--serif);font-weight:600;font-size:34px;color:var(--paper);line-height:1;font-variant-numeric:tabular-nums}
+.frames span{font-weight:500;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink)}
+/* spreads: two facing pages */
+.spread{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);border-bottom:1px solid var(--cloud)}
+.spread + .spread .pg:first-child{grid-column:auto}
+.pg{position:relative;overflow:hidden;padding:48px clamp(16px,3vw,40px) 56px;min-width:0;background:var(--paper)}
+.pg + .pg{border-left:1px solid var(--cloud)}
+.pg.tint{background:var(--mist)}
+.pg.slate{background:var(--slate);color:var(--paper)}
+.pg.slate .lbl{color:var(--mint)}
+.pg.slate .t2{color:var(--paper)}
+.pg.slate .t2 small{color:var(--mint)}
+.big{position:absolute;left:-10px;bottom:-26px;font-family:var(--display);font-weight:600;font-size:clamp(110px,15vw,210px);line-height:.8;color:var(--mint);pointer-events:none;letter-spacing:-.01em}
+.big.soft{left:auto;right:-12px;top:-18px;bottom:auto;color:var(--mist)}
+.pg > *:not(.big):not(.pno){position:relative}
+.t2{font-family:var(--serif);font-weight:500;font-size:clamp(24px,2.7vw,34px);text-transform:uppercase;letter-spacing:.08em;line-height:1.1;margin:10px 0 18px;color:var(--ink);text-wrap:balance}
+.t2 small{display:block;font-family:var(--sans);font-weight:500;font-size:11px;letter-spacing:.28em;color:var(--deep);margin-bottom:6px}
+.body{max-width:46ch;margin:0 0 12px;color:var(--slate);font-size:14px}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;border-top:1px solid var(--ink)}
+.card.surp{grid-column:span 2}
+@media (min-width:901px) and (max-width:1250px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:600px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:420px){.cards{grid-template-columns:minmax(0,1fr)}.card.surp{grid-column:auto}}
+.card{border:0;border-bottom:1px solid var(--cloud);border-right:1px solid var(--cloud);background:transparent;border-radius:0;padding:16px 14px;text-align:left;display:flex;flex-direction:column;gap:6px}
+.card:hover{background:var(--mist)}
+.card.on{background:var(--mist);box-shadow:inset 0 3px 0 var(--deep)}
+.card .num{font-family:var(--serif);font-weight:600;font-size:30px;color:var(--deep);line-height:1}
+.card b{font-family:var(--serif);font-weight:500;font-size:17px;line-height:1.2}
+.card span{font-size:12.5px;color:var(--slate)}
+.card i{font-style:normal;font-weight:500;font-size:9.5px;letter-spacing:.18em;color:var(--muted);margin-top:auto;text-transform:uppercase}
+.card .tried{font-style:normal;font-weight:500;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ok)}
+.card.surp{background:repeating-linear-gradient(135deg,var(--paper) 0 10px,var(--mist) 10px 20px)}
+.card.surp.on{background:var(--mist)}
+.go{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:22px}
+.btn{border:1px solid var(--slate);background:var(--paper);padding:10px 16px;border-radius:2px;font-weight:500;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink)}
+.btn.pri{background:var(--deep);border-color:var(--deep);color:var(--paper)}
+.btn.dark{background:var(--slate);border-color:var(--slate);color:var(--paper)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.sm{padding:6px 10px;font-size:10px}
+.flow4{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;border-top:1px solid var(--ink)}
+.flow4 div{padding:16px 18px 16px 0;border-bottom:1px solid var(--cloud)}
+.flow4 div:nth-child(odd){border-right:1px solid var(--cloud)}
+.flow4 div:nth-child(even){padding-left:18px}
+.flow4 em{font-style:normal;font-family:var(--display);font-weight:600;font-size:30px;color:var(--teal);line-height:1}
+.flow4 b{display:block;font-family:var(--serif);font-weight:500;font-size:19px;margin:6px 0}
+.flow4 p{margin:0;font-size:13px;color:var(--slate);max-width:34ch}
+.esc{display:grid;gap:0;border-top:1px solid rgba(250,250,248,.5)}
+.esc div{display:grid;grid-template-columns:130px minmax(0,1fr);gap:14px;padding:12px 0;border-bottom:1px solid rgba(250,250,248,.22);font-size:13.5px}
+.esc div b{font-weight:500;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--mint);padding-top:2px}
+/* score as colour-swatch bars */
+.swatches{display:grid;gap:6px;margin-top:6px}
+.swatches div{display:grid;grid-template-columns:64px minmax(0,1fr);align-items:center;column-gap:14px;padding:14px 16px;border-radius:2px}
+.swatches b{font-family:var(--serif);font-weight:600;font-size:32px;line-height:1;grid-row:span 2}
+.swatches span{font-weight:500;font-size:10.5px;letter-spacing:.22em;text-transform:uppercase}
+.swatches i{font-style:normal;font-size:12.5px;opacity:.9}
+.swatches .sw1{background:var(--deep);color:var(--paper);margin-right:0}
+.swatches .sw2{background:var(--teal);color:var(--ink);margin-right:20%}
+.swatches .sw3{background:var(--slate);color:var(--paper);margin-right:45%}
+.swatches .sw4{background:var(--mint);color:var(--ink);margin-right:45%}
+.units{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;margin:16px 0 20px;border-top:1px solid var(--ink)}
+.units div{padding:12px 14px 12px 0;border-bottom:1px solid var(--cloud);font-size:14px}
+.units div:nth-child(even){padding-left:14px;border-left:1px solid var(--cloud)}
+.units div.now{color:var(--deep);font-weight:500}
+.units small{display:block;font-weight:500;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+.summary{list-style:none;padding:0;margin:0;display:grid;gap:9px}
+.summary li{padding-left:22px;position:relative;font-size:14px}
+.summary li:before{content:"";position:absolute;left:0;top:.65em;width:10px;height:2px;background:var(--deep)}
+.endrow{display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between;padding-block:22px;border-bottom:1px solid var(--cloud)}
+.dots{display:flex;gap:6px}.dots i{width:7px;height:7px;border-radius:50%;background:var(--cloud)}.dots i.on{background:var(--deep)}
+.disc{font-size:12px;color:var(--muted);padding-block:18px 40px}
+.sec{padding-block:44px;border-bottom:1px solid var(--cloud)}
+.sec .lbl{color:var(--deep)}
+.sec h2{font-family:var(--serif);font-weight:500;font-size:clamp(24px,2.6vw,32px);text-transform:uppercase;letter-spacing:.08em;margin:8px 0 22px;text-wrap:balance}
+.rev{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;font-size:13px;color:var(--slate)}
+.rev .btn{padding:7px 12px;font-size:10px}
+.lockp{border:1px solid var(--deep);background:var(--mist);padding:22px 24px;border-radius:2px;max-width:720px}
+.lockp h3{font-family:var(--serif);font-weight:500;font-size:22px;margin:6px 0 8px;text-transform:none;letter-spacing:0;color:var(--ink)}
+.lockp p{margin:0 0 4px;color:var(--slate)}
+.mchip{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;padding:3px 8px;border:1px solid rgba(250,250,248,.45);border-radius:2px;color:var(--mint)}
+.mchip.trip{border-color:var(--alm-hi-bg);color:var(--alm-hi-bg)}
+.passtab{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:11.5px;margin-top:10px;font-variant-numeric:tabular-nums}
+.passtab th{font-family:var(--sans);font-weight:500;font-size:9px;letter-spacing:.14em;color:var(--muted);text-align:right;padding:3px 4px;border-bottom:1px solid var(--cloud)}
+.passtab th:first-child,.passtab td:first-child{text-align:left}
+.passtab td{text-align:right;padding:4px;border-bottom:1px solid var(--cloud)}
+.passtab .btn{padding:3px 8px;font-size:9.5px;letter-spacing:.1em;min-width:44px}
+.passtab .btn.on{background:var(--slate);color:var(--paper)}
+.trend select{font:inherit;font-size:11px;border:1px solid var(--cloud);background:var(--paper);color:var(--ink);padding:3px 4px;max-width:60%;text-transform:none;letter-spacing:0}
+/* ---------- live ---------- */
+.ovw{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;padding-block:12px 0}
+.gz{background:var(--hmi2);border:1px solid var(--cloud);border-radius:2px;padding:8px 10px 6px;min-width:0}
+.gz.alm{border-color:var(--alm-med);box-shadow:inset 0 3px 0 var(--alm-med)}
+.gz.trp{border-color:var(--alm-hi);box-shadow:inset 0 3px 0 var(--alm-hi)}
+.gz .gh{display:flex;justify-content:space-between;align-items:baseline;gap:6px}
+.gz .gh span{font-weight:500;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gz .gh b{font-family:var(--mono);font-weight:500;font-size:15px;font-variant-numeric:tabular-nums}
+.gz.alm .gh b{color:#A87400}.gz.trp .gh b{color:var(--alm-hi)}
+.gz svg{display:block;width:100%;height:22px;margin-top:4px;overflow:visible}
+.ovlbl{display:flex;justify-content:space-between;align-items:center;gap:10px;padding-top:12px}
+.ovlbl .lbl{font-size:10px}
+.flowln{fill:none;stroke:var(--deep);stroke-width:2.2;stroke-dasharray:3 13;stroke-linecap:round;opacity:.75;pointer-events:none}
+#fanRotor{transform-box:fill-box;transform-origin:center}
+.horn.on{background:var(--teal);border-color:var(--teal);color:var(--ink)}
+.pb{font-style:normal;font-weight:500;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--deep)}
+.newbest{display:inline-block;margin-left:8px;background:var(--paper);color:var(--deep);font-weight:500;font-size:10px;letter-spacing:.18em;padding:5px 9px;text-transform:uppercase}
+@media (max-width:1100px){.ovw{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:520px){.ovw{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.strip{background:var(--slate);color:var(--paper)}
+.strip .wrap{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;padding-block:10px}
+.strip .ttl{font-family:var(--serif);font-size:18px;font-weight:500;margin-right:auto;min-width:0}
+.strip .ttl small{display:block;font-family:var(--sans);font-weight:500;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--mint)}
+.clock{font-family:var(--mono);font-size:15px;font-variant-numeric:tabular-nums}
+.prog{width:120px;height:4px;background:rgba(250,250,248,.25);border-radius:2px;overflow:hidden}
+.prog i{display:block;height:100%;background:var(--teal);width:0}
+.strip .btn{background:transparent;border-color:rgba(250,250,248,.5);color:var(--paper)}
+.strip .btn.pri{background:var(--teal);border-color:var(--teal);color:var(--ink)}
+.seg{display:inline-flex;border:1px solid rgba(250,250,248,.5);border-radius:2px;overflow:hidden}
+.seg button{border:0;background:none;color:var(--paper);padding:6px 9px;font-family:var(--mono);font-size:12px}
+.seg button.on{background:var(--teal);color:var(--ink)}
+.live{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:14px;padding-block:14px}
+.hmi{background:var(--hmi);border:1px solid var(--cloud);border-radius:3px;position:relative;min-width:0}
+.hmi svg{display:block;width:100%;height:auto}
+.hmi .legend{position:absolute;left:14px;bottom:10px;font-weight:500;font-size:9.5px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase}
+.side{display:grid;gap:12px;align-content:start;min-width:0}
+.box{background:var(--hmi2);border:1px solid var(--cloud);border-radius:3px;padding:12px 14px;min-width:0}
+.box h3{margin:0 0 8px;font-weight:500;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);display:flex;justify-content:space-between;gap:8px;align-items:center}
+.shift{background:var(--mist);border-color:var(--mint)}
+.shift .t{font-family:var(--serif);font-size:20px;font-weight:500;line-height:1.2;margin-bottom:4px}
+.shift p{margin:0 0 6px;font-size:13px;color:var(--slate)}
+.shift ul{margin:4px 0 0;padding-left:18px;font-size:12.5px;color:var(--slate)}
+.alm{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:11.5px}
+.alm td{padding:5px 4px;border-bottom:1px solid var(--cloud);vertical-align:top}
+.alm td:last-child{text-align:right;color:var(--muted);white-space:nowrap}
+.pr{display:inline-block;font-size:9.5px;padding:1px 5px;border-radius:2px;font-weight:500}
+.pr.HIGH{background:var(--alm-hi);color:#fff}.pr.MED{background:var(--alm-med);color:var(--ink)}.pr.INFO{background:var(--info);color:#fff}
+.unack td{font-weight:500}
+@media (prefers-reduced-motion:no-preference){.unack .pr{animation:blink 1s steps(2,start) infinite}}
+@keyframes blink{50%{opacity:.25}}
+.empty{font-size:12.5px;color:var(--muted)}
+.trips{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:11.5px}
+.trips td{padding:5px 4px;border-bottom:1px solid var(--cloud)}
+.trips td:last-child{text-align:right;font-variant-numeric:tabular-nums}
+.near{color:var(--alm-med);font-weight:500}.ok{color:var(--ok)}.tripped{color:var(--alm-hi);font-weight:500}
+.face .head{font-family:var(--serif);font-size:17px;font-weight:500}
+.face .sub{font-size:12px;color:var(--muted);margin-bottom:8px}
+.fv{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;text-align:center}
+.fv div{background:var(--hmi);border:1px solid var(--cloud);padding:6px 2px}
+.fv span{display:block;font-weight:500;font-size:9px;letter-spacing:.18em;color:var(--muted)}
+.fv b{font-family:var(--mono);font-weight:500;font-size:16px;font-variant-numeric:tabular-nums}
+.row{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.row .btn{flex:1 1 auto;padding:7px 8px;font-size:10px;letter-spacing:.12em}
+.row .btn.on{background:var(--slate);color:var(--paper)}
+.acts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.acts .btn{font-size:9.5px;letter-spacing:.1em;padding:8px 6px;text-transform:none;font-weight:500}
+.proc{list-style:none;margin:0;padding:0;display:grid;gap:6px;font-size:12.5px}
+.proc li{display:grid;grid-template-columns:18px minmax(0,1fr);gap:6px}
+.dot{width:10px;height:10px;border-radius:50%;margin-top:5px;border:1.5px solid var(--muted)}
+.dot.done{background:var(--ok);border-color:var(--ok)}.dot.late{background:var(--alm-med);border-color:var(--alm-med)}.dot.overdue{border-color:var(--alm-hi)}.dot.missed{background:var(--alm-hi);border-color:var(--alm-hi)}.dot.na{background:var(--cloud);border-color:var(--cloud)}
+.trend svg{display:block;width:100%;height:auto}
+.overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(243,246,246,.82);z-index:3;padding:16px}
+.overlay[hidden]{display:none!important}
+.ovbox{background:var(--paper);border:1px solid var(--cloud);border-top:4px solid var(--deep);padding:24px 26px;max-width:460px;border-radius:3px}
+.ovbox.trip{border-top-color:var(--alm-hi)}
+.ovbox .lbl{font-weight:500;font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--deep)}
+.ovbox.trip .lbl{color:var(--alm-hi)}
+.ovbox h2{font-family:var(--serif);font-weight:500;font-size:26px;margin:6px 0 8px}
+.ovbox p{margin:0 0 14px;color:var(--slate)}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:2px;font-size:13px;z-index:40;max-width:min(92vw,520px)}
+.toast[hidden]{display:none!important}
+/* svg classes */
+.ln{stroke:var(--line);stroke-width:2;fill:none}
+.ln.thin{stroke-width:1.3;stroke:#8C939C}
+.ves{fill:var(--hmi2);stroke:var(--line);stroke-width:2}
+.box2{fill:#ECF1F1;stroke:var(--line);stroke-width:2}
+.coil{fill:none;stroke:#7C858F;stroke-width:2.4}
+.valve{fill:var(--hmi2);stroke:var(--slate);stroke-width:1.6}
+.valve.bad{fill:var(--alm-med)}
+.tg text{font-family:var(--mono);font-size:11.5px;fill:var(--slate)}
+.tag{cursor:pointer;outline:none}
+.tag:focus-visible{outline:2px solid var(--deep)}
+.tag:hover .valve,.tag:hover .ves,.tag:hover .eq{stroke:var(--deep);stroke-width:2.4}
+.tag.sel .valve,.tag.sel .ves,.tag.sel .eq{stroke:var(--deep);stroke-width:2.8}
+.tag.sel text.tn{fill:var(--deep);font-weight:500}
+.lbl-s{font-family:var(--mono);font-size:11.5px;fill:var(--slate)}
+.lbl-m{font-family:var(--sans);font-weight:500;font-size:10px;letter-spacing:.16em;fill:var(--muted)}
+.val{font-family:var(--mono);font-size:13px;font-weight:500;fill:var(--ink)}
+.val.hi{fill:var(--alm-hi)}.val.med{fill:#A87400}
+.eq{fill:var(--hmi2);stroke:var(--line);stroke-width:2}
+.eq.bad{fill:var(--alm-hi-bg);stroke:var(--alm-hi)}
+.eq.run{fill:var(--mist)}
+.flame{fill:#E9EEEE;stroke:#9AA2AB;stroke-width:1.2}
+.flame.on{fill:var(--mint);stroke:var(--deep)}
+/* ---------- debrief ---------- */
+.pg.teal{background:var(--teal);color:var(--ink)}
+.pg.teal .lbl{color:var(--ink)}
+.pg.teal .score{color:var(--paper)}
+.pg.teal .score small{color:var(--ink)}
+.pg.teal .verdict{background:var(--paper);color:var(--deep)}
+.pg.teal .verdict.bad{background:var(--paper);color:var(--alm-hi)}
+.pg.teal .bar u{background:rgba(250,250,248,.55)}
+.pg.teal .bar u i{background:var(--slate)}
+.pg.teal .empty{color:var(--slate)}
+.pg.teal .btn{background:transparent;border-color:var(--ink)}
+.pg.teal .btn.pri{background:var(--slate);border-color:var(--slate);color:var(--paper)}
+.deb.spread{grid-template-columns:minmax(0,4fr) minmax(0,7fr)}
+.score{font-family:var(--serif);font-weight:600;font-size:110px;line-height:.9;color:var(--ink);font-variant-numeric:tabular-nums}
+.score small{font-size:30px;color:var(--muted);font-weight:400}
+.verdict{display:inline-block;margin-top:14px;font-weight:500;font-size:11px;letter-spacing:.22em;padding:6px 10px;background:var(--mist);color:var(--deep)}
+.verdict.bad{background:var(--alm-hi-bg);color:var(--alm-hi)}
+.bars{display:grid;gap:12px;margin-top:24px}
+.bar{display:grid;grid-template-columns:110px minmax(0,1fr) 46px;gap:10px;align-items:center;font-size:13.5px}
+.bar u{display:block;height:6px;background:var(--cloud);border-radius:3px;text-decoration:none;overflow:hidden}
+.bar u i{display:block;height:100%;background:var(--deep)}
+.bar b{font-family:var(--mono);font-weight:500;text-align:right;font-variant-numeric:tabular-nums}
+.tl{width:100%;border-collapse:collapse;font-size:13.5px}
+.tl th{text-align:left;font-weight:500;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);padding:6px 8px;border-bottom:1px solid var(--ink)}
+.tl td{padding:10px 8px;border-bottom:1px solid var(--cloud);vertical-align:top}
+.tl td.tm{font-family:var(--mono);color:var(--muted);white-space:nowrap}
+.st{font-weight:500;font-size:10px;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap}
+.st.done{color:var(--ok)}.st.late{color:#A87400}.st.missed{color:var(--alm-hi)}.st.na{color:var(--muted)}
+.coach{margin-top:22px;background:var(--slate);color:var(--paper);padding:18px 20px;border-radius:3px}
+.coach .lbl{font-weight:500;font-size:10px;letter-spacing:.22em;color:var(--mint);text-transform:uppercase}
+.coach p{margin:6px 0 0;font-size:15px;line-height:1.6}
+.scroll{overflow-x:auto}
+/* instructor */
+.itabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px}
+.itabs button{border:1px solid var(--cloud);background:var(--paper);padding:8px 12px;font-weight:500;font-size:11px;letter-spacing:.12em}
+.itabs button.on{background:var(--deep);border-color:var(--deep);color:var(--paper)}
+.igrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px}
+.igrid h3{font-weight:500;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--deep);margin:0 0 6px}
+.igrid p{margin:0 0 16px;font-size:14px;color:var(--slate)}
+@media (max-width:1100px){.live{grid-template-columns:minmax(0,1fr)}}
+.hmi .legend.st{position:static}
+@media (max-width:900px){.spread{grid-template-columns:minmax(0,1fr)}.pg + .pg{border-left:0;border-top:1px solid var(--cloud)}}
+@media (max-width:820px){.hmi .legend{position:static;padding:8px 12px 10px}.cover .wrap,.igrid{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:560px){.flow4,.units,.frames{grid-template-columns:minmax(0,1fr)}.flow4 div,.flow4 div:nth-child(even){padding-left:0;border-right:0}.units div:nth-child(even){padding-left:0;border-left:0}.frames div{border-right:0;border-bottom:1px solid rgba(250,250,248,.8)}.frames div:last-child{border-bottom:0}.swatches .sw2,.swatches .sw3,.swatches .sw4{margin-right:0}}
+@media (max-width:480px){.modes,.acts{grid-template-columns:minmax(0,1fr)}.esc div{grid-template-columns:minmax(0,1fr);gap:4px}.score{font-size:84px}}
+</style>
+
+<header class="top"><div class="wrap">
+  <div class="brand"><b>PROCESSGUARD</b><small>CRACKING FURNACE TRAINER</small></div>
+  <nav class="nav" aria-label="Sections">
+    <button data-view="brief" class="on">Briefing</button>
+    <button data-view="live">Live furnace</button>
+    <button data-view="debrief">Debrief</button>
+    <button data-view="instr">Instructor view</button>
+  </nav>
+  <span class="pill" id="modePill">Trainee mode</span>
+  <div class="lang" role="group" aria-label="Language / Sprache / Langue"><button data-lang="de" aria-pressed="false">DE</button><button data-lang="en" aria-pressed="true" class="on">EN</button><button data-lang="fr" aria-pressed="false">FR</button></div>
+</div></header>
+
+<main>
+<!-- ================= BRIEFING ================= -->
+<section class="view" id="v-brief">
+  <!-- PAGE 01 · COVER -->
+  <div class="cover">
+    <div class="statement" aria-hidden="true">SC-1</div>
+    <div class="wrap">
+      <div class="covl">
+        <div class="lbl">ProcessGuard · operator training</div>
+        <h1><small>Ethane cracking furnace</small>Operator trainer</h1>
+        <p class="lede">Take the operator's seat on a synthetic ethane cracking furnace. Six situations, alarms and trips that act on their own, and a debrief that explains every decision you made.</p>
+        <div class="modes" role="radiogroup" aria-label="Mode">
+          <button class="mode" id="m-explore" role="radio" aria-checked="false"><small>Explore</small><b>Watch &amp; learn</b><span>The procedure is shown and ticks off as you go. Pause any time.</span><em id="exLock">Opens after your first try</em></button>
+          <button class="mode on" id="m-trainee" role="radio" aria-checked="true"><small>Trainee</small><b>Take the shift</b><span>No procedure on screen. Your actions are scored against it.</span></button>
+        </div>
+      </div>
+      <div class="glance">
+        <div class="lbl">The furnace at a glance</div>
+        <svg viewBox="0 0 440 270" role="img" aria-label="Schematic: ethane and dilution steam enter the convection section, crack in four radiant passes over floor burners, then are quenched in the TLE that makes steam in the steam drum">
+          <g fill="none" stroke="#3B4049" stroke-width="1.4">
+            <rect x="150" y="8" width="34" height="30" fill="#FAFAF8"/><rect x="118" y="38" width="98" height="48" fill="#E4F4F2"/>
+            <rect x="96" y="86" width="142" height="132" fill="#FAFAF8"/>
+            <path d="M118 100v104h14V100h14v104M182 100v104h14V100h14v104" stroke="#4FA8A2" stroke-width="1.8"/>
+            <rect x="290" y="112" width="30" height="86" rx="4" fill="#FAFAF8"/><rect x="276" y="48" width="70" height="26" rx="13" fill="#FAFAF8"/>
+            <path d="M298 74v38M312 74v38M238 150h52M320 150h80M10 110h86M10 140h86"/>
+          </g>
+          <g fill="#B5E2DE" stroke="#4FA8A2" stroke-width="1"><path d="M108 218c4-12 12-12 16 0z"/><path d="M146 218c4-12 12-12 16 0z"/><path d="M184 218c4-12 12-12 16 0z"/></g>
+          <g font-family="Montserrat, Arial" font-size="9" font-weight="500" letter-spacing="1.4" fill="#6B727C">
+            <text x="192" y="27">STACK · ID FAN</text><text x="10" y="64">CONVECTION</text><text x="276" y="40">STEAM DRUM</text><text x="326" y="166">TLE</text><text x="96" y="240">RADIANT · 4 PASSES · FLOOR BURNERS</text>
+          </g>
+          <g font-family="Montserrat, Arial" font-size="9" font-weight="500" letter-spacing="1.4" fill="#23262B"><text x="10" y="104">ETHANE</text><text x="10" y="134">DILUTION STEAM</text><text x="330" y="144">CRACKED GAS</text></g>
+        </svg>
+      </div>
+      <div class="frames">
+        <div><b>06</b><span>Scenarios, plus a surprise shift</span></div>
+        <div><b>02</b><span>Modes: explore and trainee</span></div>
+        <div><b>100</b><span>Points, scored automatically</span></div>
+      </div>
+    </div>
+    <div class="pno light">01</div>
+  </div>
+
+  <!-- PAGE 02–03 · SCENARIOS -->
+  <div class="spread">
+    <div class="pg tint">
+      <div class="big" aria-hidden="true">SHIFT</div>
+      <h2 class="t2"><small>Act in time</small>or the furnace acts for you</h2>
+      <p class="body">Scenarios 01 to 05 end in a trip if you wait too long. Scenario 06 has no trip: it tests whether you believe a drifting instrument. The surprise shift picks one at random and hides its name.</p>
+      <p class="body">The procedure and the scoring rules for each scenario open after your first try, so the first attempt stays a real test.</p>
+      <div class="pno">02</div>
+    </div>
+    <div class="pg">
+      <div class="cards" id="cards"></div>
+      <div class="go"><button class="btn pri" id="startBtn">Open the live furnace →</button><span class="empty" id="goNote"></span></div>
+      <div class="pno">03</div>
+    </div>
+  </div>
+
+  <!-- PAGE 04–05 · METHOD -->
+  <div class="spread">
+    <div class="pg">
+      <h2 class="t2"><small>Four steps</small>Briefing to debrief</h2>
+      <div class="flow4">
+        <div><em>01</em><b>Briefing</b><p>Plant state and limits are given up front. In trainee mode the procedure is not: like on a real shift, you have to know it.</p></div>
+        <div><em>02</em><b>Live furnace</b><p>An upset starts. Values, trends and alarms move every second. You change setpoints, switch modes, start equipment and call people.</p></div>
+        <div><em>03</em><b>Automatic evaluation</b><p>Every action is time-stamped and checked against the procedure: the right step, in time, within limits, without harmful moves.</p></div>
+        <div><em>04</em><b>Explained debrief</b><p>A score in four parts, your actions next to the expected steps, and a short note on what to do differently.</p></div>
+      </div>
+      <div class="pno">04</div>
+    </div>
+    <div class="pg slate">
+      <h2 class="t2"><small>The furnace</small>answers for you</h2>
+      <div class="esc">
+        <div><b>No action</b><span>The upset keeps developing. Alarms escalate from medium to high priority.</span></div>
+        <div><b>Limit crossed</b><span>The interlock acts on its own: a partial trip (feed cut, firing reduced, steam kept on the coils) or a full fuel trip for combustion hazards.</span></div>
+        <div><b>Scenario ends</b><span>"Furnace tripped." Missed steps score zero and the total is capped at 40.</span></div>
+        <div><b>Wrong action</b><span>A harmful move, such as adding air to a fuel-rich firebox, costs 5 points and is explained in the debrief.</span></div>
+        <div><b>Bad instrument</b><span>Nothing trips, but acting on a false reading cuts production for no reason. Cross-check before you act.</span></div>
+      </div>
+      <div class="pno light">05</div>
+    </div>
+  </div>
+
+  <!-- PAGE 06–07 · SCORE + UNITS -->
+  <div class="spread">
+    <div class="pg">
+      <h2 class="t2"><small>100 points</small>Four parts</h2>
+      <div class="swatches" role="list">
+        <div role="listitem" class="sw1" style="flex-basis:40%"><b>40</b><span>Safety</span><i>Trips and time in high-priority alarm</i></div>
+        <div role="listitem" class="sw2" style="flex-basis:30%"><b>30</b><span>Procedure</span><i>Steps done, done late or missed</i></div>
+        <div role="listitem" class="sw3" style="flex-basis:15%"><b>15</b><span>Response</span><i>Time to the key action</i></div>
+        <div role="listitem" class="sw4" style="flex-basis:15%"><b>15</b><span>Production</span><i>Ethylene made and coke formed</i></div>
+      </div>
+      <p class="body" style="margin-top:16px">Each hint costs 3 points and each harmful action 5. A trip caps the total at 40. The full rule set per scenario opens in the Instructor view after your first try.</p>
+      <div class="pno">06</div>
+    </div>
+    <div class="pg">
+      <div class="big soft" aria-hidden="true">UNIT</div>
+      <h2 class="t2"><small>One method</small>Any unit</h2>
+      <p class="body">The unit model, the scenario files and the scoring are separate parts. Swap the model and the same trainer runs other equipment.</p>
+      <div class="units">
+        <div class="now"><small>Now</small>Ethane cracking furnace</div>
+        <div><small>Next</small>CDU fired heater</div>
+        <div><small>Later</small>FCC reactor and regenerator</div>
+        <div><small>Small regions</small>Boiler drum, compressor anti-surge</div>
+      </div>
+      <ul class="summary">
+        <li>Live process response, not a quiz: your actions change the plant.</li>
+        <li>Automatic scoring against the procedure, with alarms and trips that really act.</li>
+        <li>A debrief that explains, not just a number.</li>
+        <li>Built from hands-on OTS experience, on a synthetic plant.</li>
+      </ul>
+      <div class="pno">07</div>
+    </div>
+  </div>
+
+  <div class="wrap endrow">
+    <div class="rev" id="revArea"></div>
+    <div class="dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i></div>
+  </div>
+  <div class="wrap disc">Engineering prototype by Madhushree Bharadwaj. Coil model with ethane cracking kinetics from Sundaram and Froment (1977), calibrated to typical published conversion; firebox, steam drum and controls are simplified. Values and trip limits are illustrative. Not a certified training system and not based on any specific plant.</div>
+</section>
+
+<!-- ================= LIVE ================= -->
+<section class="view" id="v-live" hidden>
+  <div class="strip"><div class="wrap">
+    <div class="ttl" id="lvTitle"><small>Scenario</small>—</div>
+    <span class="clock" id="clock">00:00 / 00:00</span>
+    <span class="mchip" id="mchip">CRACKING</span>
+    <div class="prog" id="prog" aria-hidden="true"><i id="progBar"></i></div>
+    <button class="btn pri sm" id="runBtn">▶ Start</button>
+    <div class="seg" role="group" aria-label="Speed"><button data-sp="1" class="on">1×</button><button data-sp="2">2×</button><button data-sp="4">4×</button></div>
+    <button class="btn sm" id="ackBtn">Acknowledge</button>
+    <button class="btn sm" id="silBtn" title="Silence the horn until a new alarm comes in">Silence</button>
+    <button class="btn sm horn on" id="hornBtn" aria-pressed="true">Horn on</button>
+    <button class="btn sm" id="hintBtn">Hint (−3)</button>
+    <button class="btn sm" id="restartBtn">Restart</button>
+    <button class="btn sm" id="endBtn">End &amp; debrief</button>
+  </div></div>
+  <div class="wrap ovlbl"><span class="lbl">Overview · key indicators against normal range, alarm and trip</span><span class="empty" id="ovwNote">Band = normal range · amber tick = alarm · red tick = trip</span></div>
+  <div class="wrap ovw" id="ovw"></div>
+  <div class="wrap live">
+    <div class="hmi" id="hmi">
+      <div id="svgHost"></div>
+      <div class="legend">Grey = normal · colour = abnormal · select any valve or equipment to operate it</div>
+      <div class="overlay" id="ov" hidden><div class="ovbox" id="ovBox"></div></div>
+    </div>
+    <div class="side">
+      <div class="box shift"><h3>Your shift</h3><div id="shift"></div></div>
+      <div class="box" id="almBox"><h3>Alarms <span id="almCount" class="empty"></span></h3><div id="alarms"></div></div>
+      <div class="box"><h3>Trips &amp; permissives <span class="empty">value / limit</span></h3><table class="trips" id="trips"></table></div>
+      <div class="box face" id="face"></div>
+      <div class="box"><h3>Field &amp; radio</h3><div class="acts">
+        <button class="btn" data-comm="field" id="commField">Send field operator to FIC-100</button>
+        <button class="btn" data-comm="instrument">Call instrumentation</button>
+        <button class="btn" data-comm="utilities">Notify utilities</button>
+        <button class="btn" data-comm="supervisor">Inform shift supervisor</button>
+        <button class="btn" data-comm="maintenance">Notify maintenance</button>
+      </div></div>
+      <div class="box" id="procBox"><h3>Procedure <span class="empty">explore mode</span></h3><ul class="proc" id="proc"></ul></div>
+      <div class="box trend"><h3><span id="trendTitle">Trend</span><select id="trendSel" aria-label="Trend variable"></select></h3><div id="trend"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= DEBRIEF ================= -->
+<section class="view" id="v-debrief" hidden><div id="debrief"></div></section>
+
+<!-- ================= INSTRUCTOR ================= -->
+<section class="view" id="v-instr" hidden><div class="pg" style="min-height:70vh">
+  <div class="big soft" aria-hidden="true">RULES</div>
+  <div class="lbl">Instructor view</div>
+  <h2 class="t2"><small>Scoring rules</small>How each scenario is scored</h2>
+  <p style="max-width:72ch;margin:0 0 20px;color:var(--slate)">Every rule is visible so an OTS engineer can judge whether it is fair. Times are counted from the alarm named in each step. A scenario's rules open after its first try, or for reviewers from the Briefing page.</p>
+  <div class="itabs" id="itabs"></div>
+  <div id="ibody"></div>
+</div></section>
+</main>
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+/*__ENGINE__*/
+</script>
+<script>
+(function(){
+'use strict';
+const F = window.Furnace, SC = F.SCN, LIM = F.LIM;
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const fmtT = t => { t = Math.max(0, Math.floor(t)); return String(Math.floor(t/60)).padStart(2,'0') + ':' + String(t%60).padStart(2,'0'); };
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const App = { view:'brief', mode:'trainee', pick:'s1', scn:'s1', surprise:false, run:null, running:false, speed:1, sel:'FIC-100', last:null, timer:null, trend:null };
+// per-viewer progress: which scenarios were tried, and reviewer unlock (this browser only)
+const STORE = 'pg-cracker-trainer-v1';
+const P = (() => { let o = {}; try { o = JSON.parse(localStorage.getItem(STORE)) || {}; } catch (e) {} return { tried: o.tried || {}, reviewer: !!o.reviewer, best: o.best || {}, horn: o.horn !== false, lang: o.lang || null }; })();
+function saveP(){ try { localStorage.setItem(STORE, JSON.stringify(P)); } catch (e) {} }
+const isOpen = id => P.reviewer || !!P.tried[id];
+const elapsed = r => r ? r.s.t + (r.pre || 0) : 0;
+const GENERIC = ['Keep the furnace online', 'Stay inside the alarm and trip limits', 'Act as your procedure says and tell the right people'];
+
+// ---------- navigation ----------
+function show(v){ App.view = v; $$('.view').forEach(x => x.hidden = x.id !== 'v-' + v); $$('.nav button').forEach(b => b.classList.toggle('on', b.dataset.view === v)); if (v==='debrief') renderDebrief(); if (v==='instr') renderInstr(); if (v==='live') ensureRun(); window.scrollTo({top:0}); if (v==='brief' && G && window.ScrollTrigger) window.ScrollTrigger.refresh(); }
+$$('.nav button').forEach(b => b.onclick = () => show(b.dataset.view));
+function setUiMode(m){
+  if (m === 'explore' && (App.pick === 'surprise' || !isOpen(App.pick))) { toast(App.pick === 'surprise' ? 'A surprise shift always runs in trainee mode.' : 'Explore opens after your first try of this scenario. Run it in trainee mode first.'); m = 'trainee'; }
+  App.mode = m; $('#m-explore').classList.toggle('on', m==='explore'); $('#m-trainee').classList.toggle('on', m==='trainee'); $('#m-explore').setAttribute('aria-checked', m==='explore'); $('#m-trainee').setAttribute('aria-checked', m==='trainee'); $('#modePill').textContent = m==='explore' ? 'Explore mode' : 'Trainee mode'; $('#procBox').hidden = m!=='explore'; $('#hintBtn').hidden = m!=='trainee'; }
+$('#m-explore').onclick = () => { setUiMode('explore'); if (App.run && !App.run.started) renderLive(); };
+$('#m-trainee').onclick = () => { setUiMode('trainee'); if (App.run && !App.run.started) renderLive(); };
+function lockNote(){ const open = App.pick !== 'surprise' && isOpen(App.pick); $('#m-explore').classList.toggle('locked', !open); $('#exLock').textContent = App.pick === 'surprise' ? 'Not for surprise shifts' : open ? 'Open for this scenario' : 'Opens after your first try'; }
+function noteSel(){ $('#goNote').textContent = App.pick === 'surprise' ? 'Selected: surprise shift. The scenario stays hidden until the debrief.' : 'Selected: ' + SC[App.pick].name + (isOpen(App.pick) ? '' : ' · procedure opens after your first try'); lockNote(); }
+
+// ---------- scenario cards ----------
+function renderCards(){
+  $('#cards').innerHTML = Object.values(SC).map(s => `<button class="card ${s.id===App.pick?'on':''}" data-s="${s.id}" aria-pressed="${s.id===App.pick}"><span class="num">${s.n}</span><b>${esc(s.name)}</b><span>${esc(s.teaser)}</span>${P.tried[s.id]?`<em class="tried">Tried · rules open${P.best[s.id]!=null?' · best '+P.best[s.id]:''}</em>`:''}<i>${Math.round(s.dur/60)} min · ${'●'.repeat(s.diff)}${'○'.repeat(3-s.diff)}</i></button>`).join('')
+    + `<button class="card surp ${App.pick==='surprise'?'on':''}" data-s="surprise" aria-pressed="${App.pick==='surprise'}"><span class="num">?</span><b>Surprise shift</b><span>A random scenario that starts at a random moment. Its name stays hidden until the debrief, like a real OTS session.</span><i>4–8 min · trainee only</i></button>`;
+  $$('#cards .card').forEach(c => c.onclick = () => { App.pick = c.dataset.s; App.run = null; if (App.mode === 'explore' && (App.pick === 'surprise' || !isOpen(App.pick))) setUiMode('trainee'); renderCards(); noteSel(); });
+}
+$('#startBtn').onclick = () => { App.run = null; show('live'); };
+
+// ---------- SVG ----------
+const SVG = `<svg viewBox="0 0 1000 690" role="img" aria-label="Cracking furnace process screen">
+<defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0L10,5L0,10z" fill="#5E6570"/></marker></defs>
+<!-- stack, fan, damper -->
+<path class="ln" d="M470 30v30M470 92v28"/><rect class="ves" x="452" y="12" width="36" height="18"/>
+<g class="tag" data-tag="K-101" tabindex="0" role="button" aria-label="ID fan K-101"><circle id="fanC" class="eq run" cx="470" cy="76" r="16"/><path id="fanRotor" class="ln thin" d="M459 76h22M470 65v22"/><text class="tn lbl-s" x="494" y="72">ID FAN K-101</text><text id="v-fan" class="val" x="494" y="88">RUN</text></g>
+<g class="tag" data-tag="AIC-140" tabindex="0" role="button" aria-label="Damper and O2 controller AIC-140"><path class="ln" d="M454 110h32" stroke-width="3.5"/><circle class="valve" cx="470" cy="110" r="4"/><text class="tn lbl-s" x="494" y="114">DAMPER</text><text id="v-damp" class="val" x="560" y="114">60 %</text></g>
+<!-- convection -->
+<rect class="box2" x="380" y="120" width="180" height="110"/>
+<path class="ln thin" d="M395 138h150v12H395v12h150M395 190h150M395 206h150"/>
+<text class="lbl-m" x="572" y="172">CONVECTION</text>
+<!-- radiant -->
+<path class="box2" d="M380 230L300 270V600H640V270L560 230Z"/>
+<path class="coil" d="M330 300v260h16V300h16v260"/><path class="coil" id="coilB" d="M410 300v260h16V300h16v260"/><path class="coil" id="coilC" d="M490 300v260h16V300h16v260"/><path class="coil" d="M570 300v260h16V300h16v260"/>
+<g id="flames"></g>
+<text class="lbl-m" x="244" y="602">RADIANT</text>
+<text class="lbl-s" x="326" y="292">A</text><text class="lbl-s" x="406" y="292">B</text><text class="lbl-s" x="486" y="292">C</text><text class="lbl-s" x="566" y="292">D</text>
+<g><text id="v-tmt0" class="val" x="322" y="578" font-size="11">1015</text><text id="v-tmt1" class="val" x="402" y="578" font-size="11">1015</text><text id="v-tmt2" class="val" x="482" y="578" font-size="11">1015</text><text id="v-tmt3" class="val" x="562" y="578" font-size="11">1015</text></g>
+<!-- O2 / draft -->
+<g class="tag" data-tag="AIC-140" tabindex="0" role="button" aria-label="Arch O2 and draft"><text class="tn lbl-s" x="236" y="62">AIC-140 ARCH O₂</text><text id="v-o2" class="val" x="350" y="62">2.1 %</text><text class="lbl-s" x="236" y="82">DRAFT</text><text id="v-drf" class="val" x="290" y="82">−4.8 mmH₂O</text><text class="lbl-s" x="236" y="102">CO</text><text id="v-co" class="val" x="290" y="102">25 ppm</text></g>
+<!-- feed -->
+<text class="lbl-m" x="28" y="140">ETHANE</text>
+<path class="ln" d="M28 150H380" marker-end="url(#ar)"/>
+<g class="tag" data-tag="FIC-100" tabindex="0" role="button" aria-label="Ethane feed FIC-100"><path class="valve" d="M136 143l14 7-14 7zM164 143l-14 7 14 7z"/><text class="tn lbl-s" x="120" y="136">FIC-100</text><text id="v-feed" class="val" x="176" y="141">32.0 t/h</text></g>
+<text class="lbl-m" x="28" y="180">DILUTION STEAM</text>
+<path class="ln" d="M28 190H300V150"/>
+<g class="tag" data-tag="FIC-110" tabindex="0" role="button" aria-label="Dilution steam FIC-110"><path id="dsValve" class="valve" d="M136 183l14 7-14 7zM164 183l-14 7 14 7z"/><text class="tn lbl-s" x="120" y="212">FIC-110</text><text id="v-ds" class="val" x="176" y="212">10.2 t/h</text></g>
+<g class="tag" data-tag="FIC-110" tabindex="0" role="button" aria-label="Steam to ethane ratio"><rect id="ratioBox" x="208" y="228" width="106" height="22" fill="#FFFFFE" stroke="#B9C0C6"/><text class="lbl-s" x="214" y="243">S/HC</text><text id="v-ratio" class="val" x="248" y="244">0.32</text></g>
+<!-- crossover and passes -->
+<path class="ln" d="M380 222H200V540"/>
+<g id="passes"></g>
+<!-- outlets, TLE -->
+<path class="ln" d="M640 310h80M640 390h80M640 470h80M640 550h80"/>
+<g class="tag" data-tag="TIC-150" tabindex="0" role="button" aria-label="Pass outlet thermocouples TI-151A to D feeding TIC-150"><rect x="644" y="276" width="74" height="272" fill="transparent"/><text class="tn lbl-s" x="648" y="286">TI-151A</text><text class="tn lbl-s" x="648" y="366">TI-151B</text><text class="tn lbl-s" x="648" y="446">TI-151C</text><text class="tn lbl-s" x="648" y="526">TI-151D</text><text id="v-cot0" class="val" x="648" y="302">850</text><text id="v-cot1" class="val" x="648" y="382">850</text><text id="v-cot2" class="val" x="648" y="462">850</text><text id="v-cot3" class="val" x="648" y="542">850</text></g>
+<g class="tag" data-tag="TIC-150" tabindex="0" role="button" aria-label="Coil outlet temperature TIC-150"><text class="tn lbl-s" x="648" y="624">TIC-150 COT</text><text id="v-cotsp" class="val" x="648" y="642">SP 850</text></g>
+<rect class="ves" x="720" y="292" width="64" height="276" rx="6"/><text class="lbl-s" x="726" y="586">TLE E-131</text>
+<path class="ln" d="M784 430h180" marker-end="url(#ar)"/><text class="lbl-m" x="812" y="420">CRACKED GAS</text><text id="v-tle" class="val" x="812" y="452">395 °C</text>
+<!-- steam drum -->
+<path class="ln thin" d="M736 196v96M768 196v96"/>
+<g class="tag" data-tag="LIC-130" tabindex="0" role="button" aria-label="Steam drum level LIC-130"><rect id="drum" class="ves" x="700" y="140" width="190" height="56" rx="28"/><rect id="lvlFill" x="704" y="168" width="182" height="24" rx="12" fill="#B5E2DE"/><text class="tn lbl-s" x="704" y="130">STEAM DRUM V-130 · LIC-130</text><text id="v-lvl" class="val" x="900" y="166">52 %</text><text id="v-dp" class="val" x="900" y="184" font-size="11.5">118 barg</text></g>
+<path class="ln" d="M850 64v76" marker-end="url(#ar)"/>
+<g class="tag" data-tag="P-131A" tabindex="0" role="button" aria-label="BFW pump P-131A"><circle id="pA" class="eq run" cx="880" cy="52" r="12"/><text class="tn lbl-s" x="898" y="48">P-131A</text></g>
+<g class="tag" data-tag="P-131B" tabindex="0" role="button" aria-label="BFW pump P-131B"><circle id="pB" class="eq" cx="880" cy="86" r="12"/><text class="tn lbl-s" x="898" y="82">P-131B</text></g>
+<path class="ln thin" d="M868 52h-18M868 86h-18"/><text class="lbl-m" x="700" y="40">BOILER FEED WATER</text><text id="v-bfw" class="val" x="700" y="58" font-size="11.5">BFW 100 %</text>
+<!-- fuel -->
+<text class="lbl-m" x="28" y="640">FUEL GAS</text>
+<path class="ln" d="M28 650H640"/>
+<path class="ln thin" d="M320 650v-38M360 650v-38M400 650v-38M440 650v-38M480 650v-38M520 650v-38M560 650v-38M600 650v-38"/>
+<g class="tag" data-tag="TIC-150" tabindex="0" role="button" aria-label="Fuel gas to burners, controlled by TIC-150"><path class="valve" d="M136 643l14 7-14 7zM164 643l-14 7 14 7z"/><text class="tn lbl-s" x="120" y="634">PIC-120</text><text id="v-fuel" class="val" x="176" y="672">2.4 barg · 100 %</text></g>
+</svg>`;
+
+function buildSvg(){
+  $('#svgHost').innerHTML = SVG;
+  const ys = [310,390,470,550], L = 'ABCD';
+  $('#passes').innerHTML = ys.map((y,i) => `<path class="ln" d="M200 ${y}H300"/><g class="tag" data-tag="FIC-101${L[i]}" tabindex="0" role="button" aria-label="Pass ${L[i]} flow FIC-101${L[i]}"><path id="pv${i}" class="valve" d="M228 ${y-7}l14 7-14 7zM256 ${y-7}l-14 7 14 7z"/><text class="tn lbl-s" x="214" y="${y-12}">FIC-101${L[i]}</text><text id="v-pf${i}" class="val" x="214" y="${y+22}" font-size="11.5">10.6 t/h</text></g>`).join('');
+  $('#flames').innerHTML = [320,360,400,440,480,520,560,600].map(x => `<g class="fg"><path class="flame on" d="M${x-8} 600c3-14 13-14 16 0z"/></g>`).join('');
+  FX.build();
+  $$('#svgHost .tag').forEach(g => {
+    g.onclick = () => select(g.dataset.tag);
+    g.onkeydown = e => { if (e.key==='Enter'||e.key===' ') { e.preventDefault(); select(g.dataset.tag); } };
+  });
+}
+function select(tag){ App.sel = tag; $('#commField').textContent = 'Send field operator to ' + tag; if (App.run) F.act(App.run, {kind:'select', tag}); $$('#svgHost .tag').forEach(g => g.classList.toggle('sel', g.dataset.tag === tag)); renderFace(); }
+
+// ---------- run control ----------
+function ensureRun(){ if (!App.run) newRun(); renderLive(); }
+function newRun(){ stop();
+  App.surprise = App.pick === 'surprise';
+  if (App.surprise) { const ids = Object.keys(SC); App.scn = ids[Math.floor(Math.random() * ids.length)]; } else App.scn = App.pick;
+  const pre = App.surprise ? Math.round(15 + Math.random() * 45) : 0;
+  Horn.reset(); $('#ovw').innerHTML = '';
+  App.run = F.createRun(App.scn, {pre}); App.run.started = false; App.run.surprise = App.surprise; App.last = null; App.trend = null; fillTrendSel(); App.sel = 'FIC-100'; buildSvg(); $('#ov').hidden = true; renderLive(); select('FIC-100'); App.run.log.length = 0; }
+function start(){ if (!App.run || App.run.s.tripped || App.run.s.done) return; App.run.started = true; App.running = true; App.last = performance.now(); clearInterval(App.timer); App.timer = setInterval(loop, 250); $('#runBtn').textContent = 'Ⅱ Pause'; Horn.unlock(); FX.rate(); }
+function stop(){ App.running = false; clearInterval(App.timer); Horn.tick(); FX.rate(); $('#runBtn').textContent = '▶ ' + (App.run && App.run.started ? 'Resume' : 'Start'); }
+function loop(){
+  const now = performance.now(); const dt = Math.min(1, (now - App.last) / 1000) * App.speed; App.last = now;
+  const r = App.run; if (!r) return;
+  F.tick(r, dt);
+  if (r.s.tripped || r.s.done) { stop(); finish(); }
+  renderLive();
+  Horn.tick();
+}
+$('#runBtn').onclick = () => App.running ? stop() : start();
+$('#restartBtn').onclick = () => { newRun(); toast('Scenario reset to steady state.'); };
+$('#endBtn').onclick = () => { if (!App.run || !App.run.started) { toast('Start the scenario first.'); return; } if (App.run.s.tripped || App.run.s.done) { show('debrief'); return; } stop(); App.run.s.done = true; finish(); show('debrief'); };
+$$('.seg button').forEach(b => b.onclick = () => { App.speed = +b.dataset.sp; $$('.seg button').forEach(x => x.classList.toggle('on', x===b)); FX.rate(); });
+$('#ackBtn').onclick = () => { if (!App.run) return; F.ackAll(App.run); renderLive(); Horn.tick(); };
+$('#silBtn').onclick = () => { Horn.silence(); };
+$('#hornBtn').onclick = () => { P.horn = !P.horn; saveP(); Horn.ui(); Horn.tick(); };
+$('#hintBtn').onclick = () => {
+  const r = App.run; if (!r || !r.started) { toast('Start the scenario first.'); return; }
+  const ev = F.evaluate(r, r.s, r.scn).steps.find(s => s.status === 'pending' || s.status === 'overdue');
+  r.hints = (r.hints || 0) + 1;
+  toast(ev ? 'Hint: ' + ev.text : 'No open step right now. Watch the alarms.');
+};
+$$('[data-comm]').forEach(b => b.onclick = () => {
+  const r = App.run; if (!r || !r.started) { toast('Start the scenario first.'); return; }
+  const k = b.dataset.comm, at = App.sel; F.act(r, {kind:'comm', tag:k, at});
+  if (k === 'field') {
+    if (r.s.stuck && at === 'FIC-101C') { if (r.s.fieldEta == null) { r.s.fieldEta = r.s.t + 45; toast('Field: "On my way to FV-101C. About 45 seconds."'); } else toast('Field: "Already working on FV-101C."'); }
+    else if (r.s.tcFail && at === 'TIC-150') toast('Field: "Nothing visible at the pass B outlet. Coil colour looks the same as the other passes. The thermocouple needs instrumentation."');
+    else toast('Field: "Checked ' + at + ' locally. Nothing abnormal."');
+  }
+  if (k === 'instrument') toast(r.s.tcFail ? 'Instrumentation: "TI-151B has no BAD status but reads far above its neighbours: likely a drifting or damaged thermocouple. Keep it out of control; we will check it."' : 'Instrumentation: "Noted. We will check that loop."');
+  if (k === 'utilities') toast('Utilities: "Noted. We are on it."');
+  if (k === 'supervisor') toast('Supervisor: "Thanks. Keep me posted."');
+  if (k === 'maintenance') toast('Maintenance: "Work order raised."');
+});
+
+function finish(){
+  const r = App.run; const s = r.s;
+  r.result = F.score(r, s, r.scn);
+  const wasOpen = isOpen(r.scn.id), counts = !!s.tripped || elapsed(r) >= 60;
+  let newBest = false;
+  if (counts) { P.tried[r.scn.id] = true; const pb = P.best[r.scn.id]; if (pb == null || r.result.total > pb) { newBest = pb != null; P.best[r.scn.id] = r.result.total; } saveP(); renderCards(); noteSel(); }
+  App.lastResult = { scn: r.scn.id, mode: App.mode, res: r.result, s, log: r.log.slice(), harmful: r.harmful.slice(), hints: r.hints || 0, pre: r.pre || 0, surprise: !!r.surprise, unlocked: counts && !wasOpen, short: !counts, newBest, best: P.best[r.scn.id] };
+  const reveal = r.surprise ? `<p><b style="font-weight:500">It was scenario ${r.scn.n} · ${esc(r.scn.name)}.</b></p>` : '';
+  const box = $('#ovBox');
+  if (s.tripped) { box.className = 'ovbox trip'; box.innerHTML = `<div class="lbl">Interlock acted · ${fmtT(s.tripped.t + (r.pre||0))}</div><h2>Furnace tripped</h2><p>${esc(s.tripped.text)}. ${s.tripped.kind === 'combustion' ? 'Combustion safety trip: all fuel is cut and the ethane feed is stopped. Dilution steam keeps flowing through the coils where the design allows.' : 'Partial trip: the ethane feed is cut and firing is reduced to about a quarter. Dilution steam keeps flowing through the coils to keep them hot and protect them from thermal shock.'}</p><p class="empty" style="margin-top:-6px">Exact trip actions depend on each furnace's design.</p>${reveal}<button class="btn pri" id="toDeb">See the debrief →</button>`; }
+  else { box.className = 'ovbox'; box.innerHTML = `<div class="lbl">Scenario complete · ${fmtT(elapsed(r))}</div><h2>Furnace kept online</h2><p>Your score and the step-by-step review are ready.</p>${reveal}<button class="btn pri" id="toDeb">See the debrief →</button>`; }
+  $('#ov').hidden = false; $('#toDeb').onclick = () => show('debrief'); FX.overlay(!!s.tripped);
+}
+
+// ---------- operator actions on faceplates ----------
+function setSP(tag, to){ const r = App.run, s = r.s; let from;
+  if (tag==='FIC-100'){ from = s.feedSP; to = F.clamp(to, 0, 36); s.feedSP = to; }
+  else if (tag==='FIC-110'){ from = s.ratioSP; to = F.clamp(+to.toFixed(2), 0.25, 0.45); s.ratioSP = to; }
+  else if (tag==='TIC-150'){ from = s.cotSP; to = F.clamp(to, 820, 875); s.cotSP = to; }
+  else if (tag==='AIC-140'){ from = s.o2SP; to = F.clamp(+to.toFixed(1), 1.0, 4.0); s.o2SP = to; }
+  else if (tag==='LIC-130'){ from = s.lvlSP; to = F.clamp(to, 35, 70); s.lvlSP = to; }
+  F.act(r, {kind:'sp', tag, from, to}); renderLive(); }
+function setOP(tag, to){ const r = App.run, s = r.s; let from;
+  if (tag==='TIC-150'){ from = s.fuelOP; to = F.clamp(to, 10, 140); s.fuelOP = to; }
+  else if (tag==='AIC-140'){ from = s.damper; to = F.clamp(to, 20, 100); s.damper = to; }
+  F.act(r, {kind:'op', tag, from, to}); renderLive(); }
+function setMode(tag, m){ const r = App.run, s = r.s; let from;
+  if (tag==='TIC-150'){ from = s.ticMode; if (m==='AUTO'){ const e = s.cotSP - F.cotPV(s); s.ticBias = s.fuelOP - 100 - (e + s.ticI); } s.ticMode = m; }
+  if (tag==='AIC-140'){ from = s.aicMode; if (m==='AUTO'){ const e = s.o2SP - s.o2; s.aicBias = s.damper - 60 - 6*(e + s.aicI); } s.aicMode = m; }
+  F.act(r, {kind:'mode', tag, from, to:m}); renderLive(); }
+function press(tag){ const r = App.run, s = r.s;
+  if (tag==='K-101'){ if (s.fanRun) { toast('K-101 is running.'); return; } if (s.t < s.fanAvail) { toast('K-101 motor cool-down: restart available in ' + Math.ceil(s.fanAvail - s.t) + ' s.'); F.act(r,{kind:'try', tag}); return; } s.fanStartAt = s.t + 2; toast('K-101 restart command sent.'); }
+  if (tag==='P-131B'){ if (s.pumpB || s.pumpBEta) { toast('P-131B is already starting or running.'); return; } s.pumpBEta = s.t + 8; toast('P-131B start command sent.'); }
+  F.act(r, {kind:'btn', tag}); renderLive(); }
+
+const PASS = {A:0,B:1,C:2,D:3};
+function renderFace(){
+  const el = $('#face'), r = App.run; if (!r) { el.innerHTML = ''; return; }
+  const s = r.s, t = App.sel, live = !!r.started && !s.tripped && !s.done;
+  const cotPV = F.cotPV(s), tot = s.feed + s.ds;
+  let h = '', sub = '', vals = [], ctrls = '', extra = ''; const vmap = {};
+  const B = (lbl, fn, on) => `<button class="btn ${on?'on':''}" data-f="${fn}" ${live?'':'disabled'}>${lbl}</button>`;
+  if (t==='FIC-100'){ h='FIC-100 · Ethane feed'; sub='Flow controller, AUTO'; vals=[['PV t/h',s.feed.toFixed(1)],['SP t/h',s.feedSP.toFixed(1)],['OP %',(s.feed/0.52).toFixed(0)]]; ctrls = `<div class="row">${B('SP −2','sp:-2')}${B('SP −0.5','sp:-0.5')}${B('SP +0.5','sp:0.5')}${B('SP +2','sp:2')}</div>`; }
+  else if (t==='FIC-110'){ h='FIC-110 · Dilution steam'; sub='Ratio control on ethane feed. Valve capacity ' + (s.ds >= s.dsCap - 0.05 ? 'at its limit' : 'available'); vals=[['PV t/h',s.ds.toFixed(1)],['RATIO',s.ratio.toFixed(2)],['RATIO SP',s.ratioSP.toFixed(2)]]; ctrls = `<div class="row">${B('Ratio SP −0.02','sp:-0.02')}${B('Ratio SP +0.02','sp:0.02')}</div>`; }
+  else if (t[0]==='F' && t.startsWith('FIC-101')){ const i = PASS[t.slice(-1)]; h=`${t} · Pass ${t.slice(-1)} flow`; const stuck = i===2 && s.stuck; sub = stuck ? 'Output and flow do not match: FV-101C is not responding.' : 'Flow controller, AUTO, balanced with the other passes'; vals=[['PV t/h',(s.pf[i]*tot/4).toFixed(1)],['SP t/h',(tot/4).toFixed(1)],['OP %',stuck ? '100' : (52*s.pf[i]).toFixed(0)]]; ctrls = `<div class="row">${B('OP +5 %','pass:5')}${B('OP −5 %','pass:-5')}</div>`; }
+  else if (t==='TIC-150'){ h='TIC-150 · Coil outlet temperature'; const nIn = s.avgIn.filter(Boolean).length; sub = 'PV = average of ' + (nIn===4 ? 'all four' : nIn) + ' pass thermocouples TI-151A–D in use. Output to fuel gas PIC-120.'; vals=[['PV °C',cotPV.toFixed(1)],['SP °C',s.cotSP.toFixed(0)],['FUEL %',s.fuelOP.toFixed(0)]];
+    for (let i=0;i<4;i++){ vmap['m'+i] = s.cotM[i].toFixed(0); vmap['t'+i] = s.tmt[i].toFixed(0); vmap['f'+i] = (s.pf[i]*tot/4).toFixed(1); vmap['c'+i] = (s.X[i]*100).toFixed(0); }
+    extra = `<table class="passtab"><tr><th>Pass</th><th>TI-151 °C</th><th>TMT °C</th><th>Flow t/h</th><th>Conv. %</th><th>In PV</th></tr>${[0,1,2,3].map(i => `<tr><td>${'ABCD'[i]}</td><td data-v="m${i}"></td><td data-v="t${i}"></td><td data-v="f${i}"></td><td data-v="c${i}"></td><td>${B(s.avgIn[i]?'In':'Out','avg:'+i,s.avgIn[i])}</td></tr>`).join('')}</table>`; ctrls = `<div class="row">${B('AUTO','mode:AUTO',s.ticMode==='AUTO')}${B('MAN','mode:MAN',s.ticMode==='MAN')}</div>` + (s.ticMode==='AUTO' ? `<div class="row">${B('SP −5','sp:-5')}${B('SP −1','sp:-1')}${B('SP +1','sp:1')}${B('SP +5','sp:5')}</div>` : `<div class="row">${B('Fuel −10 %','op:-10')}${B('−2 %','op:-2')}${B('+2 %','op:2')}${B('+10 %','op:10')}</div>`); }
+  else if (t==='AIC-140'){ h='AIC-140 · Arch O₂ and stack damper'; sub = s.fanRun ? 'O₂ controller acting on the stack damper' : 'ID fan stopped: natural draft only'; vals=[['O₂ %',s.o2.toFixed(2)],['SP %',s.o2SP.toFixed(1)],['DAMPER %',s.damper.toFixed(0)]]; ctrls = `<div class="row">${B('AUTO','mode:AUTO',s.aicMode==='AUTO')}${B('MAN','mode:MAN',s.aicMode==='MAN')}</div>` + (s.aicMode==='AUTO' ? `<div class="row">${B('O₂ SP −0.2','sp:-0.2')}${B('O₂ SP +0.2','sp:0.2')}</div>` : `<div class="row">${B('Damper −10','op:-10')}${B('−2','op:-2')}${B('+2','op:2')}${B('+10','op:10')}</div>`); }
+  else if (t==='LIC-130'){ h='LIC-130 · Steam drum level'; sub='Level control on boiler feed water, capacity ' + Math.round(s.bfwCap/1.3*100) + ' % of one pump'; vals=[['PV %',s.lvl.toFixed(1)],['SP %',s.lvlSP.toFixed(0)],['BFW %',(s.bfw*100).toFixed(0)]]; ctrls = `<div class="row">${B('SP −2','sp:-2')}${B('SP +2','sp:2')}</div>`; }
+  else if (t==='K-101'){ h='K-101 · ID fan'; const st = s.fanRun ? (s.fanSpeed < 1 ? 'Starting' : 'Running') : 'Tripped'; sub = !s.fanRun && s.fanAvail ? (s.t < s.fanAvail ? 'Motor cool-down: ' + Math.ceil(s.fanAvail - s.t) + ' s left' : 'Ready to restart') : 'Induced draft fan'; vals=[['STATUS',st],['SPEED %',((s.fanRun?s.fanSpeed:0)*100).toFixed(0)],['DRAFT',s.draft.toFixed(1)]]; ctrls = `<div class="row">${B('Restart fan','btn:K-101')}</div>`; }
+  else if (t==='P-131A'){ h='P-131A · BFW pump'; sub = s.ev.pumpA ? 'Duty pump' : 'Tripped on motor protection'; vals=[['STATUS',s.ev.pumpA?'Running':'Tripped'],['BFW %',(s.bfw*100).toFixed(0)],['LEVEL %',s.lvl.toFixed(0)]]; ctrls=''; }
+  else if (t==='P-131B'){ h='P-131B · BFW pump'; sub = s.pumpB ? 'Running' : s.pumpBEta ? 'Starting' : 'Standby. Auto-start ' + (r.scn.id==='s5' && !s.ev.pumpA ? 'failed' : 'armed'); vals=[['STATUS',s.pumpB?'Running':s.pumpBEta?'Starting':'Standby'],['BFW %',(s.bfw*100).toFixed(0)],['LEVEL %',s.lvl.toFixed(0)]]; ctrls = `<div class="row">${B('Start pump','btn:P-131B')}</div>`; }
+  const fv = vals.map(v=>`<div><span>${v[0]}</span><b>${v[1]}</b></div>`).join('');
+  const fillV = () => el.querySelectorAll('[data-v]').forEach(x => { x.textContent = vmap[x.dataset.v]; x.style.color = x.dataset.v[0]==='m' && (+vmap[x.dataset.v] > LIM.cotHigh || +vmap[x.dataset.v] < LIM.cotLow) ? '#A87400' : ''; });
+  const sig = t + '|' + ctrls + extra;
+  if (el.dataset.sig === sig) { el.querySelector('.sub').textContent = sub; el.querySelector('.fv').innerHTML = fv; fillV(); return; }
+  el.dataset.sig = sig;
+  el.innerHTML = `<h3>Faceplate <span class="empty">select any tag on the screen</span></h3><div class="head">${esc(h)}</div><div class="sub">${esc(sub)}</div><div class="fv">${fv}</div>${ctrls}${extra}`;
+  fillV();
+  el.querySelectorAll('[data-f]').forEach(b => b.onclick = () => {
+    const [k, v] = b.dataset.f.split(':'); const s2 = App.run.s;
+    if (k==='sp'){ const d = +v; const cur = t==='FIC-100'?s2.feedSP:t==='FIC-110'?s2.ratioSP:t==='TIC-150'?s2.cotSP:t==='AIC-140'?s2.o2SP:s2.lvlSP; setSP(t, cur + d); }
+    else if (k==='op'){ const cur = t==='TIC-150'?s2.fuelOP:s2.damper; setOP(t, cur + +v); }
+    else if (k==='mode') setMode(t, v);
+    else if (k==='btn') press(v);
+    else if (k==='avg'){ const i = +v, on = !s2.avgIn[i];
+      if (!on && s2.avgIn.filter(Boolean).length <= 1) { toast('At least one thermocouple must stay in the PV.'); return; }
+      const e0 = s2.cotSP - F.cotPV(s2); s2.avgIn[i] = on; const e1 = s2.cotSP - F.cotPV(s2);
+      if (s2.ticMode === 'AUTO') s2.ticI = F.clamp(s2.ticI + (e0 - e1), -100, 100);
+      F.act(App.run, {kind:'avg', tag:'TIC-150', pass:i, from:!on, to:on});
+      toast(`TI-151${'ABCD'[i]} ${on ? 'back in' : 'taken out of'} the TIC-150 average.`); renderLive(); }
+    else if (k==='pass'){ F.act(App.run,{kind:'op',tag:t,from:0,to:+v}); toast(t==='FIC-101C' && s2.stuck ? 'FV-101C does not move. The valve is stuck.' : 'Passes are balanced; flow controller keeps its setpoint.'); }
+    renderFace();
+  });
+}
+
+// ---------- live rendering ----------
+function setText(id, txt, cls){ const e = document.getElementById(id); if (!e) return; e.textContent = txt; if (cls !== undefined) e.setAttribute('class', 'val' + (cls ? ' ' + cls : '')); }
+function renderLive(){
+  const r = App.run; if (!r) return; const s = r.s, scn = r.scn;
+  const te = elapsed(r), sur = !!r.surprise, ended = s.tripped || s.done;
+  $('#lvTitle').innerHTML = sur && !ended ? `<small>Surprise shift · trainee mode</small>Scenario hidden until the debrief` : `<small>${sur ? 'Surprise shift · it was scenario ' + scn.n : 'Scenario ' + scn.n + ' · ' + (App.mode==='explore'?'explore':'trainee') + ' mode'}</small>${esc(scn.name)}`;
+  $('#clock').textContent = sur ? fmtT(te) : fmtT(te) + ' / ' + fmtT(scn.dur);
+  $('#prog').hidden = sur; $('#progBar').style.width = Math.min(100, s.t / scn.dur * 100) + '%';
+  $('#mchip').textContent = s.mode; $('#mchip').classList.toggle('trip', !!s.tripped);
+  if (!App.running) $('#runBtn').textContent = '▶ ' + (r.started ? 'Resume' : 'Start');
+  $('#runBtn').disabled = !!(s.tripped || s.done);
+  // shift card
+  if (sur && !ended) $('#shift').innerHTML = `<div class="t">Surprise shift</div><p>Normal operation at 32 t/h ethane. Take over the board. Something will happen; nobody knows when.</p><ul>${GENERIC.map(o=>`<li>${esc(o)}</li>`).join('')}</ul>`;
+  else if (App.mode==='explore') $('#shift').innerHTML = `<div class="t">${esc(scn.name)}</div><p>${esc(scn.state)}</p><ul>${scn.objectives.map(o=>`<li>${esc(o)}</li>`).join('')}</ul><p style="margin-top:8px"><b style="font-weight:500">What happens:</b> ${esc(scn.cause)}</p>`;
+  else $('#shift').innerHTML = `<div class="t">${esc(scn.name)}</div><p>${esc(scn.state)}</p><ul>${GENERIC.map(o=>`<li>${esc(o)}</li>`).join('')}</ul>`;
+  // values
+  const tot = s.feed + s.ds;
+  setText('v-feed', s.feed.toFixed(1) + ' t/h');
+  setText('v-ds', s.ds.toFixed(1) + ' t/h', s.ds < LIM.dsLow && s.feed > 1 ? 'med' : '');
+  setText('v-ratio', s.feed < 1 ? '—' : s.ratio.toFixed(2) + (s.ratio < LIM.ratioLow ? '  LOW' : ''), s.ratio < LIM.ratioLow && s.feed > 1 ? 'hi' : '');
+  document.getElementById('ratioBox').setAttribute('fill', s.ratio < LIM.ratioLow && s.feed > 1 ? '#FBE4E1' : '#FFFFFE');
+  document.getElementById('dsValve').setAttribute('class', 'valve' + (s.ds >= s.dsCap - 0.05 && s.dsCap < 13 ? ' bad' : ''));
+  for (let i=0;i<4;i++){ setText('v-pf'+i, (s.pf[i]*tot/4).toFixed(1) + ' t/h', s.pf[i] < LIM.passLow ? 'med' : ''); setText('v-cot'+i, s.cotM[i].toFixed(0) + ' °C' + (s.avgIn[i] ? '' : ' · out'), s.cotM[i] > LIM.cotHigh || (s.cotM[i] < LIM.cotLow && s.feed > 1) ? 'med' : ''); setText('v-tmt'+i, 'TMT ' + s.tmt[i].toFixed(0), s.tmt[i] > LIM.tmtHigh ? 'hi' : ''); document.getElementById('pv'+i).setAttribute('class','valve' + (i===2 && s.stuck ? ' bad' : '')); }
+  setText('v-cotsp', 'SP ' + s.cotSP.toFixed(0) + ' · ' + s.ticMode);
+  setText('v-o2', s.o2.toFixed(1) + ' %', s.o2 < LIM.o2Low ? 'hi' : '');
+  setText('v-drf', (s.draft>=0?'+':'−') + Math.abs(s.draft).toFixed(1) + ' mmH₂O', s.draft > LIM.drfHigh ? 'hi' : '');
+  setText('v-co', Math.round(s.co) + ' ppm', s.co > LIM.coHigh ? 'med' : '');
+  setText('v-damp', s.damper.toFixed(0) + ' % · ' + s.aicMode);
+  setText('v-fan', s.fanRun ? (s.fanSpeed < 1 ? 'STARTING' : 'RUN') : 'TRIPPED', s.fanRun ? '' : 'hi');
+  document.getElementById('fanC').setAttribute('class', 'eq ' + (s.fanRun ? 'run' : 'bad'));
+  setText('v-fuel', (0.5 + 0.38*s.fuel).toFixed(1) + ' barg · ' + s.fuelOP.toFixed(0) + ' %');
+  setText('v-lvl', s.lvl.toFixed(0) + ' %', s.lvl < LIM.lvlLow ? 'hi' : '');
+  const lv = document.getElementById('lvlFill'); const hh = Math.max(2, 48 * s.lvl / 100); FX.attr(lv, {y: 192 - hh, height: hh}); lv.setAttribute('fill', s.lvl < LIM.lvlLow ? '#FBE4E1' : '#B5E2DE');
+  setText('v-dp', s.drumP.toFixed(0) + ' barg');
+  setText('v-bfw', 'BFW ' + Math.round(s.bfw*100) + ' %');
+  setText('v-tle', s.tleOut.toFixed(0) + ' °C', s.tleOut > 430 ? 'med' : '');
+  document.getElementById('pA').setAttribute('class', 'eq ' + (s.ev.pumpA ? 'run' : 'bad'));
+  document.getElementById('pB').setAttribute('class', 'eq ' + (s.pumpB ? 'run' : ''));
+  const fl = s.tripped ? s.fuel > 0.5 : true; $$('#flames path').forEach(p => p.setAttribute('class', 'flame' + (fl ? ' on' : '')));
+  FX.live(s); renderOverview(s); FX.alarms(r);
+  // alarms
+  const list = Object.values(r.alarms).sort((a,b) => (a.ack - b.ack) || (b.t - a.t));
+  $('#almCount').textContent = list.length ? list.filter(a=>!a.ack).length + ' unacknowledged' : '';
+  $('#alarms').innerHTML = list.length ? `<table class="alm">${list.map(a => { const d = F.ALARMS.find(x=>x.id===a.id); return `<tr class="${a.ack?'':'unack'}"><td><span class="pr ${d.pri}">${d.pri}</span></td><td>${esc(d.text)}${a.active?'':' · cleared'}</td><td>${fmtT(a.t)}</td></tr>`; }).join('')}</table>` : '<div class="empty">No active alarms.</div>';
+  // trips
+  $('#trips').innerHTML = F.TRIPS.map(tr => { const v = tr.val(s); const lim = tr.lim; const NEAR = { ratio: v < LIM.ratioLow, pass: v < LIM.passLow*100, cot: v > LIM.cotHigh, o2: v < LIM.o2Low, drf: v > LIM.drfHigh, lvl: v < LIM.lvlLow }; const near = NEAR[tr.id] && !(tr.id==='ratio' && s.feed < 1); const tripped = s.tripped && s.tripped.id === tr.id; const cls = tripped ? 'tripped' : near ? 'near' : 'ok'; const show = tr.id==='ratio' && s.feed < 1 ? '—' : tr.fmt(v); return `<tr><td>${esc(tr.text)}</td><td class="${cls}">${tripped?'TRIPPED · ':''}${show} / ${tr.fmt(lim)}</td></tr>`; }).join('');
+  // procedure (explore)
+  if (App.mode === 'explore') {
+    const ev = F.evaluate(r, s, scn).steps;
+    $('#proc').innerHTML = ev.map(st => `<li><span class="dot ${st.status}"></span><span>${esc(st.text)}${st.t!=null?` <span class="empty">· ${fmtT(st.t + (r.pre||0))}</span>`:''}${st.status==='overdue'?' <span class="empty">· now</span>':''}</span></li>`).join('');
+  }
+  renderTrend(); if (App.running || App.view==='live') renderFaceLight();
+}
+let faceTick = 0;
+function renderFaceLight(){ faceTick++; if (faceTick % 2 === 0 || !App.running) renderFace(); }
+
+const TRENDS = {
+  cotpv: { title:'TIC-150 PV, average COT °C', key:'cotpv', lo:800, hi:900, lim:[LIM.cotHigh], fmt:v=>v.toFixed(0) },
+  fuel: { title:'TIC-150 output to fuel %', key:'fuel', lo:40, hi:140, lim:[], fmt:v=>v.toFixed(0) },
+  tmtMax: { title:'Highest tube metal °C · alarm 1045', key:'tmtMax', lo:1000, hi:1100, lim:[LIM.tmtHigh], fmt:v=>v.toFixed(0) },
+  ratio: { title:'Steam / ethane ratio · trip 0.20', key:'ratio', lo:0.15, hi:0.40, lim:[LIM.ratioLow, LIM.ratioLL], fmt:v=>v.toFixed(2) },
+  tmtC: { title:'Pass C tube metal °C · alarm 1045', key:'tmtC', lo:1000, hi:1100, lim:[LIM.tmtHigh], fmt:v=>v.toFixed(0) },
+  o2: { title:'Arch O₂ % · trip 0.5', key:'o2', lo:0, hi:4, lim:[LIM.o2Low, LIM.o2LL], fmt:v=>v.toFixed(1) },
+  draft: { title:'Firebox pressure mmH₂O · trip +2', key:'draft', lo:-8, hi:4, lim:[LIM.drfHigh, LIM.drfHH], fmt:v=>v.toFixed(1) },
+  lvl: { title:'Steam drum level % · trip 20', key:'lvl', lo:0, hi:70, lim:[LIM.lvlLow, LIM.lvlLL], fmt:v=>v.toFixed(0) }
+};
+const TREND_LIST = ['cotpv','fuel','ratio','tmtMax','o2','draft','lvl'];
+function trendKey(){ const r = App.run; return App.trend || (r && r.surprise ? 'cotpv' : r ? r.scn.key : 'cotpv'); }
+function fillTrendSel(){ const k = trendKey(); $('#trendSel').innerHTML = TREND_LIST.map(x => `<option value="${x}" ${x===k?'selected':''}>${esc(TRENDS[x].title.split(' · ')[0])}</option>`).join(''); }
+$('#trendSel').onchange = e => { App.trend = e.target.value; if (App.run) renderTrend(); };
+function renderTrend(){
+  const r = App.run, T = TRENDS[trendKey()], pre = r.pre || 0; $('#trendTitle').textContent = 'Trend' + (T.title.includes(' · ') ? ' · ' + T.title.split(' · ')[1] : '');
+  const W = 340, H = 130, pl = 34, pr = 8, pt = 8, pb = 18, span = 240;
+  const t1 = Math.max(span, elapsed(r)), t0 = t1 - span;
+  const X = t => pl + (W-pl-pr) * (t + pre - t0) / span, Y = v => pt + (H-pt-pb) * (1 - (Math.min(T.hi, Math.max(T.lo, v)) - T.lo) / (T.hi - T.lo));
+  const pts = r.hist.filter(h => h.t + pre >= t0 && h[T.key] != null);
+  let d = pts.map((h,i) => (i?'L':'M') + X(h.t).toFixed(1) + ' ' + Y(h[T.key]).toFixed(1)).join('');
+  const area = pts.length ? d + `L${X(pts[pts.length-1].t).toFixed(1)} ${H-pb}L${X(pts[0].t).toFixed(1)} ${H-pb}Z` : '';
+  const ticks = [T.lo, (T.lo+T.hi)/2, T.hi];
+  let svg = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(T.title)}"><rect x="${pl}" y="${pt}" width="${W-pl-pr}" height="${H-pt-pb}" fill="#F3F6F6"/>`;
+  svg += ticks.map(v => `<line x1="${pl}" x2="${W-pr}" y1="${Y(v)}" y2="${Y(v)}" stroke="#E6E8E8"/><text x="${pl-4}" y="${Y(v)+3}" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="9" fill="#6B727C">${T.fmt(v)}</text>`).join('');
+  svg += T.lim.map((v,i) => `<line x1="${pl}" x2="${W-pr}" y1="${Y(v)}" y2="${Y(v)}" stroke="${i===T.lim.length-1 && T.lim.length>1 || T.key==='tmtC' || T.key==='tmtMax' ? '#C8372D' : '#D99A06'}" stroke-dasharray="4 3"/>`).join('');
+  if (pts.length) { svg += `<path d="${area}" fill="#B5E2DE" opacity=".45"/><path d="${d}" fill="none" stroke="#3B4049" stroke-width="1.6"/>`; const p = pts[pts.length-1]; svg += `<circle cx="${X(p.t)}" cy="${Y(p[T.key])}" r="3.2" fill="#4FA8A2"/>`; }
+  svg += `<text x="${pl}" y="${H-4}" font-family="IBM Plex Mono, monospace" font-size="9" fill="#6B727C">${fmtT(t0)}</text><text x="${W-pr}" y="${H-4}" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="9" fill="#6B727C">${fmtT(t1)}</text></svg>`;
+  $('#trend').innerHTML = svg;
+}
+
+// ---------- debrief ----------
+const STAT = { done:'Done', late:'Late', missed:'Missed', na:'Not needed', pending:'Open', overdue:'Missed' };
+function renderDebrief(){
+  const L = App.lastResult, el = $('#debrief');
+  if (!L) { el.innerHTML = `<div class="wrap sec"><div class="lbl">Debrief</div><h2>Your review appears here</h2><p style="max-width:62ch;color:var(--slate)">Finish or end a scenario on the live furnace. You will see a score in four parts, every expected step next to what you did, and a short coaching note.</p><button class="btn pri" id="goLive">Open the live furnace →</button></div>`; $('#goLive').onclick = () => show('live'); return; }
+  const scn = SC[L.scn], res = L.res, s = L.s, pre = L.pre || 0;
+  const firstBad = res.steps.find(x => x.key && (x.status==='missed' || x.status==='late')) || res.steps.find(x => x.status==='missed' || x.status==='late');
+  const coach = s.tripped ? scn.coach.trip : firstBad ? (scn.coach[firstBad.id] || (firstBad.id === 'ack' ? 'Acknowledge alarms early. It confirms you have seen them and keeps the list readable for the next alarm.' : 'Review the step marked in the table and try the scenario again.')) : 'A clean run. Every expected step was done in time and the furnace stayed online.';
+  const headline = s.tripped ? 'Furnace tripped.' : res.total >= 85 ? 'Furnace kept online. Well handled.' : 'Furnace kept online.';
+  const sub = s.tripped ? `${s.tripped.text} at ${fmtT(s.tripped.t + pre)}. The total is capped at 40.` : firstBad ? 'You avoided the trip. One or more steps were late or missed.' : 'All steps in time, no harmful actions.';
+  const bar = (n, v, max) => `<div class="bar"><span>${n}</span><u><i style="width:${Math.round(100*v/max)}%"></i></u><b>${v}/${max}</b></div>`;
+  el.innerHTML = `<div class="deb spread">
+    <div class="pg teal">
+      <div class="big" aria-hidden="true" style="color:rgba(181,226,222,.55);left:auto;right:-14px;bottom:-30px">${res.total}</div>
+      <div class="lbl">${L.surprise ? 'SURPRISE SHIFT · IT WAS ' : ''}SCENARIO ${scn.n} · ${esc(scn.name.toUpperCase())} · ${L.mode.toUpperCase()}</div>
+      <h2 class="t2" style="color:var(--paper)">${headline}</h2>
+      <p style="margin:0;color:var(--ink)">${esc(sub)}</p>
+      <div style="margin-top:22px" class="score"><span id="scoreNum">${res.total}</span><small> /100</small></div>
+      <span class="verdict ${s.tripped||res.total<50?'bad':''}">${res.verdict}</span>${L.newBest ? '<span class="newbest">New personal best</span>' : (L.best!=null && !L.short ? `<span class="newbest" style="background:transparent;color:var(--ink)">Your best ${L.best}</span>` : '')}
+      <div class="bars">${bar('Safety',res.safety,40)}${bar('Procedure',res.procedure,30)}${bar('Response',res.response,15)}${bar('Production',res.production,15)}</div>
+      <p class="empty" style="margin-top:14px">Ethylene ${Math.round(res.prodRatio*100)} % of plan · coke index ${res.coke.toFixed(1)}${L.hints?` · ${L.hints} hint${L.hints>1?'s':''} (−${3*L.hints})`:''}${res.harmful.length?` · ${res.harmful.length} harmful action${res.harmful.length>1?'s':''} (−${5*res.harmful.length})`:''}</p>
+      ${L.unlocked ? `<p class="empty" style="margin-top:10px;color:var(--ink);font-weight:500">The procedure, Explore mode and instructor rules for this scenario are now open.</p>` : ''}${L.short ? `<p class="empty" style="margin-top:10px">This run was shorter than 60 seconds, so it does not count as a first try.</p>` : ''}
+      <div class="go"><button class="btn pri" id="again">Try again</button>${L.surprise ? `<button class="btn" id="another">Another surprise shift</button>` : ''}${nextOf(scn.id)?`<button class="btn" id="next">Next · ${esc(SC[nextOf(scn.id)].name)} →</button>`:''}</div>
+      <div class="pno light">01</div>
+    </div>
+    <div class="pg">
+      <h2 class="t2"><small>What the procedure expected</small>and what you did</h2>
+      <div class="scroll"><table class="tl" style="margin-top:10px"><tr><th>Time</th><th>Expected step</th><th>Result</th></tr>
+      ${res.steps.map(st => `<tr><td class="tm">${st.t!=null?fmtT(st.t + pre):'—'}</td><td>${esc(st.text)}${st.target?` <span class="empty">· within ${st.target} s</span>`:''}${st.late?` <span class="empty">· ${st.late} s late</span>`:''}${st.note?`<br><span class="empty">${esc(st.note)}</span>`:''}</td><td><span class="st ${st.status==='overdue'||st.status==='pending'?'missed':st.status}">${STAT[st.status]}</span></td></tr>`).join('')}
+      ${res.harmful.map(h => `<tr><td class="tm">${fmtT(h.t + pre)}</td><td>${esc(h.text)}</td><td><span class="st missed">Harmful</span></td></tr>`).join('')}
+      </table></div>
+      <div class="coach"><div class="lbl">Coach's note</div><p>${esc(coach)}</p></div>
+      ${scn.note ? `<p class="empty" style="margin-top:12px">${esc(scn.note)}</p>` : ''}
+      <p class="empty" style="margin-top:12px">Rule-based debrief. Each rule is listed in the Instructor view.</p>
+      <div class="pno">02</div>
+    </div></div>`;
+  FX.debrief(res.total);
+  $('#again').onclick = () => { App.pick = scn.id; App.run = null; renderCards(); noteSel(); show('live'); };
+  const an = $('#another'); if (an) an.onclick = () => { App.pick = 'surprise'; App.run = null; setUiMode('trainee'); renderCards(); noteSel(); show('live'); };
+  const nx = $('#next'); if (nx) nx.onclick = () => { App.pick = nextOf(scn.id); App.run = null; if (App.mode === 'explore' && !isOpen(App.pick)) setUiMode('trainee'); renderCards(); noteSel(); show('live'); };
+}
+function nextOf(id){ const ids = Object.keys(SC); const i = ids.indexOf(id); return ids[i+1] || null; }
+
+// ---------- instructor ----------
+let iSel = 's1';
+function renderInstr(){
+  $('#itabs').innerHTML = Object.values(SC).map(s => `<button data-i="${s.id}" class="${s.id===iSel?'on':''}">${s.n} · ${esc(s.name)}${isOpen(s.id) ? '' : ' (locked)'}</button>`).join('');
+  $$('#itabs button').forEach(b => b.onclick = () => { iSel = b.dataset.i; renderInstr(); });
+  const s = SC[iSel];
+  if (!isOpen(iSel)) {
+    $('#ibody').innerHTML = `<div class="lockp"><div class="lbl">Locked</div><h3>Try scenario ${s.n} once to open its rules</h3><p>The expected steps, time windows and harmful actions stay hidden until you have run this scenario for at least a minute, or until it trips. That keeps the first attempt a real test.</p><div class="go"><button class="btn pri" id="tryIt">Run scenario ${s.n} now →</button></div><div class="rev" id="revInstr" style="margin-top:16px"></div></div>`;
+    $('#tryIt').onclick = () => { App.pick = iSel; App.run = null; setUiMode('trainee'); renderCards(); noteSel(); show('live'); };
+    renderRev($('#revInstr'));
+    return;
+  }
+  $('#ibody').innerHTML = `<div class="igrid"><div>
+    <h3>Initial state</h3><p>${esc(s.state)}</p>
+    <h3>Initiating event</h3><p>${esc(s.cause)}</p>
+    <h3>Objectives given to the trainee</h3><p>${s.objectives.map(esc).join('<br>')}</p>
+    <h3>Armed trips</h3><p>${F.TRIPS.map(t => esc(t.text) + ' at ' + t.fmt(t.lim) + ' for ' + t.hold + ' s · ' + (t.kind === 'combustion' ? 'full fuel trip' : 'partial trip')).join('<br>')}</p>
+    ${s.note ? `<h3>Design note</h3><p>${esc(s.note)}</p>` : ''}
+  </div><div style="min-width:0">
+    <h3>Expected steps</h3><div class="scroll"><table class="tl"><tr><th>#</th><th>Step</th><th>Window</th></tr>${s.steps.map((st,i)=>`<tr><td class="tm">${i+1}${st.key?' ★':''}</td><td>${esc(st.text)}</td><td class="tm">${st.target?st.target+' s':'by end'}</td></tr>`).join('')}</table></div>
+    <p class="empty" style="margin-top:8px">★ key action: its timing sets the response score.</p>
+    <h3 style="margin-top:14px">Harmful actions (−5 each)</h3><p>${s.harmful.map(h=>esc(h.text)).join('<br>')}</p>
+    <h3>Scoring</h3><p>Safety 40: zero on a trip, otherwise reduced by time in high-priority alarm. Procedure 30: done = full, late = half. Response 15: full within the key window, falling to zero at three times the window. Production 15: ethylene made against plan, minus coke formed. Hints −3, harmful actions −5, trip caps the total at 40.</p>
+  </div></div>`;
+}
+
+// ---------- motion (GSAP when it loads; the page works without it) ----------
+const RM = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+const G = !RM && window.gsap ? window.gsap : null;
+const SVGNS = 'http://www.w3.org/2000/svg';
+const FX = (() => {
+  let flows = [], fan = null, flames = [], flick = [], seen = new Set(), lastS = null;
+  const tot = s => s.feed + s.ds;
+  const FLOWS = [
+    { d:'M28 150H380', f: s => s.feed / 32 },
+    { d:'M28 190H300V150', f: s => s.ds / 10.2 },
+    { d:'M380 222H200V540', f: s => tot(s) / 42 },
+    ...[310,390,470,550].map((y,i) => ({ d:`M200 ${y}H300`, f: s => s.pf[i] * tot(s) / 4 / 10.6 })),
+    ...[310,390,470,550].map((y,i) => ({ d:`M640 ${y}h80`, f: s => s.pf[i] * tot(s) / 4 / 10.6 })),
+    { d:'M784 430h180', f: s => tot(s) / 42 },
+    { d:'M28 650H640', f: s => s.fuel / F.D.FUEL0 },
+    { d:'M850 64v76', f: s => s.bfw }
+  ];
+  function build(){
+    flick.forEach(t => t.kill()); flows.forEach(f => f.tw && f.tw.kill()); if (fan) fan.kill();
+    flows = []; flick = []; seen = new Set(); fan = null;
+    const svg = document.querySelector('#svgHost svg'); if (!svg) return;
+    const g = document.createElementNS(SVGNS, 'g'); g.setAttribute('aria-hidden', 'true');
+    FLOWS.forEach(fl => { const p = document.createElementNS(SVGNS, 'path'); p.setAttribute('d', fl.d); p.setAttribute('class', 'flowln'); g.appendChild(p);
+      flows.push({ p, f: fl.f, tw: G ? G.to(p, { strokeDashoffset: -32, duration: .8, ease: 'none', repeat: -1, paused: true }) : null }); });
+    svg.appendChild(g);
+    if (G) fan = G.to('#fanRotor', { rotation: 360, svgOrigin: '470 76', duration: .6, ease: 'none', repeat: -1, paused: true });
+    flames = [...document.querySelectorAll('#flames .fg')];
+    if (G) flames.forEach(fg => flick.push(G.to(fg.firstChild, { scaleY: () => .75 + Math.random() * .45, scaleX: () => .9 + Math.random() * .15, transformOrigin: '50% 100%', duration: () => .12 + Math.random() * .2, ease: 'sine.inOut', repeat: -1, yoyo: true, repeatRefresh: true, paused: true })));
+    lastS = App.run ? App.run.s : null; rate();
+  }
+  function rate(){
+    const s = lastS || (App.run && App.run.s); if (!s) return;
+    const on = App.running ? App.speed : 0;
+    flows.forEach(fl => { const v = Math.max(0, fl.f(s) || 0);
+      fl.p.style.opacity = v > .03 ? Math.min(.85, .35 + v * .5) : 0;
+      if (fl.tw) { const ts = on * Math.min(2.5, v); if (ts > .01) { fl.tw.timeScale(ts); fl.tw.play(); } else fl.tw.pause(); } });
+    if (fan) { const ts = on * (s.fanRun ? s.fanSpeed : 0); if (ts > .01) { fan.timeScale(ts); fan.play(); } else fan.pause(); }
+    flick.forEach(t => App.running ? t.play() : t.pause());
+  }
+  function live(s){
+    lastS = s; rate();
+    const k = Math.max(.15, Math.min(1.5, s.fuel / F.D.FUEL0));
+    if (G) flames.forEach(fg => G.to(fg, { scale: k, transformOrigin: '50% 100%', duration: .6, overwrite: 'auto' }));
+  }
+  function attr(el, a){ if (G) G.to(el, { attr: a, duration: .5, overwrite: 'auto' }); else for (const k in a) el.setAttribute(k, a[k]); }
+  function move(el, x){ if (G) G.to(el, { x, duration: .5, overwrite: 'auto' }); else el.setAttribute('transform', `translate(${x},0)`); }
+  function alarms(r){
+    const ids = Object.keys(r.alarms);
+    for (const id of [...seen]) if (!r.alarms[id]) seen.delete(id);
+    let fresh = null;
+    ids.forEach(id => { if (!seen.has(id) && r.alarms[id].active) { seen.add(id); fresh = F.ALARMS.find(a => a.id === id); } });
+    if (!fresh || !r.started) return;
+    if (fresh.pri !== 'HIGH') Horn.chirp();
+    if (G) G.fromTo('#almBox', { boxShadow: '0 0 0 5px rgba(200,55,45,.5)' }, { boxShadow: '0 0 0 0px rgba(200,55,45,0)', duration: 1.4, ease: 'power2.out' });
+  }
+  function overlay(trip){
+    if (!G) return;
+    G.from('#ovBox', { y: 30, opacity: 0, duration: .55, ease: 'power3.out' });
+    if (trip) G.fromTo('#hmi', { x: -7 }, { x: 0, duration: .7, ease: 'elastic.out(1,.3)' });
+  }
+  function debrief(total){
+    if (!G) return;
+    const el = document.getElementById('scoreNum'); if (el) { const o = { v: 0 }; G.to(o, { v: total, duration: 1.2, ease: 'power2.out', onUpdate: () => { el.textContent = Math.round(o.v); } }); }
+    G.from('#debrief .bar u i', { width: 0, duration: 1, stagger: .12, ease: 'power2.out' });
+    G.from('#debrief .tl tr', { opacity: 0, y: 8, duration: .4, stagger: .05, delay: .2 });
+  }
+  function intro(){
+    if (!G) return;
+    G.from('.cover h1, .cover .lede, .cover .modes, .cover .glance, .frames', { y: 22, opacity: 0, duration: .8, stagger: .1, ease: 'power3.out' });
+    if (window.ScrollTrigger) {
+      G.registerPlugin(window.ScrollTrigger);
+      G.to('.statement', { yPercent: 14, ease: 'none', scrollTrigger: { trigger: '.cover', start: 'top top', end: 'bottom top', scrub: true } });
+      G.utils.toArray('.big').forEach(b => G.fromTo(b, { xPercent: -6 }, { xPercent: 5, ease: 'none', scrollTrigger: { trigger: b.parentElement, start: 'top bottom', end: 'bottom top', scrub: true } }));
+    }
+  }
+  return { build, rate, live, attr, move, alarms, overlay, debrief, intro };
+})();
+
+// ---------- alarm horn (Web Audio; starts only after the trainee presses Start) ----------
+const Horn = (() => {
+  let ctx = null, osc = null, gain = null, silenced = new Set();
+  function unlock(){
+    if (ctx || !P.horn) return;
+    try { const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
+      ctx = new AC(); osc = ctx.createOscillator(); gain = ctx.createGain(); osc.type = 'square'; osc.frequency.value = 660; gain.gain.value = 0;
+      osc.connect(gain).connect(ctx.destination); osc.start(); } catch (e) { ctx = null; }
+  }
+  function pending(){
+    const r = App.run; if (!r) return false;
+    for (const id of [...silenced]) if (!r.alarms[id]) silenced.delete(id);
+    return Object.values(r.alarms).some(a => a.active && !a.ack && !silenced.has(a.id) && (F.ALARMS.find(x => x.id === a.id) || {}).pri === 'HIGH');
+  }
+  function tick(){
+    if (!ctx) return;
+    const want = P.horn && App.running && pending(), t = ctx.currentTime;
+    gain.gain.setTargetAtTime(want ? .045 : 0, t, .02);
+    if (want) for (let k = 0; k < 4; k++) osc.frequency.setValueAtTime(k % 2 ? 880 : 660, t + k * .25);
+  }
+  function chirp(){
+    if (!ctx || !P.horn || !App.running) return;
+    const t = ctx.currentTime, o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = 'sine'; o.frequency.value = 990; g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.05, t + .02); g.gain.exponentialRampToValueAtTime(.0001, t + .35);
+    o.connect(g).connect(ctx.destination); o.start(t); o.stop(t + .4);
+  }
+  function silence(){ const r = App.run; if (r) Object.keys(r.alarms).forEach(k => silenced.add(k)); tick(); toast('Horn silenced. The alarms stay unacknowledged until you acknowledge them.'); }
+  function reset(){ silenced = new Set(); }
+  function ui(){ const b = $('#hornBtn'); b.classList.toggle('on', P.horn); b.textContent = P.horn ? 'Horn on' : 'Horn off'; b.setAttribute('aria-pressed', String(P.horn)); if (P.horn) unlock(); }
+  return { unlock, tick, chirp, silence, reset, ui };
+})();
+
+// ---------- overview: analog indicators with normal band, alarm and trip ticks (ISA-101 style) ----------
+const GZ = [
+  { k: 'S/HC ratio', v: s => s.feed < 1 ? null : s.ratio, lo: .15, hi: .45, n: [.29, .35], alm: [{ v: LIM.ratioLow, d: -1 }], trip: { v: LIM.ratioLL, d: -1 }, f: v => v.toFixed(2) },
+  { k: 'COT · TIC-150 °C', v: s => F.cotPV(s), lo: 800, hi: 900, n: [843, 857], alm: [{ v: LIM.cotLow, d: -1 }, { v: LIM.cotHigh, d: 1 }], trip: { v: LIM.cotHH, d: 1 }, f: v => v.toFixed(0) },
+  { k: 'Max tube metal °C', v: s => Math.max(...s.tmt), lo: 980, hi: 1100, n: [995, 1035], alm: [{ v: LIM.tmtHigh, d: 1 }], trip: null, f: v => v.toFixed(0) },
+  { k: 'Arch O₂ %', v: s => s.o2, lo: 0, hi: 5, n: [1.8, 3.0], alm: [{ v: LIM.o2Low, d: -1 }], trip: { v: LIM.o2LL, d: -1 }, f: v => v.toFixed(1) },
+  { k: 'Firebox mmH₂O', v: s => s.draft, lo: -10, hi: 4, n: [-6, -3], alm: [{ v: LIM.drfHigh, d: 1 }], trip: { v: LIM.drfHH, d: 1 }, f: v => (v >= 0 ? '+' : '−') + Math.abs(v).toFixed(1) },
+  { k: 'Drum level %', v: s => s.lvl, lo: 0, hi: 100, n: [45, 60], alm: [{ v: LIM.lvlLow, d: -1 }], trip: { v: LIM.lvlLL, d: -1 }, f: v => v.toFixed(0) }
+];
+function renderOverview(s){
+  const host = $('#ovw'), W = 200;
+  const X = (g, v) => 4 + (W - 8) * (Math.min(g.hi, Math.max(g.lo, v)) - g.lo) / (g.hi - g.lo);
+  if (!document.getElementById('gz0')) {
+    host.innerHTML = GZ.map((g, i) => `<div class="gz" id="gz${i}"><div class="gh"><span>${esc(g.k)}</span><b id="gzv${i}">—</b></div><svg viewBox="0 0 ${W} 22" preserveAspectRatio="none" aria-hidden="true">
+      <rect x="4" y="11" width="${W-8}" height="6" fill="#E6E8E8"/><rect x="${X(g,g.n[0])}" y="11" width="${X(g,g.n[1])-X(g,g.n[0])}" height="6" fill="#A9CFCB"/>
+      ${g.alm.map(a => `<line x1="${X(g,a.v)}" x2="${X(g,a.v)}" y1="8" y2="20" stroke="#D99A06" stroke-width="2"/>`).join('')}
+      ${g.trip ? `<line x1="${X(g,g.trip.v)}" x2="${X(g,g.trip.v)}" y1="6" y2="22" stroke="#C8372D" stroke-width="2.4"/>` : ''}
+      <path id="gzp${i}" d="M-5 1h10l-5 8z" fill="#3B4049"/></svg></div>`).join('');
+  }
+  GZ.forEach((g, i) => {
+    const v = g.v(s), tile = document.getElementById('gz' + i), ptr = document.getElementById('gzp' + i);
+    if (v == null || !isFinite(v)) { $('#gzv' + i).textContent = '—'; tile.className = 'gz'; ptr.style.opacity = .25; return; }
+    ptr.style.opacity = 1;
+    const beyond = (l) => l.d < 0 ? v < l.v : v > l.v;
+    const st = g.trip && beyond(g.trip) ? 'trp' : g.alm.some(beyond) ? 'alm' : '';
+    tile.className = 'gz' + (st ? ' ' + st : '');
+    ptr.setAttribute('fill', st === 'trp' ? '#C8372D' : st === 'alm' ? '#D99A06' : '#3B4049');
+    $('#gzv' + i).textContent = g.f(v);
+    FX.move(ptr, X(g, v));
+  });
+}
+
+/* Language switch (EN source text, DE and FR translations). Text nodes are translated as the
+   page renders them, so the simulation and scoring code stay in English. */
+const I18N = (() => {
+  const D = /*__L10N__*/{};
+  const IX = { de: 0, fr: 1 };
+  let lang = 'en';
+  const LOWER = {}; for (const k in D) LOWER[k.toLowerCase()] = k;
+  const NUM = /[−+-]?\d+(?:\.\d+)?/g;
+  const cache = { de: new Map(), fr: new Map() };
+  const fill = (tpl, nums) => { let i = 0; return tpl.replace(/#/g, () => (i < nums.length ? nums[i++] : '#')); };
+  const L = (de, fr) => lang === 'de' ? de : fr;
+  function look(t){
+    const nums = t.match(NUM) || [], k = t.replace(NUM, '#');
+    if (D[k]) return fill(D[k][IX[lang]], nums);
+    const lk = LOWER[k.toLowerCase()];
+    if (!lk) return null;
+    const out = fill(D[lk][IX[lang]], nums);
+    return t === t.toUpperCase() && /[A-Z]/.test(t) ? out.toUpperCase() : out;
+  }
+  const RULES = [
+    [/^(.+) →$/, m => tr(m[1]) + ' →'],
+    [/^Selected: (.+)$/, m => L('Ausgewählt: ', 'Sélectionné : ') + tr(m[1])],
+    [/^Hint: (.+)$/, m => L('Tipp: ', 'Indice : ') + tr(m[1])],
+    [/^Send field operator to (\S+)$/, m => L(`Anlagenfahrer zu ${m[1]} schicken`, `Envoyer un opérateur terrain à ${m[1]}`)],
+    [/^Field: "Checked (\S+) locally\. Nothing abnormal\."$/, m => L(`Vor Ort: „${m[1]} vor Ort geprüft. Nichts Auffälliges.“`, `Terrain : « ${m[1]} vérifié sur place. Rien d'anormal. »`)],
+    [/^(TI-151[A-D]) (taken out of|back in) the TIC-150 average\.$/, m => m[2] === 'back in' ? L(`${m[1]} wieder im TIC-150-Mittelwert.`, `${m[1]} réintégré dans la moyenne TIC-150.`) : L(`${m[1]} aus dem TIC-150-Mittelwert genommen.`, `${m[1]} sorti de la moyenne TIC-150.`)],
+    [/^(.+) \(locked\)$/, m => tr(m[1]) + L(' (gesperrt)', ' (verrouillé)')],
+    [/^(.+) at (\S+(?: %)?) for (\d+) s$/, m => L(`${tr(m[1])} bei ${m[2]} für ${m[3]} s`, `${tr(m[1])} à ${m[2]} pendant ${m[3]} s`)],
+    [/^(.+) at (\d\d:\d\d)$/, m => L(`${tr(m[1])} um ${m[2]}`, `${tr(m[1])} à ${m[2]}`)]
+  ];
+  function tr(t){
+    if (lang === 'en' || !/[A-Za-z]/.test(t)) return t;
+    const c = cache[lang]; if (c.has(t)) return c.get(t);
+    let r = look(t);
+    if (r == null) for (const [re, fn] of RULES) { const m = t.match(re); if (m) { const x = fn(m); if (x != null) { r = x; break; } } }
+    if (r == null) { const p = t.split(/(?<=[.?!])\s+(?=[A-Z"„«])/); if (p.length > 1) { const q = p.map(tr); if (q.some((x, i) => x !== p[i])) r = q.join(' '); } }
+    if (r == null && t.includes(' · ')) { const p = t.split(' · '), q = p.map(tr); if (q.some((x, i) => x !== p[i])) r = q.join(' · '); }
+    if (r == null && /[^.]\.$/.test(t)) { const x = tr(t.slice(0, -1)); if (x !== t.slice(0, -1)) r = x + '.'; }
+    if (r == null) r = t;
+    c.set(t, r); return r;
+  }
+  const raw = s => { const m = s.match(/^(\s*)([\s\S]*?)(\s*)$/); return m[2] ? m[1] + tr(m[2]) + m[3] : s; };
+  const ORIG = new WeakMap(), DONE = new WeakMap(), SKIP = /^(SCRIPT|STYLE|TITLE)$/;
+  function apply(n){
+    if (n.nodeType === 3) {
+      const p = n.parentNode; if (!p || SKIP.test(p.nodeName)) return;
+      const cur = n.textContent; if (DONE.get(n) === cur) return;
+      ORIG.set(n, cur); const out = raw(cur); DONE.set(n, out); if (out !== cur) n.textContent = out;
+    } else if (n.nodeType === 1 && !SKIP.test(n.nodeName)) n.childNodes.forEach(apply);
+  }
+  function relang(n){
+    if (n.nodeType === 3) { const p = n.parentNode; if (!p || SKIP.test(p.nodeName)) return; const o = ORIG.has(n) ? ORIG.get(n) : n.textContent; ORIG.set(n, o); const out = raw(o); DONE.set(n, out); if (n.textContent !== out) n.textContent = out; }
+    else if (n.nodeType === 1 && !SKIP.test(n.nodeName)) n.childNodes.forEach(relang);
+  }
+  let obs = null;
+  function set(l){
+    lang = IX[l] != null ? l : 'en';
+    document.documentElement.lang = lang;
+    relang(document.body);
+    document.querySelectorAll('[data-lang]').forEach(b => { const on = b.dataset.lang === lang; b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); });
+  }
+  function init(l){
+    set(l);
+    if (!obs && window.MutationObserver) { obs = new MutationObserver(ms => ms.forEach(m => { if (m.type === 'characterData') apply(m.target); else m.addedNodes.forEach(apply); })); obs.observe(document.body, { subtree: true, childList: true, characterData: true }); }
+  }
+  return { init, set, tr, get lang(){ return lang; } };
+})();
+
+$$('[data-lang]').forEach(b => b.onclick = () => { P.lang = b.dataset.lang; saveP(); I18N.set(P.lang); });
+const startLang = P.lang || ((navigator.language || 'en').slice(0, 2).toLowerCase());
+
+// ---------- reviewer unlock ----------
+function renderRev(el){
+  if (!el) return;
+  if (P.reviewer) { el.innerHTML = `<span>Reviewer view is on: every procedure and rule is visible in this browser.</span><button class="btn" data-rev="lock">Lock again</button>`; }
+  else { el.innerHTML = `<span>Reviewing this demo for an OTS or hiring team?</span><button class="btn" data-rev="ask">Show all procedures</button>`; }
+  el.querySelectorAll('[data-rev]').forEach(b => b.onclick = () => {
+    const k = b.dataset.rev;
+    if (k === 'ask') { el.innerHTML = `<span>This opens Explore mode and the instructor rules for all six scenarios. A trainee should try each scenario first, so the first attempt stays a real test.</span><button class="btn pri" data-rev="yes">Show everything</button><button class="btn" data-rev="no">Cancel</button>`; el.querySelectorAll('[data-rev]').forEach(x => x.onclick = () => { if (x.dataset.rev === 'yes') { P.reviewer = true; saveP(); } refreshLocks(); }); return; }
+    if (k === 'lock') { P.reviewer = false; saveP(); if (App.mode === 'explore' && !isOpen(App.pick)) setUiMode('trainee'); refreshLocks(); }
+  });
+}
+function refreshLocks(){ renderRev($('#revArea')); renderCards(); noteSel(); if (App.view === 'instr') renderInstr(); }
+
+// ---------- toast ----------
+let toastT; function toast(m){ const t = $('#toast'); t.textContent = m; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => t.hidden = true, 3200); }
+
+// ---------- boot ----------
+renderCards(); setUiMode('trainee'); noteSel(); renderRev($('#revArea')); fillTrendSel(); Horn.ui(); I18N.init(startLang); FX.intro();
+if (location.hash === '#live') show('live');
+})();
+</script>

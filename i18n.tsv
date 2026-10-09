@@ -1,0 +1,477 @@
+"Furnace tripped." Missed steps score zero and the total is capped at #.	„Ofen abgeschaltet.“ Versäumte Schritte zählen null, die Gesamtpunktzahl ist auf # begrenzt.	« Four déclenché. » Les étapes manquées comptent zéro et le total est plafonné à #.
+# min	# Min.	# min
+# points	# Punkte	# points
+# unacknowledged	# nicht quittiert	# non acquittées
+#–# min	#–# Min.	#–# min
+trainee only	nur Trainee	stagiaire uniquement
+A boiler-feed pump stops. The TLE needs water before the level trip.	Eine Kesselspeisewasserpumpe fällt aus. Der Spaltgaskühler braucht Wasser, bevor der Niveau-Trip auslöst.	Une pompe d'eau alimentaire s'arrête. L'échangeur de trempe a besoin d'eau avant le déclenchement sur niveau.
+A debrief that explains, not just a number.	Eine Nachbesprechung, die erklärt, statt nur eine Zahl.	Un débriefing qui explique, pas seulement une note.
+A failed auto-start is a hidden failure. Maintenance must know before the next demand.	Ein fehlgeschlagener Autostart ist ein verdeckter Fehler. Die Instandhaltung muss es vor der nächsten Anforderung wissen.	Un démarrage automatique raté est une défaillance cachée. La maintenance doit le savoir avant la prochaine sollicitation.
+A harmful move, such as adding air to a fuel-rich firebox, costs # points and is explained in the debrief.	Eine schädliche Aktion, etwa Luft in einen brennstoffreichen Feuerraum zu geben, kostet # Punkte und wird in der Nachbesprechung erklärt.	Une action nuisible, comme ajouter de l'air dans une chambre de combustion riche en combustible, coûte # points et est expliquée au débriefing.
+A pass flow valve sticks. Its outlet and tube-metal temperatures climb.	Ein Passventil klemmt. Austritts- und Rohrwandtemperatur steigen.	Une vanne de passe se bloque. Les températures de sortie et de peau des tubes montent.
+A random scenario that starts at a random moment. Its name stays hidden until the debrief, like a real OTS session.	Ein zufälliges Szenario, das zu einem zufälligen Zeitpunkt beginnt. Der Name bleibt bis zur Nachbesprechung verborgen, wie in einer echten OTS-Sitzung.	Un scénario au hasard qui démarre à un moment au hasard. Son nom reste caché jusqu'au débriefing, comme dans une vraie séance OTS.
+A score in four parts, your actions next to the expected steps, and a short note on what to do differently.	Eine Punktzahl in vier Teilen, Ihre Aktionen neben den erwarteten Schritten und ein kurzer Hinweis, was Sie anders machen können.	Une note en quatre parties, vos actions face aux étapes attendues, et une courte remarque sur ce qu'il faut faire autrement.
+A sticking valve is a field problem. The fastest fix is a person at the valve. Call early; the control room cannot stroke a stuck valve.	Ein klemmendes Ventil ist ein Problem vor Ort. Am schnellsten hilft jemand direkt am Ventil. Früh anrufen: Aus der Warte lässt sich ein festsitzendes Ventil nicht bewegen.	Une vanne bloquée est un problème terrain. La solution la plus rapide est quelqu'un à la vanne. Appelez tôt : la salle de contrôle ne peut pas débloquer une vanne coincée.
+A surprise shift always runs in trainee mode.	Eine Überraschungsschicht läuft immer im Trainee-Modus.	Un quart surprise se joue toujours en mode stagiaire.
+AIC# ARCH O₂	AIC# O₂ DACH	AIC# O₂ VOÛTE
+ARCH O₂ LOW	O₂ FEUERRAUMDACH NIEDRIG	O₂ VOÛTE BAS
+ARCH O₂ LOW-LOW	O₂ FEUERRAUMDACH SEHR NIEDRIG	O₂ VOÛTE TRÈS BAS
+AUTO	AUTO	AUTO
+Acknowledge	Quittieren	Acquitter
+Acknowledge the alarms	Alarme quittieren	Acquitter les alarmes
+Acknowledge the alarms and check the DS header pressure	Alarme quittieren und Druck der Verdünnungsdampfschiene prüfen	Acquitter les alarmes et vérifier la pression du collecteur de vapeur de dilution
+Act as your procedure says and tell the right people	Nach Verfahren handeln und die richtigen Personen informieren	Agir selon la procédure et prévenir les bonnes personnes
+Act in time	Rechtzeitig handeln	Agir à temps
+Added air to a fuel-rich firebox (opened the damper or put AIC# in AUTO while O₂ was below # % or CO was high)	Luft in einen brennstoffreichen Feuerraum gegeben (Klappe geöffnet oder AIC# auf AUTO, während O₂ unter # % oder CO hoch war)	Air ajouté dans une chambre riche en combustible (registre ouvert ou AIC# en AUTO alors que O₂ était sous # % ou le CO élevé)
+After steam recovers, ramp feed back to ≥ # t/h at ≤ # t/h per minute	Nach Wiederkehr des Dampfes den Einsatz auf ≥ # t/h hochfahren, mit ≤ # t/h pro Minute	Après le retour de la vapeur, remonter la charge à ≥ # t/h à ≤ # t/h par minute
+Alarms	Alarme	Alarmes
+An upset starts. Values, trends and alarms move every second. You change setpoints, switch modes, start equipment and call people.	Eine Störung beginnt. Werte, Trends und Alarme ändern sich jede Sekunde. Sie verstellen Sollwerte, schalten Betriebsarten, starten Aggregate und rufen Leute an.	Une perturbation commence. Valeurs, tendances et alarmes bougent chaque seconde. Vous changez des consignes, des modes, démarrez des équipements et appelez des collègues.
+Another surprise shift	Noch eine Überraschungsschicht	Un autre quart surprise
+Any unit	Jede Anlage	Toute unité
+Arch O₂ %	O₂ Feuerraumdach %	O₂ voûte %
+Armed trips	Aktive Abschaltungen	Déclenchements armés
+At low steam ratio, a slightly lower COT slows coke formation. It is the second line of defence after the feed cut.	Bei niedrigem Dampfverhältnis bremst eine etwas niedrigere COT die Koksbildung. Das ist die zweite Verteidigungslinie nach der Einsatzreduzierung.	Avec un faible taux de vapeur, une COT un peu plus basse ralentit le cokage. C'est la deuxième ligne de défense après la réduction de charge.
+Automatic evaluation	Automatische Bewertung	Évaluation automatique
+Automatic scoring against the procedure, with alarms and trips that really act.	Automatische Bewertung nach Verfahren, mit Alarmen und Abschaltungen, die wirklich eingreifen.	Notation automatique selon la procédure, avec des alarmes et des déclenchements qui agissent vraiment.
+Avoid an unplanned furnace trip	Ungeplante Ofenabschaltung vermeiden	Éviter un déclenchement imprévu du four
+Avoid unnecessary feed or firing cuts	Unnötige Einsatz- oder Feuerungsreduzierung vermeiden	Éviter les réductions inutiles de charge ou de chauffe
+BFW # %	KSW # %	EAU ALIM. # %
+BFW %	KSW %	EAU ALIM. %
+BFW PUMP P#A TRIPPED	KSW-PUMPE P#A AUSGEFALLEN	POMPE EAU ALIM. P#A DÉCLENCHÉE
+BFW pump P#A trips and the auto-start of standby P#B fails.	KSW-Pumpe P#A fällt aus, und der Autostart der Reservepumpe P#B versagt.	La pompe d'eau alimentaire P#A déclenche et le démarrage automatique de la pompe de secours P#B échoue.
+BOILER FEED WATER	KESSELSPEISEWASSER	EAU ALIMENTAIRE
+Bad instrument	Defektes Messgerät	Instrument défaillant
+Band = normal range · amber tick = alarm · red tick = trip	Band = Normalbereich · gelbe Marke = Alarm · rote Marke = Abschaltung	Bande = plage normale · repère orange = alarme · repère rouge = déclenchement
+Boiler drum, compressor anti-surge	Dampftrommel, Verdichter-Pumpschutz	Ballon de chaudière, anti-pompage compresseur
+Briefing	Einweisung	Briefing
+Briefing to debrief	Von der Einweisung bis zur Nachbesprechung	Du briefing au débriefing
+Bring the real coil outlet temperature back above # °C by the end	Die echte Spaltrohraustrittstemperatur bis zum Ende wieder über # °C bringen	Ramener la vraie température de sortie de serpentin au-dessus de # °C d'ici la fin
+Built from hands-on OTS experience, on a synthetic plant.	Aus praktischer OTS-Erfahrung entwickelt, an einer synthetischen Anlage.	Construit à partir d'une expérience OTS de terrain, sur une installation synthétique.
+CDU fired heater	Röhrenofen der Rohöldestillation	Four de distillation atmosphérique
+CONVECTION	KONVEKTION	CONVECTION
+COT HIGH-HIGH (SIS)	COT SEHR HOCH (SIS)	COT TRÈS HAUTE (SIS)
+COT · TIC# °C	COT · TIC# °C	COT · TIC# °C
+CRACKED GAS	SPALTGAS	GAZ CRAQUÉ
+CRACKING	SPALTBETRIEB	CRAQUAGE
+CRACKING FURNACE TRAINER	SPALTOFEN-TRAINER	SIMULATEUR DE FOUR DE CRAQUAGE
+Call instrumentation	MSR-Techniker rufen	Appeler l'instrumentation
+Call instrumentation about TI#B	MSR-Techniker wegen TI#B rufen	Appeler l'instrumentation pour TI#B
+Cancel	Abbrechen	Annuler
+Closed the damper while O₂ was low	Klappe geschlossen, während O₂ niedrig war	Registre fermé alors que l'O₂ était bas
+Coach's note	Hinweis des Coaches	Note du coach
+Combustion safety trip: all fuel is cut and the ethane feed is stopped.	Feuerungsschutz-Abschaltung: Der gesamte Brennstoff wird abgesperrt und der Ethaneinsatz gestoppt.	Déclenchement de sécurité combustion : tout le combustible est coupé et la charge d'éthane est arrêtée.
+Cross-check pass B against the other passes and its tube metal temperature (TIC# faceplate)	Pass B mit den anderen Pässen und seiner Rohrwandtemperatur vergleichen (Bedienbild TIC#)	Comparer la passe B aux autres passes et à sa température de peau (face avant TIC#)
+Cut ethane feed because of the pass B reading	Ethaneinsatz wegen des Messwerts von Pass B reduziert	Charge d'éthane réduite à cause de la mesure de la passe B
+Cut ethane feed so the ratio stays at or above # (≤ # t/h)	Ethaneinsatz reduzieren, damit das Verhältnis bei mindestens # bleibt (≤ # t/h)	Réduire la charge d'éthane pour garder le taux à # ou plus (≤ # t/h)
+Cut firing: COT setpoint # °C or fuel ≤ # % in manual	Feuerung reduzieren: COT-Sollwert # °C oder Brennstoff ≤ # % in Hand	Réduire la chauffe : consigne COT # °C ou combustible ≤ # % en manuel
+Cut fuel first: lower the COT setpoint by at least # °C, or put TIC# in MANUAL and reduce fuel to # % or less	Zuerst Brennstoff reduzieren: COT-Sollwert um mindestens # °C senken oder TIC# auf HAND und Brennstoff auf # % oder weniger	D'abord réduire le combustible : baisser la consigne COT d'au moins # °C, ou passer TIC# en MANUEL et réduire le combustible à # % ou moins
+Cutting feed is the move that protects the coils: with less ethane, the steam you still have keeps the ratio up. Every minute below # builds coke you pay for at the next decoke.	Die Einsatzreduzierung schützt die Rohre: Mit weniger Ethan hält der verbleibende Dampf das Verhältnis oben. Jede Minute unter # baut Koks auf, den Sie beim nächsten Entkoken bezahlen.	Réduire la charge protège les serpentins : avec moins d'éthane, la vapeur restante maintient le taux. Chaque minute sous # forme du coke que vous payez au prochain décokage.
+DAMPER	KLAPPE	REGISTRE
+DILUTION STEAM	VERD.-DAMPF	VAPEUR DIL.
+DRAFT	ZUG	TIRAGE
+DRUM LEVEL LOW-LOW	TROMMELNIVEAU SEHR NIEDRIG	NIVEAU BALLON TRÈS BAS
+DS HEADER PRESSURE LOW	DRUCK VERDÜNNUNGSDAMPFSCHIENE NIEDRIG	PRESSION COLLECTEUR VAPEUR DE DILUTION BASSE
+Debrief	Nachbesprechung	Débriefing
+Design note	Hinweis zum Modell	Note de conception
+Dilution steam header pressure drops (upstream boiler problem). FIC# runs out of valve capacity; utilities restore the header later.	Der Druck der Verdünnungsdampfschiene fällt (Kesselproblem vorgelagert). FIC# erreicht seine Ventilkapazität; die Energieversorgung stellt die Schiene später wieder her.	La pression du collecteur de vapeur de dilution chute (problème de chaudière en amont). FIC# arrive en limite de vanne ; les utilités rétablissent le collecteur plus tard.
+Dilution steam keeps flowing through the coils where the design allows.	Verdünnungsdampf strömt weiter durch die Rohre, sofern die Auslegung es zulässt.	La vapeur de dilution continue de circuler dans les serpentins si la conception le permet.
+Dilution steam keeps flowing through the coils to keep them hot and protect them from thermal shock.	Verdünnungsdampf strömt weiter durch die Rohre, hält sie heiß und schützt sie vor Thermoschock.	La vapeur de dilution continue de circuler dans les serpentins pour les garder chauds et les protéger du choc thermique.
+Dilution steam loss	Ausfall Verdünnungsdampf	Perte de vapeur de dilution
+Done	Erledigt	Fait
+Late	Verspätet	En retard
+Open	Offen	Ouvert
+Draft is lost in seconds. Firebox pressure heads positive.	Der Zug bricht in Sekunden zusammen. Der Feuerraumdruck wird positiv.	Le tirage disparaît en quelques secondes. La pression de la chambre devient positive.
+Drum level %	Trommelniveau %	Niveau ballon %
+Duty pump	Betriebspumpe	Pompe en service
+ETHANE	ETHAN	ÉTHANE
+Each hint costs # points and each harmful action #. A trip caps the total at #. The full rule set per scenario opens in the Instructor view after your first try.	Jeder Tipp kostet # Punkte, jede schädliche Aktion #. Eine Abschaltung begrenzt die Summe auf #. Alle Regeln je Szenario öffnen sich in der Ausbilderansicht nach Ihrem ersten Versuch.	Chaque indice coûte # points et chaque action nuisible #. Un déclenchement plafonne le total à #. Les règles complètes de chaque scénario s'ouvrent dans la vue formateur après votre premier essai.
+End & debrief	Beenden & besprechen	Terminer & débriefer
+Engineering prototype by Madhushree Bharadwaj. Coil model with ethane cracking kinetics from Sundaram and Froment (1977), calibrated to typical published conversion; firebox, steam drum and controls are simplified. Values and trip limits are illustrative. Not a certified training system and not based on any specific plant.	Engineering-Prototyp von Madhushree Bharadwaj. Rohrmodell mit Ethan-Spaltkinetik nach Sundaram und Froment (1977), kalibriert auf typische veröffentlichte Umsätze; Feuerraum, Dampftrommel und Regelung sind vereinfacht. Werte und Abschaltgrenzen sind beispielhaft. Kein zertifiziertes Trainingssystem und keiner bestimmten Anlage nachgebildet.	Prototype d'ingénierie par Madhushree Bharadwaj. Modèle de serpentin avec la cinétique de craquage de l'éthane de Sundaram et Froment (1977), calé sur des conversions typiques publiées ; chambre de combustion, ballon et régulations sont simplifiés. Les valeurs et seuils de déclenchement sont illustratifs. Pas un système de formation certifié et basé sur aucune installation réelle.
+Ethane cracking furnace	Ethan-Spaltofen	Four de craquage d'éthane
+Ethylene # % of plan	Ethylen # % vom Plan	Éthylène # % du plan
+coke index #	Koksindex #	indice de coke #
+# hint (#)	# Tipp (#)	# indice (#)
+# hints (#)	# Tipps (#)	# indices (#)
+# harmful action (#)	# schädliche Aktion (#)	# action nuisible (#)
+# harmful actions (#)	# schädliche Aktionen (#)	# actions nuisibles (#)
+Ethylene made and coke formed	Erzeugtes Ethylen und gebildeter Koks	Éthylène produit et coke formé
+Every action is time-stamped and checked against the procedure: the right step, in time, within limits, without harmful moves.	Jede Aktion erhält einen Zeitstempel und wird gegen das Verfahren geprüft: der richtige Schritt, rechtzeitig, innerhalb der Grenzen, ohne schädliche Eingriffe.	Chaque action est horodatée et comparée à la procédure : la bonne étape, à temps, dans les limites, sans action nuisible.
+Every rule is visible so an OTS engineer can judge whether it is fair. Times are counted from the alarm named in each step. A scenario's rules open after its first try, or for reviewers from the Briefing page.	Jede Regel ist sichtbar, damit ein OTS-Ingenieur beurteilen kann, ob sie fair ist. Zeiten zählen ab dem im Schritt genannten Alarm. Die Regeln eines Szenarios öffnen sich nach dem ersten Versuch oder für Prüfer über die Einweisungsseite.	Chaque règle est visible pour qu'un ingénieur OTS puisse juger si elle est juste. Les temps sont comptés depuis l'alarme indiquée à chaque étape. Les règles d'un scénario s'ouvrent après le premier essai, ou pour les évaluateurs depuis la page de briefing.
+Exact trip actions depend on each furnace's design.	Die genauen Abschaltaktionen hängen von der Auslegung des jeweiligen Ofens ab.	Les actions exactes de déclenchement dépendent de la conception de chaque four.
+Expected step	Erwarteter Schritt	Étape attendue
+Expected steps	Erwartete Schritte	Étapes attendues
+Explained debrief	Erklärende Nachbesprechung	Débriefing expliqué
+Explore	Erkunden	Explorer
+Explore mode	Erkunden-Modus	Mode exploration
+explore mode	Erkunden-Modus	mode exploration
+Explore opens after your first try of this scenario. Run it in trainee mode first.	Erkunden öffnet sich nach Ihrem ersten Versuch dieses Szenarios. Spielen Sie es zuerst im Trainee-Modus.	Le mode exploration s'ouvre après votre premier essai de ce scénario. Jouez-le d'abord en mode stagiaire.
+FCC reactor and regenerator	FCC-Reaktor und Regenerator	Réacteur et régénérateur FCC
+FIC# DILUTION STEAM LOW FLOW	FIC# VERDÜNNUNGSDAMPF DURCHFLUSS NIEDRIG	FIC# DÉBIT VAPEUR DE DILUTION BAS
+cleared	gegangen	disparue
+FIC# · Dilution steam	FIC# · Verdünnungsdampf	FIC# · Vapeur de dilution
+FIC# · Ethane feed	FIC# · Ethaneinsatz	FIC# · Charge d'éthane
+Pass A flow	Durchfluss Pass A	Débit passe A
+Pass B flow	Durchfluss Pass B	Débit passe B
+Pass C flow	Durchfluss Pass C	Débit passe C
+Pass D flow	Durchfluss Pass D	Débit passe D
+FIC#C PASS C LOW FLOW	FIC#C PASS C DURCHFLUSS NIEDRIG	FIC#C DÉBIT PASSE C BAS
+FIREBOX PRESS HIGH-HIGH	FEUERRAUMDRUCK SEHR HOCH	PRESSION CHAMBRE TRÈS HAUTE
+FIREBOX PRESSURE HIGH	FEUERRAUMDRUCK HOCH	PRESSION CHAMBRE HAUTE
+FLUE GAS CO HIGH	RAUCHGAS CO HOCH	CO FUMÉES HAUT
+FUEL %	BRENNGAS %	COMBUSTIBLE %
+FUEL GAS	BRENNGAS	GAZ COMBUSTIBLE
+FUEL GAS DENSITY HIGH	BRENNGASDICHTE HOCH	DENSITÉ GAZ COMBUSTIBLE HAUTE
+FUEL TRIP	BRENNSTOFF-ABSCHALTUNG	DÉCLENCHEMENT COMBUSTIBLE
+FURNACE TRIPPED	OFEN ABGESCHALTET	FOUR DÉCLENCHÉ
+FEED CUT	EINSATZ AUS	COUPURE CHARGE
+FV#C does not move. The valve is stuck.	FV#C bewegt sich nicht. Das Ventil klemmt.	FV#C ne bouge pas. La vanne est bloquée.
+Faceplate	Bedienbild	Face avant
+Feed not restored, or ramped faster than # t/h per minute	Einsatz nicht wiederhergestellt oder schneller als # t/h pro Minute hochgefahren	Charge non rétablie, ou remontée plus vite que # t/h par minute
+Field & radio	Vor Ort & Funk	Terrain & radio
+Finish or end a scenario on the live furnace. You will see a score in four parts, every expected step next to what you did, and a short coaching note.	Beenden Sie ein Szenario am Live-Ofen. Sie sehen dann eine Punktzahl in vier Teilen, jeden erwarteten Schritt neben Ihrer Aktion und einen kurzen Coaching-Hinweis.	Terminez un scénario sur le four en direct. Vous verrez une note en quatre parties, chaque étape attendue face à ce que vous avez fait, et une courte remarque du coach.
+Firebox mmH₂O	Feuerraum mmH₂O	Chambre mmH₂O
+Firebox pressure mmH₂O	Feuerraumdruck mmH₂O	Pression chambre mmH₂O
+Firebox pressure or O₂ hit the trip. In this scenario you have about # seconds: damper first, then firing.	Feuerraumdruck oder O₂ hat die Abschaltung ausgelöst. In diesem Szenario haben Sie etwa # Sekunden: zuerst die Klappe, dann die Feuerung.	La pression de chambre ou l'O₂ a atteint le déclenchement. Dans ce scénario vous avez environ # secondes : d'abord le registre, ensuite la chauffe.
+Flow controller, AUTO	Durchflussregler, AUTO	Régulateur de débit, AUTO
+Flow controller, AUTO, balanced with the other passes	Durchflussregler, AUTO, abgeglichen mit den anderen Pässen	Régulateur de débit, AUTO, équilibré avec les autres passes
+Flow t/h	Durchfluss t/h	Débit t/h
+Four parts	Vier Teile	Quatre parties
+Four steps	Vier Schritte	Quatre étapes
+Fuel # %	Brennstoff # %	Combustible # %
+Fuel heating value jumps. Arch O₂ falls and CO rises. Fuel or air first?	Der Heizwert des Brenngases springt. O₂ fällt, CO steigt. Zuerst Brennstoff oder Luft?	Le pouvoir calorifique du combustible bondit. L'O₂ baisse et le CO monte. Combustible ou air d'abord ?
+Furnace kept online	Ofen in Betrieb gehalten	Four maintenu en service
+Furnace kept online.	Ofen in Betrieb gehalten.	Four maintenu en service.
+Furnace kept online. Well handled.	Ofen in Betrieb gehalten. Gut gemacht.	Four maintenu en service. Bien géré.
+Furnace not brought back to rate	Ofen nicht auf Normallast zurückgebracht	Four non ramené à pleine charge
+Furnace tripped	Ofen abgeschaltet	Four déclenché
+Furnace tripped.	Ofen abgeschaltet.	Four déclenché.
+Grey = normal · colour = abnormal · select any valve or equipment to operate it	Grau = normal · Farbe = abweichend · Ventil oder Aggregat anklicken, um es zu bedienen	Gris = normal · couleur = anormal · sélectionnez une vanne ou un équipement pour l'actionner
+HIGH	HOCH	HAUTE
+MED	MITTEL	MOY.
+INFO	INFO	INFO
+Hand air back to the O₂ controller only once O₂ and CO are back to normal, so the air comes back gradually into a clean firebox.	Geben Sie die Luft erst wieder an den O₂-Regler, wenn O₂ und CO normal sind, damit die Luft allmählich in einen sauberen Feuerraum zurückkehrt.	Rendez l'air au régulateur d'O₂ seulement quand l'O₂ et le CO sont revenus à la normale, pour que l'air revienne progressivement dans une chambre propre.
+Harmful	Schädlich	Nuisible
+Harmful actions (# each)	Schädliche Aktionen (je #)	Actions nuisibles (# chacune)
+Heavier components enter the fuel gas header. Heating value rises by about # % within a minute.	Schwerere Komponenten gelangen in die Brenngasschiene. Der Heizwert steigt innerhalb einer Minute um etwa # %.	Des composants plus lourds entrent dans le collecteur de gaz combustible. Le pouvoir calorifique augmente d'environ # % en une minute.
+Highest tube metal °C	Höchste Rohrwandtemperatur °C	Température de peau max. °C
+Hint (#)	Tipp (#)	Indice (#)
+Horn off	Hupe aus	Klaxon coupé
+Horn on	Hupe an	Klaxon actif
+Horn silenced. The alarms stay unacknowledged until you acknowledge them.	Hupe stummgeschaltet. Die Alarme bleiben unquittiert, bis Sie sie quittieren.	Klaxon coupé. Les alarmes restent non acquittées jusqu'à ce que vous les acquittiez.
+How each scenario is scored	Wie jedes Szenario bewertet wird	Comment chaque scénario est noté
+ID FAN K#	SAUGZUG K#	VENTILATEUR K#
+ID FAN K# TRIPPED	SAUGZUGGEBLÄSE K# AUSGEFALLEN	VENTILATEUR DE TIRAGE K# DÉCLENCHÉ
+ID fan trip	Ausfall Saugzuggebläse	Déclenchement du ventilateur de tirage
+If level falls below # %, cut feed to ≤ # t/h	Wenn das Niveau unter # % fällt, Einsatz auf ≤ # t/h reduzieren	Si le niveau passe sous # %, réduire la charge à ≤ # t/h
+Inform shift supervisor	Schichtleiter informieren	Prévenir le chef de quart
+Inform the shift supervisor	Den Schichtleiter informieren	Prévenir le chef de quart
+Initial state	Ausgangszustand	État initial
+Initiating event	Auslösendes Ereignis	Événement initiateur
+Instructor view	Ausbilderansicht	Vue formateur
+Instrumentation: "Noted. We will check that loop."	MSR: „Notiert. Wir prüfen den Kreis.“	Instrumentation : « Noté. Nous vérifions cette boucle. »
+Instrumentation: "TI#B has no BAD status but reads far above its neighbours: likely a drifting or damaged thermocouple. Keep it out of control; we will check it."	MSR: „TI#B hat keinen BAD-Status, liegt aber weit über den Nachbarn: wahrscheinlich ein driftendes oder beschädigtes Thermoelement. Aus der Regelung nehmen, wir prüfen es.“	Instrumentation : « TI#B n'a pas de statut BAD mais lit bien au-dessus des voisins : thermocouple probablement en dérive ou endommagé. Sortez-le de la régulation, nous allons le vérifier. »
+Interlock acted	Verriegelung hat ausgelöst	Le verrouillage a agi
+Is it real?	Echt oder nicht?	Vrai ou faux ?
+It was scenario #	Es war Szenario #	C'était le scénario #
+Keep COT within #–# °C	COT zwischen #–# °C halten	Garder la COT entre #–# °C
+Keep arch O₂ above # % (trip below # %)	O₂ am Feuerraumdach über # % halten (Abschaltung unter # %)	Garder l'O₂ en voûte au-dessus de # % (déclenchement sous # %)
+Keep arch O₂ above the trip	O₂ am Feuerraumdach über der Abschaltgrenze halten	Garder l'O₂ en voûte au-dessus du déclenchement
+Keep drum level above the trip (# %)	Trommelniveau über der Abschaltgrenze halten (# %)	Garder le niveau du ballon au-dessus du déclenchement (# %)
+Keep every pass above the low-low flow trip (# %)	Jeden Pass über der Durchfluss-Abschaltgrenze halten (# %)	Garder chaque passe au-dessus du déclenchement débit très bas (# %)
+Keep firebox pressure below # mmH₂O	Feuerraumdruck unter # mmH₂O halten	Garder la pression de chambre sous # mmH₂O
+Keep steam/ethane ratio above the trip (#)	Dampf/Ethan-Verhältnis über der Abschaltgrenze halten (#)	Garder le taux vapeur/éthane au-dessus du déclenchement (#)
+Keep the furnace online	Den Ofen in Betrieb halten	Garder le four en service
+Keep the real coil outlet temperature near # °C	Die echte Spaltrohraustrittstemperatur nahe # °C halten	Garder la vraie température de sortie de serpentin vers # °C
+Keep tube-metal temperatures below # °C	Rohrwandtemperaturen unter # °C halten	Garder les températures de peau sous # °C
+LEVEL %	NIVEAU %	NIVEAU %
+LIC# · Steam drum level	LIC# · Dampftrommelniveau	LIC# · Niveau du ballon de vapeur
+Later	Später	Plus tard
+Less feed means less steam generated in the TLE, which slows the level drop.	Weniger Einsatz bedeutet weniger Dampferzeugung im Spaltgaskühler, das verlangsamt den Niveauabfall.	Moins de charge signifie moins de vapeur produite dans l'échangeur de trempe, ce qui ralentit la baisse du niveau.
+Less fuel means less flue gas to remove. Cutting firing is what brings the pressure back under the trip.	Weniger Brennstoff bedeutet weniger abzuführendes Rauchgas. Die Feuerungsreduzierung bringt den Druck wieder unter die Abschaltgrenze.	Moins de combustible signifie moins de fumées à évacuer. Réduire la chauffe ramène la pression sous le déclenchement.
+Level control on boiler feed water, capacity # % of one pump	Niveauregelung über Kesselspeisewasser, Kapazität # % einer Pumpe	Régulation de niveau sur l'eau alimentaire, capacité # % d'une pompe
+Limit coking: keep the ratio at or above #	Koksbildung begrenzen: Verhältnis bei mindestens # halten	Limiter le cokage : garder le taux à # ou plus
+Limit crossed	Grenze überschritten	Limite franchie
+Live furnace	Live-Ofen	Four en direct
+Live process response, not a quiz: your actions change the plant.	Echte Prozessreaktion statt Quiz: Ihre Aktionen verändern die Anlage.	Réponse du procédé en direct, pas un quiz : vos actions changent l'installation.
+Lock again	Wieder sperren	Reverrouiller
+Locked	Gesperrt	Verrouillé
+Low O₂ with rising CO means unburned fuel is already in the firebox. Cut fuel first and let O₂ recover. Opening the damper fast can let fresh air meet that hot fuel: the usual reflex, and the dangerous one.	Niedriger O₂-Wert bei steigendem CO bedeutet: Unverbrannter Brennstoff ist schon im Feuerraum. Zuerst Brennstoff reduzieren und O₂ erholen lassen. Schnelles Öffnen der Klappe kann frische Luft auf diesen heißen Brennstoff treffen lassen: der übliche Reflex, und der gefährliche.	Un O₂ bas avec un CO qui monte signifie que du combustible imbrûlé est déjà dans la chambre. Réduisez d'abord le combustible et laissez l'O₂ remonter. Ouvrir vite le registre peut mettre de l'air frais au contact de ce combustible chaud : le réflexe habituel, et le dangereux.
+Lower COT setpoint ≥ # °C or cut feed while tube metal is high	COT-Sollwert um ≥ # °C senken oder Einsatz reduzieren, solange die Rohrwand heiß ist	Baisser la consigne COT de ≥ # °C ou réduire la charge tant que la peau est chaude
+Lower the COT setpoint by at least # °C while steam is short	COT-Sollwert um mindestens # °C senken, solange Dampf fehlt	Baisser la consigne COT d'au moins # °C tant que la vapeur manque
+Lowered the COT setpoint because of the pass B reading	COT-Sollwert wegen des Messwerts von Pass B gesenkt	Consigne COT baissée à cause de la mesure de la passe B
+Lowered the steam ratio setpoint during a steam shortage	Sollwert des Dampfverhältnisses bei Dampfmangel gesenkt	Consigne du taux de vapeur baissée pendant un manque de vapeur
+MAN	HAND	MAN
+Maintenance: "Work order raised."	Instandhaltung: „Auftrag ist angelegt.“	Maintenance : « Ordre de travail créé. »
+Max tube metal °C	Max. Rohrwandtemperatur °C	Peau max. °C
+Missed	Versäumt	Manqué
+Modes: explore and trainee	Modi: Erkunden und Trainee	Modes : exploration et stagiaire
+EXCELLENT	SEHR GUT	EXCELLENT
+COMPETENT	KOMPETENT	COMPÉTENT
+NEEDS PRACTICE	MEHR ÜBUNG NÖTIG	À ENTRAÎNER
+NOT YET	NOCH NICHT	PAS ENCORE
+Next	Weiter	Suivant
+No action	Keine Aktion	Aucune action
+No active alarms.	Keine aktiven Alarme.	Aucune alarme active.
+No open step right now. Watch the alarms.	Gerade kein offener Schritt. Beobachten Sie die Alarme.	Aucune étape ouverte pour l'instant. Surveillez les alarmes.
+No procedure on screen. Your actions are scored against it.	Kein Verfahren auf dem Bildschirm. Ihre Aktionen werden daran gemessen.	Pas de procédure à l'écran. Vos actions sont notées par rapport à elle.
+Normal operation at # t/h ethane. All loops in AUTO. FIC# runs in ratio control at #.	Normalbetrieb mit # t/h Ethan. Alle Regelkreise in AUTO. FIC# fährt Verhältnisregelung auf #.	Marche normale à # t/h d'éthane. Toutes les boucles en AUTO. FIC# est en régulation de rapport à #.
+Normal operation at # t/h ethane. TIC# controls the average of the four pass outlet thermocouples TI#A to D.	Normalbetrieb mit # t/h Ethan. TIC# regelt auf den Mittelwert der vier Pass-Austrittsthermoelemente TI#A bis D.	Marche normale à # t/h d'éthane. TIC# régule sur la moyenne des quatre thermocouples de sortie de passe TI#A à D.
+Normal operation at # t/h ethane. Take over the board. Something will happen; nobody knows when.	Normalbetrieb mit # t/h Ethan. Übernehmen Sie die Warte. Etwas wird passieren, niemand weiß wann.	Marche normale à # t/h d'éthane. Prenez le pupitre. Quelque chose va arriver ; personne ne sait quand.
+Normal operation. ID fan K# running, damper in AUTO via AIC#, draft about # mmH₂O.	Normalbetrieb. Saugzuggebläse K# läuft, Klappe in AUTO über AIC#, Zug etwa # mmH₂O.	Marche normale. Ventilateur K# en marche, registre en AUTO via AIC#, tirage environ # mmH₂O.
+Normal operation. O₂ controller AIC# left in MANUAL after an analyzer calibration, damper at # %.	Normalbetrieb. O₂-Regler AIC# steht nach einer Analysatorkalibrierung noch in HAND, Klappe bei # %.	Marche normale. Régulateur d'O₂ AIC# laissé en MANUEL après un étalonnage d'analyseur, registre à # %.
+Normal operation. Pass flows FIC#A to D in AUTO, balanced at about # t/h each.	Normalbetrieb. Passdurchflüsse FIC#A bis D in AUTO, abgeglichen auf je etwa # t/h.	Marche normale. Débits de passe FIC#A à D en AUTO, équilibrés à environ # t/h chacun.
+Normal operation. Steam drum V# at # %, LIC# in AUTO. BFW pump P#A running, P#B on auto-standby.	Normalbetrieb. Dampftrommel V# bei # %, LIC# in AUTO. KSW-Pumpe P#A läuft, P#B in automatischer Reserve.	Marche normale. Ballon V# à # %, LIC# en AUTO. Pompe d'eau alimentaire P#A en marche, P#B en secours automatique.
+Not for surprise shifts	Nicht für Überraschungsschichten	Pas pour les quarts surprise
+Not needed	Nicht nötig	Pas nécessaire
+Nothing trips, but acting on a false reading cuts production for no reason. Cross-check before you act.	Nichts schaltet ab, aber wer auf einen falschen Messwert reagiert, senkt die Produktion ohne Grund. Erst vergleichen, dann handeln.	Rien ne déclenche, mais agir sur une fausse mesure réduit la production sans raison. Recoupez avant d'agir.
+Notify maintenance	Instandhaltung informieren	Prévenir la maintenance
+Notify maintenance about P#A and the failed auto-start	Instandhaltung über P#A und den fehlgeschlagenen Autostart informieren	Prévenir la maintenance pour P#A et le démarrage automatique raté
+Notify utilities	Energieversorgung informieren	Prévenir les utilités
+Notify utilities about the fuel gas quality	Energieversorgung über die Brenngasqualität informieren	Prévenir les utilités de la qualité du gaz combustible
+Notify utilities about the steam header	Energieversorgung über die Dampfschiene informieren	Prévenir les utilités pour le collecteur de vapeur
+Now	Jetzt	Maintenant
+Objectives given to the trainee	Ziele für den Trainee	Objectifs donnés au stagiaire
+One method	Eine Methode	Une méthode
+One pass starving	Ein Pass unterversorgt	Une passe sous-alimentée
+One reading jumps while the rest of the furnace says otherwise. Process upset or bad instrument?	Ein Messwert springt, während der Rest des Ofens etwas anderes sagt. Prozessstörung oder defektes Messgerät?	Une mesure saute alors que le reste du four dit autre chose. Perturbation du procédé ou instrument défaillant ?
+Open for this scenario	Für dieses Szenario offen	Ouvert pour ce scénario
+Open the FIC#C faceplate and check the valve	Bedienbild FIC#C öffnen und das Ventil prüfen	Ouvrir la face avant FIC#C et vérifier la vanne
+Open the live furnace →	Live-Ofen öffnen →	Ouvrir le four en direct →
+Open the stack damper fully (≥ # %)	Rauchgasklappe voll öffnen (≥ # %)	Ouvrir complètement le registre de cheminée (≥ # %)
+Opens after your first try	Öffnet sich nach Ihrem ersten Versuch	S'ouvre après votre premier essai
+Operator trainer	Bedienertrainer	Simulateur opérateur
+Output and flow do not match: FV#C is not responding.	Stellgröße und Durchfluss passen nicht zusammen: FV#C reagiert nicht.	Sortie et débit ne correspondent pas : FV#C ne répond pas.
+Overview · key indicators against normal range, alarm and trip	Übersicht · wichtige Größen gegen Normalbereich, Alarm und Abschaltung	Vue d'ensemble · indicateurs clés face à la plage normale, l'alarme et le déclenchement
+O₂ fell below the low-low limit and the fuel was cut. Cutting fuel early is what keeps the furnace out of this state.	O₂ fiel unter die Sehr-niedrig-Grenze und der Brennstoff wurde abgesperrt. Frühes Reduzieren des Brennstoffs hält den Ofen aus diesem Zustand heraus.	L'O₂ est passé sous la limite très basse et le combustible a été coupé. Réduire tôt le combustible évite d'en arriver là.
+P#A · BFW pump	P#A · KSW-Pumpe	P#A · Pompe d'eau alimentaire
+P#B · BFW pump	P#B · KSW-Pumpe	P#B · Pompe d'eau alimentaire
+P#B start command sent.	Startbefehl an P#B gesendet.	Ordre de démarrage envoyé à P#B.
+P#B is already starting or running.	P#B startet bereits oder läuft.	P#B démarre déjà ou est en marche.
+PARTIAL TRIP	TEILABSCHALTUNG	DÉCLENCHEMENT PARTIEL
+STEAM ON	DAMPF AN	VAPEUR MAINTENUE
+PASS COIL OUTLET TEMP HIGH	PASS-AUSTRITTSTEMPERATUR HOCH	TEMP. SORTIE DE PASSE HAUTE
+PASS COIL OUTLET TEMP LOW	PASS-AUSTRITTSTEMPERATUR NIEDRIG	TEMP. SORTIE DE PASSE BASSE
+PASS FLOW LOW-LOW	PASSDURCHFLUSS SEHR NIEDRIG	DÉBIT DE PASSE TRÈS BAS
+PROCESSGUARD	PROCESSGUARD	PROCESSGUARD
+PV = average of all four pass thermocouples TI#A–D in use. Output to fuel gas PIC#.	PV = Mittelwert aller vier Pass-Thermoelemente TI#A–D. Ausgang auf Brenngas PIC#.	PV = moyenne des quatre thermocouples de passe TI#A–D. Sortie vers le gaz combustible PIC#.
+PV = average of # pass thermocouples TI#A–D in use. Output to fuel gas PIC#.	PV = Mittelwert von # Pass-Thermoelementen TI#A–D. Ausgang auf Brenngas PIC#.	PV = moyenne de # thermocouples de passe TI#A–D. Sortie vers le gaz combustible PIC#.
+Pass	Pass	Passe
+Pass B outlet thermocouple TI#B drifts high (time-compressed here: about # °C in two and a half minutes) but stays inside its range, so the DCS shows no BAD status. TIC# sees a false rise in the average and cuts fuel, so the real coil outlet temperature falls. The process itself is healthy.	Das Austrittsthermoelement TI#B von Pass B driftet nach oben (hier zeitlich gerafft: etwa # °C in zweieinhalb Minuten), bleibt aber im Messbereich, daher zeigt das PLS keinen BAD-Status. TIC# sieht einen falschen Anstieg im Mittelwert und reduziert Brennstoff, also fällt die echte Austrittstemperatur. Der Prozess selbst ist in Ordnung.	Le thermocouple de sortie TI#B de la passe B dérive vers le haut (accéléré ici : environ # °C en deux minutes et demie) mais reste dans sa plage, donc le SNCC n'affiche pas de statut BAD. TIC# voit une fausse hausse de la moyenne et réduit le combustible : la vraie température de sortie baisse. Le procédé lui-même est sain.
+Pass B read about # °C above the others while its tube metal temperature, its flow and the SIS sensors stayed normal, and the other three passes fell. A reading that disagrees with everything around it is usually the instrument.	Pass B lag etwa # °C über den anderen, während Rohrwandtemperatur, Durchfluss und SIS-Sensoren normal blieben und die anderen drei Pässe fielen. Ein Messwert, der allem um ihn herum widerspricht, ist meist das Messgerät.	La passe B lisait environ # °C au-dessus des autres alors que sa température de peau, son débit et les capteurs SIS restaient normaux, et que les trois autres passes baissaient. Une mesure qui contredit tout ce qui l'entoure, c'est généralement l'instrument.
+Pass control valve FV#C sticks and slowly creeps closed. It does not respond from the control room; only a field operator can free it.	Das Passregelventil FV#C klemmt und schließt langsam. Es reagiert nicht aus der Warte; nur ein Anlagenfahrer vor Ort kann es lösen.	La vanne de passe FV#C se bloque et se ferme lentement. Elle ne répond pas depuis la salle de contrôle ; seul un opérateur terrain peut la débloquer.
+Pass flow not restored or setpoints left reduced	Passdurchfluss nicht wiederhergestellt oder Sollwerte reduziert gelassen	Débit de passe non rétabli ou consignes laissées réduites
+Passes are balanced; flow controller keeps its setpoint.	Die Pässe sind abgeglichen; der Durchflussregler hält seinen Sollwert.	Les passes sont équilibrées ; le régulateur de débit tient sa consigne.
+Plant state and limits are given up front. In trainee mode the procedure is not: like on a real shift, you have to know it.	Anlagenzustand und Grenzen werden vorab genannt. Im Trainee-Modus das Verfahren nicht: Wie in einer echten Schicht müssen Sie es kennen.	L'état de l'installation et les limites sont donnés au départ. En mode stagiaire, pas la procédure : comme en vrai quart, vous devez la connaître.
+Points, scored automatically	Punkte, automatisch bewertet	Points, notés automatiquement
+Procedure	Verfahren	Procédure
+ProcessGuard · operator training	ProcessGuard · Bedienerschulung	ProcessGuard · formation des opérateurs
+Production	Produktion	Production
+Protect the TLE from running dry	Den Spaltgaskühler vor dem Trockenlaufen schützen	Protéger l'échangeur de trempe de l'assèchement
+RADIANT	STRAHLUNG	RADIATION
+RADIANT · # PASSES · FLOOR BURNERS	STRAHLUNGSZONE · # PÄSSE · BODENBRENNER	RADIATION · # PASSES · BRÛLEURS DE SOLE
+RATIO	VERHÄLTNIS	RAPPORT
+RATIO SP	VERHÄLTNIS SP	RAPPORT SP
+RULES	REGELN	RÈGLES
+RUN	LÄUFT	MARCHE
+Raised ethane feed while the steam ratio was low	Ethaneinsatz erhöht, während das Dampfverhältnis niedrig war	Charge d'éthane augmentée alors que le taux de vapeur était bas
+Raised feed while drum level was low	Einsatz erhöht, während das Trommelniveau niedrig war	Charge augmentée alors que le niveau du ballon était bas
+Raised firing while O₂ was low	Feuerung erhöht, während O₂ niedrig war	Chauffe augmentée alors que l'O₂ était bas
+Raised firing while the fan was down	Feuerung erhöht, während das Gebläse stand	Chauffe augmentée alors que le ventilateur était arrêté
+Raised the COT setpoint while tube metal was high	COT-Sollwert erhöht, während die Rohrwand heiß war	Consigne COT augmentée alors que la peau était chaude
+Ramp back slowly once steam returns. A fast feed increase can overshoot the ratio controller and dip the ratio again.	Fahren Sie nach Wiederkehr des Dampfes langsam hoch. Eine schnelle Einsatzerhöhung kann den Verhältnisregler überschwingen lassen und das Verhältnis erneut absenken.	Remontez doucement quand la vapeur revient. Une hausse rapide de charge peut faire dépasser le régulateur de rapport et refaire baisser le taux.
+Ratio SP #	Verhältnis SP #	Rapport SP #
+Ratio control on ethane feed.	Verhältnisregelung auf den Ethaneinsatz.	Régulation de rapport sur la charge d'éthane.
+Valve capacity available	Ventilkapazität verfügbar	Capacité de vanne disponible
+Valve capacity at its limit	Ventilkapazität am Anschlag	Capacité de vanne en butée
+Real COT left away from # °C, so ethylene was lost	Echte COT blieb von # °C entfernt, dadurch ging Ethylen verloren	La vraie COT est restée loin de # °C, donc de l'éthylène a été perdu
+Reduce ethane feed to match firing (≤ # t/h)	Ethaneinsatz an die Feuerung anpassen (≤ # t/h)	Réduire la charge d'éthane selon la chauffe (≤ # t/h)
+Response	Reaktion	Réactivité
+Restart	Neustart	Recommencer
+Restart as soon as the cool-down ends, then bring the furnace back in steps.	Neu starten, sobald die Abkühlzeit vorbei ist, dann den Ofen schrittweise zurückfahren.	Redémarrez dès la fin du refroidissement, puis ramenez le four par paliers.
+Restart the ID fan when available	Saugzuggebläse neu starten, sobald möglich	Redémarrer le ventilateur dès que possible
+Restart the fan and recover the furnace	Gebläse neu starten und den Ofen zurückfahren	Redémarrer le ventilateur et rétablir le four
+Restore COT and feed setpoints once the pass flow is back	COT- und Einsatzsollwerte wiederherstellen, sobald der Passdurchfluss zurück ist	Rétablir les consignes COT et charge quand le débit de passe est revenu
+Restore feed and COT after the fan is back	Einsatz und COT wiederherstellen, wenn das Gebläse läuft	Rétablir la charge et la COT quand le ventilateur est revenu
+Result	Ergebnis	Résultat
+Return AIC# to AUTO only after O₂ is back above # % and CO is normal	AIC# erst wieder auf AUTO, wenn O₂ über # % liegt und CO normal ist	Remettre AIC# en AUTO seulement quand l'O₂ est au-dessus de # % et le CO normal
+Reviewer view is on: every procedure and rule is visible in this browser.	Prüferansicht aktiv: Alle Verfahren und Regeln sind in diesem Browser sichtbar.	Vue évaluateur active : toutes les procédures et règles sont visibles dans ce navigateur.
+Reviewing this demo for an OTS or hiring team?	Prüfen Sie diese Demo für ein OTS- oder Recruiting-Team?	Vous évaluez cette démo pour une équipe OTS ou de recrutement ?
+Rich fuel gas	Reiches Brenngas	Gaz combustible riche
+Rule-based debrief. Each rule is listed in the Instructor view.	Regelbasierte Nachbesprechung. Jede Regel steht in der Ausbilderansicht.	Débriefing à base de règles. Chaque règle figure dans la vue formateur.
+Run scenario # now →	Szenario # jetzt starten →	Lancer le scénario # →
+Running	Läuft	En marche
+S/HC LOW-LOW	D/KW SEHR NIEDRIG	V/HC TRÈS BAS
+S/HC ratio	D/KW-Verhältnis	Rapport V/HC
+SHIFT	SCHICHT	QUART
+STACK · ID FAN	KAMIN · SAUGZUG	CHEMINÉE · VENTILATEUR
+STATUS	STATUS	ÉTAT
+STEAM / ETHANE RATIO LOW	DAMPF/ETHAN-VERHÄLTNIS NIEDRIG	RAPPORT VAPEUR/ÉTHANE BAS
+STEAM DRUM	DAMPFTROMMEL	BALLON DE VAPEUR
+STEAM DRUM LEVEL LOW	DAMPFTROMMELNIVEAU NIEDRIG	NIVEAU BALLON DE VAPEUR BAS
+STEAM DRUM V#	DAMPFTROMMEL V#	BALLON V#
+Safety	Sicherheit	Sécurité
+Safety #: zero on a trip, otherwise reduced by time in high-priority alarm. Procedure #: done = full, late = half. Response #: full within the key window, falling to zero at three times the window. Production #: ethylene made against plan, minus coke formed. Hints #, harmful actions #, trip caps the total at #.	Sicherheit #: null bei Abschaltung, sonst reduziert durch die Zeit in Alarmen hoher Priorität. Verfahren #: erledigt = voll, verspätet = halb. Reaktion #: voll innerhalb des Schlüsselfensters, null beim Dreifachen des Fensters. Produktion #: erzeugtes Ethylen gegenüber Plan, abzüglich Koks. Tipps #, schädliche Aktionen #, Abschaltung begrenzt die Summe auf #.	Sécurité # : zéro en cas de déclenchement, sinon réduite par le temps en alarme haute priorité. Procédure # : fait = complet, en retard = moitié. Réactivité # : complète dans la fenêtre clé, nulle à trois fois la fenêtre. Production # : éthylène produit par rapport au plan, moins le coke formé. Indices #, actions nuisibles #, un déclenchement plafonne le total à #.
+Scenario	Szenario	Scénario
+Scenario #	Szenario #	Scénario #
+Scenario complete	Szenario beendet	Scénario terminé
+Scenario ends	Szenario endet	Fin du scénario
+Scenario hidden until the debrief	Szenario bis zur Nachbesprechung verborgen	Scénario caché jusqu'au débriefing
+Scenario reset to steady state.	Szenario auf stationären Zustand zurückgesetzt.	Scénario remis en régime établi.
+Scenarios # to # end in a trip if you wait too long. Scenario # has no trip: it tests whether you believe a drifting instrument. The surprise shift picks one at random and hides its name.	Die Szenarien # bis # enden in einer Abschaltung, wenn Sie zu lange warten. Szenario # hat keine Abschaltung: Es prüft, ob Sie einem driftenden Messgerät glauben. Die Überraschungsschicht wählt eins zufällig und verbirgt den Namen.	Les scénarios # à # finissent en déclenchement si vous attendez trop. Le scénario # n'a pas de déclenchement : il teste si vous croyez un instrument qui dérive. Le quart surprise en choisit un au hasard et cache son nom.
+Scenarios, plus a surprise shift	Szenarien plus eine Überraschungsschicht	Scénarios, plus un quart surprise
+Scoring	Bewertung	Notation
+Scoring rules	Bewertungsregeln	Règles de notation
+See the debrief →	Zur Nachbesprechung →	Voir le débriefing →
+Selected: surprise shift. The scenario stays hidden until the debrief.	Ausgewählt: Überraschungsschicht. Das Szenario bleibt bis zur Nachbesprechung verborgen.	Sélectionné : quart surprise. Le scénario reste caché jusqu'au débriefing.
+procedure opens after your first try	Verfahren öffnet sich nach Ihrem ersten Versuch	procédure ouverte après votre premier essai
+Send a field operator to FV#C	Anlagenfahrer zu FV#C schicken	Envoyer un opérateur terrain à FV#C
+Show all procedures	Alle Verfahren zeigen	Afficher toutes les procédures
+Show everything	Alles zeigen	Tout afficher
+Silence	Stumm	Silence
+Small regions	Kleine Bereiche	Petites zones
+Standby	Reserve	Secours
+Standby. Auto-start armed	Reserve. Autostart bereit	Secours. Démarrage auto armé
+Standby. Auto-start failed	Reserve. Autostart fehlgeschlagen	Secours. Démarrage auto en échec
+Start from the alarm: the faceplate shows the valve output is not matching the flow. That tells you it is mechanical.	Beginnen Sie beim Alarm: Das Bedienbild zeigt, dass Ventilstellung und Durchfluss nicht zusammenpassen. Das deutet auf ein mechanisches Problem.	Partez de l'alarme : la face avant montre que la sortie de vanne ne correspond pas au débit. C'est donc mécanique.
+Start pump	Pumpe starten	Démarrer la pompe
+Start standby BFW pump P#B	Reserve-KSW-Pumpe P#B starten	Démarrer la pompe d'eau alimentaire de secours P#B
+Start the scenario first.	Bitte zuerst das Szenario starten.	Démarrez d'abord le scénario.
+Starting	Startet	Démarrage
+Stay inside the alarm and trip limits	Innerhalb der Alarm- und Abschaltgrenzen bleiben	Rester dans les limites d'alarme et de déclenchement
+Steam / ethane ratio	Dampf/Ethan-Verhältnis	Rapport vapeur/éthane
+Steam drum level %	Dampftrommelniveau %	Niveau ballon %
+Steam drum level low	Dampftrommelniveau niedrig	Niveau du ballon de vapeur bas
+Steam-to-ethane ratio falls. Coking starts and the ratio trip gets close.	Das Dampf/Ethan-Verhältnis fällt. Die Verkokung beginnt, und die Verhältnis-Abschaltung rückt näher.	Le rapport vapeur/éthane baisse. Le cokage commence et le déclenchement sur rapport approche.
+Step	Schritt	Étape
+Steps done, done late or missed	Schritte erledigt, verspätet oder versäumt	Étapes faites, en retard ou manquées
+Supervisor: "Thanks. Keep me posted."	Schichtleiter: „Danke. Halten Sie mich auf dem Laufenden.“	Chef de quart : « Merci. Tenez-moi au courant. »
+Surprise shift	Überraschungsschicht	Quart surprise
+trainee mode	Trainee-Modus	mode stagiaire
+it was scenario #	es war Szenario #	c'était le scénario #
+TIC# COT	TIC# COT	TIC# COT
+TIC# PV, average COT °C	TIC# PV, mittlere COT °C	TIC# PV, COT moyenne °C
+TIC# output to fuel %	TIC# Ausgang Brennstoff %	TIC# sortie combustible %
+TIC# · Coil outlet temperature	TIC# · Spaltrohraustrittstemperatur	TIC# · Température de sortie de serpentin
+TLE	SPALTGASKÜHLER	ÉCH. DE TREMPE
+TLE E#	SPALTGASKÜHLER E#	ÉCH. DE TREMPE E#
+TMT #	TMT #	TMT #
+TMT °C	TMT °C	TMT °C
+TRIPPED	ABGESCHALTET	DÉCLENCHÉ
+TUBE METAL TEMPERATURE HIGH	ROHRWANDTEMPERATUR HOCH	TEMPÉRATURE DE PEAU HAUTE
+Take TI#B out of the COT average, or put TIC# in MANUAL	TI#B aus dem COT-Mittelwert nehmen oder TIC# auf HAND schalten	Sortir TI#B de la moyenne COT, ou passer TIC# en MANUEL
+Take the bad signal out of control first: deselect TI#B from the average or put TIC# in manual. Every minute it stays in, the controller keeps cutting fuel for a temperature that does not exist.	Nehmen Sie das falsche Signal zuerst aus der Regelung: TI#B aus dem Mittelwert abwählen oder TIC# auf Hand. Jede Minute, die es drin bleibt, reduziert der Regler Brennstoff für eine Temperatur, die es nicht gibt.	Sortez d'abord le mauvais signal de la régulation : désélectionnez TI#B de la moyenne ou passez TIC# en manuel. Chaque minute où il reste, le régulateur réduit le combustible pour une température qui n'existe pas.
+Take the operator's seat on a synthetic ethane cracking furnace. Six situations, alarms and trips that act on their own, and a debrief that explains every decision you made.	Übernehmen Sie die Warte eines synthetischen Ethan-Spaltofens. Sechs Situationen, Alarme und Abschaltungen, die selbst eingreifen, und eine Nachbesprechung, die jede Ihrer Entscheidungen erklärt.	Prenez la place de l'opérateur d'un four de craquage d'éthane synthétique. Six situations, des alarmes et déclenchements qui agissent seuls, et un débriefing qui explique chacune de vos décisions.
+Take the shift	Schicht übernehmen	Prendre le quart
+Tell a real upset from a bad measurement	Echte Störung von falscher Messung unterscheiden	Distinguer une vraie perturbation d'une mauvaise mesure
+The ID fan motor trips. The fan can be restarted after a #-second motor cool-down.	Der Motor des Saugzuggebläses löst aus. Das Gebläse kann nach einer Motor-Abkühlzeit von # Sekunden neu gestartet werden.	Le moteur du ventilateur de tirage déclenche. Le ventilateur peut redémarrer après un refroidissement moteur de # secondes.
+The cause is upstream. Utilities need to know the fuel gas changed.	Die Ursache liegt vorgelagert. Die Energieversorgung muss wissen, dass sich das Brenngas geändert hat.	La cause est en amont. Les utilités doivent savoir que le gaz combustible a changé.
+The drum level reached the low-low trip, which shuts the furnace to protect the TLE tubes.	Das Trommelniveau erreichte die Sehr-niedrig-Abschaltung, die den Ofen zum Schutz der Spaltgaskühlerrohre abschaltet.	Le niveau du ballon a atteint le déclenchement très bas, qui arrête le four pour protéger les tubes de l'échangeur de trempe.
+The expected steps, time windows and harmful actions stay hidden until you have run this scenario for at least a minute, or until it trips. That keeps the first attempt a real test.	Erwartete Schritte, Zeitfenster und schädliche Aktionen bleiben verborgen, bis Sie dieses Szenario mindestens eine Minute gespielt haben oder es abschaltet. So bleibt der erste Versuch ein echter Test.	Les étapes attendues, fenêtres de temps et actions nuisibles restent cachées tant que vous n'avez pas joué ce scénario au moins une minute, ou jusqu'au déclenchement. Le premier essai reste ainsi un vrai test.
+The fix is a new thermocouple. Instrumentation needs to know so the signal is repaired and not just bypassed.	Die Lösung ist ein neues Thermoelement. Die MSR-Technik muss es wissen, damit das Signal repariert und nicht nur überbrückt wird.	La solution est un nouveau thermocouple. L'instrumentation doit le savoir pour réparer le signal et pas seulement le contourner.
+The furnace	Der Ofen	Le four
+The furnace at a glance	Der Ofen auf einen Blick	Le four en un coup d'œil
+The furnace tripped. In this scenario nothing in the process required a trip: check which action drove it there.	Der Ofen hat abgeschaltet. In diesem Szenario hat der Prozess keine Abschaltung verlangt: Prüfen Sie, welche Aktion dazu geführt hat.	Le four a déclenché. Dans ce scénario rien dans le procédé n'exigeait un déclenchement : vérifiez quelle action l'a provoqué.
+The interlock acts on its own: a partial trip (feed cut, firing reduced, steam kept on the coils) or a full fuel trip for combustion hazards.	Die Verriegelung greift selbst ein: eine Teilabschaltung (Einsatz aus, Feuerung reduziert, Dampf bleibt auf den Rohren) oder eine vollständige Brennstoffabschaltung bei Feuerungsgefahren.	Le verrouillage agit seul : un déclenchement partiel (charge coupée, chauffe réduite, vapeur maintenue dans les serpentins) ou un déclenchement complet du combustible pour les risques de combustion.
+The pass kept starving until a trip acted on high outlet temperature or low-low flow. Only the field fix stops the drift.	Der Pass wurde weiter unterversorgt, bis eine Abschaltung wegen hoher Austrittstemperatur oder sehr niedrigem Durchfluss eingriff. Nur die Reparatur vor Ort stoppt das.	La passe a continué de manquer de débit jusqu'à un déclenchement sur température de sortie haute ou débit très bas. Seule l'intervention terrain arrête la dérive.
+The procedure and the scoring rules for each scenario open after your first try, so the first attempt stays a real test.	Verfahren und Bewertungsregeln jedes Szenarios öffnen sich nach Ihrem ersten Versuch, damit der erste Versuch ein echter Test bleibt.	La procédure et les règles de notation de chaque scénario s'ouvrent après votre premier essai, pour que le premier essai reste un vrai test.
+The procedure is shown and ticks off as you go. Pause any time.	Das Verfahren wird angezeigt und abgehakt. Jederzeit pausieren.	La procédure est affichée et se coche au fur et à mesure. Pause possible à tout moment.
+The procedure, Explore mode and instructor rules for this scenario are now open.	Verfahren, Erkunden-Modus und Ausbilderregeln dieses Szenarios sind jetzt offen.	La procédure, le mode exploration et les règles formateur de ce scénario sont maintenant ouverts.
+The ratio trip cut the feed. Watch the low-flow alarm on FIC#: it comes first and gives you the time to act.	Die Verhältnis-Abschaltung hat den Einsatz abgestellt. Achten Sie auf den Durchfluss-Alarm an FIC#: Er kommt zuerst und gibt Ihnen Zeit zum Handeln.	Le déclenchement sur rapport a coupé la charge. Surveillez l'alarme débit bas sur FIC# : elle arrive en premier et vous laisse le temps d'agir.
+The standby pump is the fix. When an auto-start fails, start it by hand straight away.	Die Reservepumpe ist die Lösung. Wenn der Autostart versagt, sofort von Hand starten.	La pompe de secours est la solution. Si le démarrage automatique échoue, démarrez-la à la main tout de suite.
+The total is capped at #.	Die Gesamtpunktzahl ist auf # begrenzt.	Le total est plafonné à #.
+The unit model, the scenario files and the scoring are separate parts. Swap the model and the same trainer runs other equipment.	Anlagenmodell, Szenariodateien und Bewertung sind getrennte Teile. Tauschen Sie das Modell, und derselbe Trainer läuft für andere Anlagen.	Le modèle d'unité, les fichiers de scénario et la notation sont des parties séparées. Changez le modèle et le même simulateur fonctionne pour d'autres équipements.
+The upset keeps developing. Alarms escalate from medium to high priority.	Die Störung entwickelt sich weiter. Alarme steigen von mittlerer auf hohe Priorität.	La perturbation continue. Les alarmes passent de priorité moyenne à haute.
+This opens Explore mode and the instructor rules for all six scenarios. A trainee should try each scenario first, so the first attempt stays a real test.	Damit öffnen sich der Erkunden-Modus und die Ausbilderregeln für alle sechs Szenarien. Ein Trainee sollte jedes Szenario zuerst selbst versuchen, damit der erste Versuch ein echter Test bleibt.	Cela ouvre le mode exploration et les règles formateur des six scénarios. Un stagiaire devrait d'abord essayer chaque scénario, pour que le premier essai reste un vrai test.
+This run was shorter than # seconds, so it does not count as a first try.	Dieser Durchlauf war kürzer als # Sekunden und zählt daher nicht als erster Versuch.	Cet essai a duré moins de # secondes, il ne compte donc pas comme premier essai.
+Time	Zeit	Temps
+Time to the key action	Zeit bis zur Schlüsselaktion	Temps jusqu'à l'action clé
+Took a healthy pass out of the COT average	Einen intakten Pass aus dem COT-Mittelwert genommen	Une passe saine sortie de la moyenne COT
+Trainee	Trainee	Stagiaire
+TRAINEE	TRAINEE	STAGIAIRE
+Trainee mode	Trainee-Modus	Mode stagiaire
+Trend	Trend	Tendance
+trip #	Abschaltung #	déclenchement #
+alarm #	Alarm #	alarme #
+Tried	Versucht	Essayé
+rules open	Regeln offen	règles ouvertes
+best #	Bestwert #	record #
+Tripped	Ausgelöst	Déclenché
+Tripped on motor protection	Durch Motorschutz ausgelöst	Déclenchée par la protection moteur
+Trips & permissives	Abschaltungen & Freigaben	Déclenchements & permissifs
+Trips and time in high-priority alarm	Abschaltungen und Zeit in Alarmen hoher Priorität	Déclenchements et temps en alarme haute priorité
+Try again	Nochmal versuchen	Réessayer
+Try scenario # once to open its rules	Spielen Sie Szenario # einmal, um seine Regeln zu öffnen	Jouez une fois le scénario # pour ouvrir ses règles
+UNIT	ANLAGE	UNITÉ
+Utilities: "Noted. We are on it."	Energieversorgung: „Notiert. Wir kümmern uns.“	Utilités : « Noté. Nous nous en occupons. »
+Watch & learn	Zusehen & lernen	Observer & apprendre
+What happens:	Was passiert:	Ce qui se passe :
+What the procedure expected	Was das Verfahren erwartet hat	Ce que la procédure attendait
+While one pass runs hot, lowering COT or feed buys time for the coil. Tube metal is what limits run length.	Solange ein Pass zu heiß läuft, verschafft eine niedrigere COT oder weniger Einsatz dem Rohr Zeit. Die Rohrwand begrenzt die Laufzeit.	Tant qu'une passe est trop chaude, baisser la COT ou la charge donne du temps au serpentin. C'est la peau des tubes qui limite la durée de campagne.
+Why drift and not burnout: a burnt-out thermocouple drives its transmitter outside #–# mA (NAMUR NE #). The DCS then marks the signal BAD and TIC# can shed to manual by itself. A drifting thermocouple gives no such flag, so only a cross-check catches it.	Warum Drift und nicht Bruch: Ein gebrochenes Thermoelement treibt den Messumformer aus dem Bereich #–# mA (NAMUR NE #). Das PLS markiert das Signal dann als BAD, und TIC# kann selbst auf Hand gehen. Ein driftendes Thermoelement setzt kein solches Kennzeichen, nur ein Vergleich deckt es auf.	Pourquoi une dérive et pas une rupture : un thermocouple rompu fait sortir son transmetteur de la plage #–# mA (NAMUR NE #). Le SNCC marque alors le signal BAD et TIC# peut passer seul en manuel. Un thermocouple qui dérive ne donne pas ce signal, seul un recoupement le détecte.
+Window	Fenster	Fenêtre
+With the drifting thermocouple in the average, the real COT fell by more than # °C. Nothing tripped, but conversion and ethylene dropped. Bad data costs production quietly.	Mit dem driftenden Thermoelement im Mittelwert fiel die echte COT um mehr als # °C. Nichts schaltete ab, aber Umsatz und Ethylen sanken. Schlechte Daten kosten leise Produktion.	Avec le thermocouple en dérive dans la moyenne, la vraie COT a baissé de plus de # °C. Rien n'a déclenché, mais la conversion et l'éthylène ont chuté. Les mauvaises données coûtent de la production en silence.
+Without the fan, only natural draft is left. A fully open damper is worth more than anything else in the first seconds.	Ohne Gebläse bleibt nur der natürliche Zug. Eine voll geöffnete Klappe bringt in den ersten Sekunden mehr als alles andere.	Sans ventilateur, il ne reste que le tirage naturel. Un registre grand ouvert vaut plus que tout le reste dans les premières secondes.
+Wrong action	Falsche Aktion	Mauvaise action
+You avoided the trip. One or more steps were late or missed.	Sie haben die Abschaltung vermieden. Ein oder mehrere Schritte waren verspätet oder versäumt.	Vous avez évité le déclenchement. Une ou plusieurs étapes étaient en retard ou manquées.
+All steps in time, no harmful actions.	Alle Schritte rechtzeitig, keine schädlichen Aktionen.	Toutes les étapes à temps, aucune action nuisible.
+A clean run. Every expected step was done in time and the furnace stayed online.	Ein sauberer Durchlauf. Jeder erwartete Schritt kam rechtzeitig, und der Ofen blieb in Betrieb.	Un essai propre. Chaque étape attendue a été faite à temps et le four est resté en service.
+Review the step marked in the table and try the scenario again.	Prüfen Sie den markierten Schritt in der Tabelle und versuchen Sie das Szenario erneut.	Revoyez l'étape signalée dans le tableau et réessayez le scénario.
+Acknowledge alarms early. It confirms you have seen them and keeps the list readable for the next alarm.	Quittieren Sie Alarme früh. Das bestätigt, dass Sie sie gesehen haben, und hält die Liste für den nächsten Alarm lesbar.	Acquittez les alarmes tôt. Cela confirme que vous les avez vues et garde la liste lisible pour la suivante.
+Your best #	Ihr Bestwert #	Votre record #
+New personal best	Neuer persönlicher Bestwert	Nouveau record personnel
+Your review appears here	Ihre Auswertung erscheint hier	Votre bilan apparaît ici
+Your score and the step-by-step review are ready.	Ihre Punktzahl und die Schritt-für-Schritt-Auswertung sind bereit.	Votre note et le bilan étape par étape sont prêts.
+Your shift	Ihre Schicht	Votre quart
+and what you did	und was Sie getan haben	et ce que vous avez fait
+answers for you	reagiert für Sie	répond pour vous
+by end	bis Ende	d'ici la fin
+or the furnace acts for you	oder der Ofen handelt für Sie	ou le four agit pour vous
+select any tag on the screen	beliebigen Tag im Bild anklicken	sélectionnez un repère à l'écran
+value / limit	Wert / Grenze	valeur / limite
+· within # s	· innerhalb # s	· sous # s
+· # s late	· # s verspätet	· # s de retard
+· now	· jetzt	· maintenant
+now	jetzt	maintenant
+Ⅱ Pause	Ⅱ Pause	Ⅱ Pause
+▶ Resume	▶ Fortsetzen	▶ Reprendre
+▶ Start	▶ Start	▶ Démarrer
+★ key action: its timing sets the response score.	★ Schlüsselaktion: Ihr Zeitpunkt bestimmt die Reaktionspunkte.	★ action clé : son délai fixe la note de réactivité.
+Interlock acted · #:#	Verriegelung hat ausgelöst · #:#	Le verrouillage a agi · #:#
+partial trip	Teilabschaltung	déclenchement partiel
+full fuel trip	vollständige Brennstoffabschaltung	déclenchement complet du combustible
+At least one thermocouple must stay in the PV.	Mindestens ein Thermoelement muss im Istwert bleiben.	Au moins un thermocouple doit rester dans la PV.
+K# restart command sent.	Startbefehl an K# gesendet.	Ordre de redémarrage envoyé à K#.
+K# is running.	K# läuft.	K# est en marche.
+Motor cool-down: # s left	Motor-Abkühlzeit: noch # s	Refroidissement moteur : encore # s
+K# motor cool-down: restart available in # s.	K# Motor-Abkühlzeit: Neustart möglich in # s.	Refroidissement moteur K# : redémarrage possible dans # s.
+Ready to restart	Bereit zum Neustart	Prêt à redémarrer
+Induced draft fan	Saugzuggebläse	Ventilateur de tirage induit
+Restart fan	Gebläse neu starten	Redémarrer le ventilateur
+ID fan stopped: natural draft only	Saugzuggebläse steht: nur natürlicher Zug	Ventilateur arrêté : tirage naturel seulement
+O₂ controller acting on the stack damper	O₂-Regler wirkt auf die Rauchgasklappe	Régulateur d'O₂ agissant sur le registre de cheminée
+AIC# · Arch O₂ and stack damper	AIC# · O₂ Feuerraumdach und Rauchgasklappe	AIC# · O₂ voûte et registre de cheminée
+In	Ein	Inclus
+Out	Aus	Exclu
+In PV	Im PV	Dans PV
+TI# °C	TI# °C	TI# °C
+PV t/h	PV t/h	PV t/h
+SP t/h	SP t/h	SP t/h
+OP %	OP %	OP %
+PV °C	PV °C	PV °C
+SP °C	SP °C	SP °C
+O₂ %	O₂ %	O₂ %
+SP %	SP %	SP %
+DAMPER %	KLAPPE %	REGISTRE %
+PV %	PV %	PV %
+SPEED %	DREHZAHL %	VITESSE %
+Damper #	Klappe #	Registre #
+O₂ SP #	O₂ SP #	O₂ SP #
+out	aus	exclu
+Silence the horn until a new alarm comes in	Hupe stummschalten, bis ein neuer Alarm kommt	Couper le klaxon jusqu'à la prochaine alarme
+Passes are balanced; flow controller keeps its setpoint	Die Pässe sind abgeglichen; der Durchflussregler hält seinen Sollwert	Les passes sont équilibrées ; le régulateur de débit tient sa consigne
+STARTING	STARTET	DÉMARRAGE
+Field: "On my way to FV#C. About # seconds."	Vor Ort: „Bin unterwegs zu FV#C. Etwa # Sekunden.“	Terrain : « J'arrive à FV#C. Environ # secondes. »
+Field: "Already working on FV#C."	Vor Ort: „Bin schon an FV#C dran.“	Terrain : « Je suis déjà sur FV#C. »
+Field: "Nothing visible at the pass B outlet. Coil colour looks the same as the other passes. The thermocouple needs instrumentation."	Vor Ort: „Am Austritt von Pass B ist nichts zu sehen. Die Rohrfarbe ist wie bei den anderen Pässen. Das Thermoelement braucht die MSR-Technik.“	Terrain : « Rien de visible à la sortie de la passe B. La couleur du serpentin est la même que les autres passes. Le thermocouple relève de l'instrumentation. »
+Partial trip: the ethane feed is cut and firing is reduced to about a quarter.	Teilabschaltung: Der Ethaneinsatz wird abgestellt und die Feuerung auf etwa ein Viertel reduziert.	Déclenchement partiel : la charge d'éthane est coupée et la chauffe réduite à environ un quart.
+Conv. %	Umsatz %	Conv. %
