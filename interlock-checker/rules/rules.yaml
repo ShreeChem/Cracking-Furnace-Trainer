@@ -1,0 +1,105 @@
+# =============================================================================
+#  Interlock Consistency Checker – settings and latching / reset rules
+#
+#  THE RULES BELOW ARE PLACEHOLDERS (examples only). They are NOT a site
+#  philosophy and NOT a recommendation. Replace them with your own rules.
+#  Every placeholder is marked "placeholder: true" and is shown in the report
+#  as "[PLACEHOLDER RULE – replace with your own]".
+#
+#  How to edit (no programming needed):
+#   * Lines starting with # are comments and are ignored.
+#   * Indentation matters: use spaces, never tabs, and keep the same indent
+#     as the lines around the one you change.
+#   * Text with special characters (: # [ ] { } ^ $ \) goes in "double quotes".
+#   * See GUIDE.md, Step 6, for every field and test you can use.
+# =============================================================================
+
+settings:
+  # A P&ID transmitter is treated as a TRIP transmitter (check 2) if its tag
+  # matches one of these patterns ...
+  #   "^[A-Z]Z[A-Z]*-?\d"  = first letter, then Z (ISA safety letter), e.g. PZT-170, BZS-171
+  trip_transmitter_patterns:
+    - "^[A-Z]Z[A-Z]*-?\\d"
+  # ... or if the P&ID gives it a safety class (e.g. SIL2).
+  treat_safety_class_as_trip: true
+  # Which valve fail position gives the safe state for each trip action (check 3).
+  action_to_fail_position:
+    CLOSE: FC
+    OPEN: FO
+
+rules:
+  # ---------------------------------------------------------------------------
+  # PLACEHOLDER 1 – fuel gas shutoffs must latch and need a manual reset.
+  # Reads: "For every C&E row that CLOSEs a valve tagged XV-170 to XV-179,
+  #         Latching must be YES and Reset must be MANUAL."
+  # ---------------------------------------------------------------------------
+  - id: R-PH-01
+    placeholder: true
+    title: "Every trip of a fuel gas shutoff valve must be latched with manual reset"
+    severity: HIGH
+    when:
+      acts_on:
+        tag_matches: "^XV-17\\d$"     # fuel gas / pilot gas shutoff valves in the example
+        action: CLOSE
+    require:
+      latching: "YES"
+      reset: MANUAL
+    explanation: >-
+      If the trip clears by itself when the reading recovers, the fuel valves could reopen
+      onto a hot firebox without an operator checking it is safe to relight.
+    suggested_action: >-
+      Set Latching = YES and Reset = MANUAL for this cause, or record the approved exception.
+
+  # ---------------------------------------------------------------------------
+  # PLACEHOLDER 2 – no automatic reset on any SIF.
+  # Reads: "For every C&E row with a SIL rating, Reset must not be AUTO."
+  # ---------------------------------------------------------------------------
+  - id: R-PH-02
+    placeholder: true
+    title: "No auto-reset on any safety instrumented function (SIF)"
+    severity: HIGH
+    when:
+      sil:
+        matches: "^SIL ?[1-4]$"
+    require:
+      reset:
+        not: AUTO
+    explanation: >-
+      An automatic reset lets the plant restart without anyone confirming why it tripped.
+    suggested_action: >-
+      Change the reset to MANUAL, or remove the SIL rating if this is not a SIF.
+
+  # ---------------------------------------------------------------------------
+  # PLACEHOLDER 3 – SIL 2 and above must not rely on a single sensor.
+  # Reads: "For every C&E row with SIL 2 or higher, Voting must not be 1oo1."
+  # ---------------------------------------------------------------------------
+  - id: R-PH-03
+    placeholder: true
+    title: "SIL 2 and higher trips must not use 1oo1 voting"
+    severity: MEDIUM
+    when:
+      sil:
+        min: 2
+    require:
+      voting:
+        not: 1oo1
+    explanation: >-
+      A single sensor gives no redundancy. Whether 1oo1 is acceptable depends on the SIL
+      verification, so this rule only asks for a second look.
+    suggested_action: >-
+      Check the SIL verification for this SIF; add redundancy (1oo2, 2oo3) if it is needed.
+
+  # ---------------------------------------------------------------------------
+  # TEMPLATE for your own rule: copy the block, remove the # at the start of
+  # each line, and fill it in. Set placeholder: false for real rules.
+  # ---------------------------------------------------------------------------
+  # - id: R-SITE-01
+  #   placeholder: false
+  #   title: "Short sentence that says what the rule demands"
+  #   severity: HIGH            # HIGH, MEDIUM, LOW or INFO
+  #   when:                     # which C&E rows the rule looks at (leave out = all rows)
+  #     trip_type: HH
+  #   require:                  # what must be true for those rows
+  #     latching: "YES"
+  #   explanation: "Why the rule exists (shown in the report)."
+  #   suggested_action: "What to do when the rule is broken."
