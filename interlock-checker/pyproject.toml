@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "interlock-checker"
+version = "0.1.0"
+description = "Compare a DEXPI P&ID with a cause-and-effect matrix and report interlock mismatches."
+readme = "README.md"
+requires-python = ">=3.12"   # pyDEXPI needs 3.12 or newer
+dependencies = [
+    "pydexpi>=1.2,<2",    # TU Delft Process Intelligence group, AGPL-3.0
+    "openpyxl>=3.1",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=8", "pytest-cov>=5"]
+
+[project.scripts]
+interlock-checker = "interlock_checker.cli:main"
+
+[tool.setuptools]
+packages = ["interlock_checker"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.coverage.run]
+source = ["interlock_checker"]
+omit = ["interlock_checker/__main__.py"]
