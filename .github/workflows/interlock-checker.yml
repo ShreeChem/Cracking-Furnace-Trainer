@@ -1,0 +1,43 @@
+# Test the Interlock Consistency Checker (Python) in interlock-checker/.
+# Runs only when files in that folder (or this workflow) change, so the trainer's
+# own "Build and test" workflow is not affected.
+
+name: Interlock checker tests
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - "interlock-checker/**"
+      - ".github/workflows/interlock-checker.yml"
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - "interlock-checker/**"
+      - ".github/workflows/interlock-checker.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: interlock-checker
+    strategy:
+      matrix:
+        python-version: ["3.12", "3.13"]
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install the checker and test tools
+      run: python -m pip install ".[test]"
+    - name: Download the public DEXPI reference P&ID for the reader test
+      run: python scripts/fetch_public_example.py
+    - name: Run the tests with coverage (must stay at or above 80 %)
+      run: python -m pytest --cov --cov-report=term-missing --cov-fail-under=80
+    - name: Run the checker on the synthetic example
+      run: python -m interlock_checker --pid examples/synthetic_furnace_pid.xml --ce examples/synthetic_furnace_ce.xlsx --rules rules/rules.yaml --out ci-output

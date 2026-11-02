@@ -1,0 +1,174 @@
+# =============================================================================
+#  Interlock Consistency Checker – settings and latching / reset rules
+#
+#  THE RULES BELOW are the latching / reset rules for the SYNTHETIC ethane
+#  furnace F-101. They started as draft proposals based on common IEC 61511 /
+#  burner-management practice and were approved by ShreeChem on 2026-11-02
+#  (PR #1). Each rule's "status" line records that approval. To change a rule
+#  later, edit it and update its status line (GUIDE.md: "How to accept, change
+#  or delete a draft rule").
+#
+#  Limits: these rules check what the C&E *documents* (latching, reset type,
+#  reset location, reset permissives, bypass status). They cannot prove the
+#  logic solver actually behaves that way – that is the job of the FAT/SAT and
+#  proof tests.
+#
+#  How to edit (no programming needed):
+#   * Lines starting with # are comments and are ignored.
+#   * Indentation matters: use spaces, never tabs, and keep the same indent
+#     as the lines around the one you change.
+#   * Text with special characters (: # [ ] { } ^ $ \) goes in "double quotes".
+#   * See GUIDE.md, Step 6, for every field and test you can use.
+# =============================================================================
+
+settings:
+  # A P&ID transmitter is treated as a TRIP transmitter (check 2) if its tag
+  # matches one of these patterns ...
+  #   "^[A-Z]Z[A-Z]*-?\d"  = first letter, then Z (ISA safety letter), e.g. PZT-170, BZS-171
+  trip_transmitter_patterns:
+    - "^[A-Z]Z[A-Z]*-?\\d"
+  # ... or if the P&ID gives it a safety class (e.g. SIL2).
+  treat_safety_class_as_trip: true
+  # Which valve fail position gives the safe state for each trip action (check 3).
+  action_to_fail_position:
+    CLOSE: FC
+    OPEN: FO
+
+rules:
+  # Fields used below are C&E columns: sil, latching, reset, reset_location,
+  # reset_permissive, bypass, voting. "acts_on" selects rows by the valves they drive.
+
+  - id: D-01
+    status: "APPROVED – ShreeChem, 2026-11-02 (PR #1)"
+    title: "Every SIF trip must latch"
+    severity: HIGH
+    when:
+      sil: {matches: "^SIL ?[1-4]$"}
+    require:
+      latching: "YES"
+    why_this_matters: >-
+      A trip that un-trips by itself when the reading recovers can restart the furnace
+      half-way through an upset, before anyone has found the cause (common IEC 61511 practice).
+    suggested_action: "Set Latching = YES, or record why this SIF may be non-latching."
+
+  - id: D-02
+    status: "APPROVED – ShreeChem, 2026-11-02 (PR #1)"
+    title: "No automatic reset on any SIF"
+    severity: HIGH
+    when:
+      sil: {matches: "^SIL ?[1-4]$"}
+    require:
+      reset: MANUAL
+    why_this_matters: >-
+      An operator must confirm the plant is safe before a safety function is re-armed;
+      an AUTO reset skips that check.
+    suggested_action: "Change Reset to MANUAL."
+
+  - id: D-03
+    status: "APPROVED – ShreeChem, 2026-11-02 (PR #1)"
+    title: "No automatic reset on any fuel gas or ethane feed shutoff, SIF or not"
+    severity: HIGH
+    when:
+      acts_on:
+        tag_matches: "^XV-(100|17\\d)$"   # ethane feed and fuel/pilot gas shutoff valves
+        action: CLOSE
+    require:
+      reset: MANUAL
+    why_this_matters: >-
+      Reopening fuel or feed by itself onto a hot firebox or hot coils is how furnace
+      explosions and coil damage happen, even when the trip is not SIL-rated.
+    suggested_action: "Change Reset to MANUAL for every cause that closes a feed or fuel shutoff."
+
+  - id: D-04
+    status: "APPROVED – ShreeChem, 2026-11-02 (PR #1)"
+    title: "Reset is blocked while the initiating cause is still active"
+    severity: HIGH
+    when:
+      sil: {matches: "^SIL ?[1-4]$"}
+    require:
+      reset_permissive: {contains: "CAUSE CLEAR"}
+    why_this_matters: >-
+      If reset is accepted while, say, the COT is still above its trip point, the furnace
+      re-trips at best, or restarts into the hazard at worst.
+    suggested_action: "Add CAUSE CLEAR to the reset permissives for this cause."
+
+  - id: D-05
+    status: "APPROVED – ShreeChem, 2026-11-02 (PR #1)"
+    title: "SIF reset is done at field or console as specified, never by a DCS auto-sequence"
+    severity: HIGH
+    when:
+      sil: {matches: "^SIL ?[1-4]$"}
+    require:
+      reset_location: [FIELD, CONSOLE, FIELD+CONSOLE]
+    why_this_matters: >-
+      A DCS sequence that resets the SIS takes the deliberate human step out of the loop
+      and lets the basic control system defeat the safety system.
+    suggested_action: "Set Reset location to FIELD, CONSOLE or FIELD+CONSOLE as the SRS specifies."
+
+  - id: D-06
+    status: "APPROVED – ShreeChem, 2026-11-02 (PR #1)"
+    title: "Any fuel trip needs a purge-complete permissive before relight"
+    severity: HIGH
+    when:
+      acts_on:
+        tag_matches: "^XV-17\\d$"         # fuel gas and pilot gas shutoff valves
+        action: CLOSE
+    require:
+      reset_permissive: {contains: "PURGE COMPLETE"}
+    why_this_matters: >-
+      After a fuel trip, unburnt gas can sit in the firebox. Relighting without a timed purge
+      is the classic cause of firebox explosions (burner-management practice, e.g. NFPA 86 / EN 746-2).
+    suggested_action: "Add PURGE COMPLETE to the reset permissives for this cause."
+
+  - id: D-07
+    status: "APPROVED – ShreeChem, 2026-11-02 (PR #1)"
+    title: "A 2oo3 trip resets only when at least 2 of 3 transmitters are healthy"
+    severity: MEDIUM
+    when:
+      voting: 2oo3
+    require:
+      reset_permissive: {contains: "2OO3 HEALTHY"}
+    why_this_matters: >-
+      With two transmitters faulty, the vote can no longer see a real demand; resetting
+      then re-arms a trip that cannot act.
+    suggested_action: "Add 2OO3 HEALTHY to the reset permissives, or document degraded-mode voting."
+
+  - id: D-08
+    status: "APPROVED – ShreeChem, 2026-11-02 (PR #1)"
+    title: "Bypassed or overridden initiators are flagged for review"
+    severity: MEDIUM
+    when:
+      bypass: {not_one_of: ["", NONE]}
+    require:
+      bypass: [NONE]
+    why_this_matters: >-
+      While an initiator is bypassed, its trip is not protecting the furnace. Every bypass
+      needs a permit, compensating measures and an end date, and should be visible.
+    suggested_action: "Confirm the bypass permit, its compensating measures and expiry; remove the bypass when done."
+
+  - id: D-09
+    status: "APPROVED – ShreeChem, 2026-11-02 (PR #1)"
+    title: "SIL 2 and higher trips must not rely on a single sensor (1oo1)"
+    severity: MEDIUM
+    when:
+      sil: {min: 2}
+    require:
+      voting: {not: 1oo1}
+    why_this_matters: >-
+      A single sensor gives no redundancy. Whether 1oo1 is acceptable depends on the SIL
+      verification, so this rule asks for a second look rather than declaring it wrong.
+    suggested_action: "Check the SIL verification; add redundancy (1oo2, 2oo3) if it is needed."
+
+  # ---------------------------------------------------------------------------
+  # TEMPLATE for your own rule: copy the block, remove the # at the start of
+  # each line, and fill it in. Leave out "status" (or write "APPROVED") for real rules.
+  # ---------------------------------------------------------------------------
+  # - id: R-SITE-01
+  #   title: "Short sentence that says what the rule demands"
+  #   severity: HIGH            # HIGH, MEDIUM, LOW or INFO
+  #   when:                     # which C&E rows the rule looks at (leave out = all rows)
+  #     trip_type: HH
+  #   require:                  # what must be true for those rows
+  #     latching: "YES"
+  #   why_this_matters: "Why the rule exists (shown in the report)."
+  #   suggested_action: "What to do when the rule is broken."
