@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
 """Step 8: the command line that ties the steps together.
 
     python -m interlock_checker --pid P&ID.xml --ce C&E.xlsx --rules rules.yaml --out report_folder

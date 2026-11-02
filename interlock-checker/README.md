@@ -13,6 +13,10 @@ commissioning, an audit or an incident review. Typical examples are a trip on th
 no transmitter on the P&ID, a SIL-rated transmitter nobody connected to a trip, or a valve
 that fails open when the trip needs it closed.
 
+**Licence:** GNU Affero General Public License v3.0 or later (`AGPL-3.0-or-later`); see
+[`LICENSE`](LICENSE). This applies to the `interlock-checker/` folder only, not to the rest
+of the repository.
+
 This folder is separate from the furnace trainer. It does not touch `index.html`, `src/`,
 `tools/build.py` or `tests/engine-test.js`, and it has its own CI workflow
 (`.github/workflows/interlock-checker.yml`) that runs only when this folder changes.
@@ -306,6 +310,13 @@ for testing, not redistributed here.
 - Your **input data and reports** (P&IDs, C&Es, findings) are not code and are not covered
   by the AGPL. Proprietary plant documents stay yours.
 
-This repository has no licence file yet. Because this tool depends on pyDEXPI, the simplest
-choice if you publish it is to license `interlock-checker/` under AGPL-3.0 as well. That
-decision is yours; it is listed as an open point.
+### Licence of this folder
+
+`interlock-checker/` is licensed under the **GNU Affero General Public License v3.0 or
+later** (SPDX: `AGPL-3.0-or-later`), the same terms as pyDEXPI. The full text is in
+[`LICENSE`](LICENSE); every Python file carries the tag `SPDX-License-Identifier:
+AGPL-3.0-or-later`. Copyright (C) 2026 ShreeChem.
+
+This licence covers only this folder. The furnace trainer in the rest of the repository
+(`index.html`, `src/`, `tools/`, `tests/`) is not covered by it and still has no licence
+file.

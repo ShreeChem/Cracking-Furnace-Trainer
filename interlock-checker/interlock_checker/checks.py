@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
 """Steps 3 to 5: the three built-in consistency checks.
 
 Each check compares the P&ID tag list with the C&E matrix and returns a list

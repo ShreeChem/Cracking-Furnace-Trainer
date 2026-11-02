@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
 """Step 7: write the mismatch report as Excel, Markdown and HTML.
 
 The same list of findings goes into all three, so the Excel copy can be

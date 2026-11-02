@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
 """Step 1: read the P&ID.
 
 The P&ID arrives as a DEXPI file (Proteus XML), the vendor-neutral exchange

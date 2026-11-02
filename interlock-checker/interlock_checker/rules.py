@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
 """Step 6: latching and reset rules, written by the user in a YAML (or JSON) file.
 
 A rule reads like a line in a site philosophy document:

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
 """Plain data containers shared by the readers, the checks and the report.
 
 Think of these as the blank forms the tool fills in: one form per instrument

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
 """Make the SYNTHETIC example data: a furnace P&ID (DEXPI XML) and a C&E matrix (Excel).
 
 Everything here is invented for training. The trips follow the ethane cracking

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
 """Step 2: read the cause-and-effect matrix from Excel.
 
 The reader looks for the headings rather than fixed cell addresses, so a C&E

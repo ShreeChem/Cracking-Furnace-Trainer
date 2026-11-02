@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
 """Download the public DEXPI reference P&ID (C01) used to show the reader works on real DEXPI.
 
 Source: DEXPI e.V. reference P&ID "C01V04-VER.EX01.xml" (c) DEXPI e.V., as shipped in the

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
 import pytest
 
 from interlock_checker.pid_reader import PidReadError, read_pid

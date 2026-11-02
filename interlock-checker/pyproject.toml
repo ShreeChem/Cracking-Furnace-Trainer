@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=68"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -7,6 +7,8 @@ name = "interlock-checker"
 version = "0.1.0"
 description = "Compare a DEXPI P&ID with a cause-and-effect matrix and report interlock mismatches."
 readme = "README.md"
+license = "AGPL-3.0-or-later"
+license-files = ["LICENSE"]
 requires-python = ">=3.12"   # pyDEXPI needs 3.12 or newer
 dependencies = [
     "pydexpi>=1.2,<2",    # TU Delft Process Intelligence group, AGPL-3.0
