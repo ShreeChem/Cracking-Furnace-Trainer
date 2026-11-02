@@ -16,7 +16,7 @@ EXPECTED = {
     ("2", "FZT-101D"), ("2", "PT-172"),
     ("3", "FV-110"), ("3", "TV-150"), ("3", "XV-172"), ("3", "XV-100"),
 }
-# Draft latching/reset rules: (rule id, tag). FZT-110 breaks both D-02 and D-03.
+# Latching/reset rules: (rule id, tag). FZT-110 breaks both D-02 and D-03.
 EXPECTED_RULES = {
     ("D-01", "PZT-141"), ("D-02", "FZT-110"), ("D-03", "FZT-110"), ("D-03", "HS-199"),
     ("D-04", "TZT-150"), ("D-05", "AZT-140"), ("D-06", "PZT-170"), ("D-07", "LZT-130"),
@@ -34,7 +34,7 @@ def test_seeded_example_finds_every_planted_mismatch(seeded_files):
     assert {f.check.split(".")[0] for f in findings} == {"1", "2", "3", "4"}
     assert ctx.banner.startswith("SYNTHETIC")
     assert ctx.placeholder_rules == []
-    assert ctx.draft_rules == [f"D-0{i}" for i in range(1, 10)]
+    assert ctx.draft_rules == []            # D-01..D-09 approved
 
 
 def test_clean_example_has_zero_findings(clean_files):
@@ -47,11 +47,12 @@ def test_cli_writes_three_reports(seeded_files, tmp_path, capsys):
                      "--rules", str(RULES), "--out", str(tmp_path)])
     assert code == 0
     out = capsys.readouterr().out
-    assert "18 findings: 14 HIGH, 4 MEDIUM" in out and "DRAFT rules awaiting" in out
+    assert "18 findings: 14 HIGH, 4 MEDIUM" in out and "DRAFT rules awaiting" not in out
     md = (tmp_path / "interlock_report.md").read_text(encoding="utf-8")
     html = (tmp_path / "interlock_report.html").read_text(encoding="utf-8")
     assert "SYNTHETIC – FOR TRAINING ONLY" in md and "F-018" in md
-    assert "DRAFT rules awaiting engineer approval" in md and "DRAFT rules awaiting" in html
+    assert "DRAFT rules awaiting" not in md and "DRAFT rules awaiting" not in html
+    assert "APPROVED – ShreeChem" in md
     assert "SYNTHETIC – FOR TRAINING ONLY" in html and "XV-172" in html
     wb = load_workbook(tmp_path / "interlock_report.xlsx")
     ws = wb["Findings"]
@@ -61,7 +62,7 @@ def test_cli_writes_three_reports(seeded_files, tmp_path, capsys):
     assert ws.max_row == 5 + 18
     assert wb["Summary"]["B2"].value == 18
     summary = [c.value for c in wb["Summary"]["A"]]
-    assert "DRAFT rules awaiting engineer approval" in summary
+    assert "DRAFT rules awaiting engineer approval" not in summary
 
 
 def test_cli_fail_on(seeded_files, clean_files, tmp_path):
@@ -108,3 +109,20 @@ def test_generator_cli(tmp_path, capsys):
     for ws in wb.worksheets:                       # every sheet carries the stamp
         assert ws["A1"].value == "SYNTHETIC – FOR TRAINING ONLY"
         assert ws.oddHeader.center.text == "SYNTHETIC – FOR TRAINING ONLY"
+
+
+def test_rule_set_back_to_draft_is_reported(seeded_files, tmp_path, capsys):
+    text = RULES.read_text(encoding="utf-8").replace(
+        'status: "APPROVED – ShreeChem, 2026-11-02 (PR #1)"\n    title: "Every SIF trip must latch"',
+        'status: "DRAFT – pending engineer approval"\n    title: "Every SIF trip must latch"')
+    assert "DRAFT" in text
+    rules = tmp_path / "rules.yaml"
+    rules.write_text(text, encoding="utf-8")
+    out = tmp_path / "out"
+    assert cli.main(["--pid", str(seeded_files[0]), "--ce", str(seeded_files[1]),
+                     "--rules", str(rules), "--out", str(out)]) == 0
+    assert "DRAFT rules awaiting engineer approval: D-01" in capsys.readouterr().out
+    assert "DRAFT rules awaiting engineer approval:** D-01" in (out / "interlock_report.md").read_text(encoding="utf-8")
+    assert "DRAFT rules awaiting engineer approval:</b> D-01" in (out / "interlock_report.html").read_text(encoding="utf-8")
+    summary = [c.value for c in load_workbook(out / "interlock_report.xlsx")["Summary"]["A"]]
+    assert "DRAFT rules awaiting engineer approval" in summary

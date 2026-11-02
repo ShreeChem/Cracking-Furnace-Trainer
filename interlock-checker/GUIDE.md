@@ -263,11 +263,11 @@ A rule in your site's safety philosophy reads like:
 > "For every C&E row that closes a fuel gas shutoff valve, the reset permissives must
 > include a completed purge."
 
-In `rules/rules.yaml` the same rule (draft rule D-06) is:
+In `rules/rules.yaml` the same rule (rule D-06) is:
 
 ```yaml
   - id: D-06
-    status: "DRAFT – pending engineer approval"
+    status: "APPROVED – ShreeChem, 2026-11-02 (PR #1)"
     title: "Any fuel trip needs a purge-complete permissive before relight"
     severity: HIGH
     when:                       # WHICH rows the rule looks at
@@ -350,7 +350,9 @@ match for the rule to apply.
 
 ### How to accept, change or delete a draft rule
 
-The file starts with nine rules, D-01 to D-09. Each one is marked
+The nine rules D-01 to D-09 started as drafts and were approved on 2026-11-02; their status
+now reads `"APPROVED – ShreeChem, 2026-11-02 (PR #1)"`. The steps below apply whenever a rule is proposed as a draft again, for
+example a new rule, or a change your SIS engineer wants reviewed first. A draft rule carries
 `status: "DRAFT – pending engineer approval"`. Treat them like a proposed C&E markup: nothing
 in them is agreed until you or your SIS engineer has reviewed each one. While a rule is in
 draft, its findings carry the label `[DRAFT – pending engineer approval]`, and the report

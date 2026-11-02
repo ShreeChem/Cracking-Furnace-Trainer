@@ -1,11 +1,12 @@
 # =============================================================================
 #  Interlock Consistency Checker – settings and latching / reset rules
 #
-#  THE RULES BELOW ARE DRAFT PROPOSALS for the SYNTHETIC ethane furnace F-101.
-#  They follow common IEC 61511 / burner-management practice but have NOT been
-#  approved by any engineer. Each carries  status: "DRAFT – pending engineer
-#  approval"  and the report lists them until you accept, change or delete them
-#  (GUIDE.md: "How to accept, change or delete a draft rule").
+#  THE RULES BELOW are the latching / reset rules for the SYNTHETIC ethane
+#  furnace F-101. They started as draft proposals based on common IEC 61511 /
+#  burner-management practice and were approved by ShreeChem on 2026-11-02
+#  (PR #1). Each rule's "status" line records that approval. To change a rule
+#  later, edit it and update its status line (GUIDE.md: "How to accept, change
+#  or delete a draft rule").
 #
 #  Limits: these rules check what the C&E *documents* (latching, reset type,
 #  reset location, reset permissives, bypass status). They cannot prove the
@@ -38,7 +39,7 @@ rules:
   # reset_permissive, bypass, voting. "acts_on" selects rows by the valves they drive.
 
   - id: D-01
-    status: "DRAFT – pending engineer approval"
+    status: "APPROVED – ShreeChem, 2026-11-02 (PR #1)"
     title: "Every SIF trip must latch"
     severity: HIGH
     when:
@@ -51,7 +52,7 @@ rules:
     suggested_action: "Set Latching = YES, or record why this SIF may be non-latching."
 
   - id: D-02
-    status: "DRAFT – pending engineer approval"
+    status: "APPROVED – ShreeChem, 2026-11-02 (PR #1)"
     title: "No automatic reset on any SIF"
     severity: HIGH
     when:
@@ -64,7 +65,7 @@ rules:
     suggested_action: "Change Reset to MANUAL."
 
   - id: D-03
-    status: "DRAFT – pending engineer approval"
+    status: "APPROVED – ShreeChem, 2026-11-02 (PR #1)"
     title: "No automatic reset on any fuel gas or ethane feed shutoff, SIF or not"
     severity: HIGH
     when:
@@ -79,7 +80,7 @@ rules:
     suggested_action: "Change Reset to MANUAL for every cause that closes a feed or fuel shutoff."
 
   - id: D-04
-    status: "DRAFT – pending engineer approval"
+    status: "APPROVED – ShreeChem, 2026-11-02 (PR #1)"
     title: "Reset is blocked while the initiating cause is still active"
     severity: HIGH
     when:
@@ -92,7 +93,7 @@ rules:
     suggested_action: "Add CAUSE CLEAR to the reset permissives for this cause."
 
   - id: D-05
-    status: "DRAFT – pending engineer approval"
+    status: "APPROVED – ShreeChem, 2026-11-02 (PR #1)"
     title: "SIF reset is done at field or console as specified, never by a DCS auto-sequence"
     severity: HIGH
     when:
@@ -105,7 +106,7 @@ rules:
     suggested_action: "Set Reset location to FIELD, CONSOLE or FIELD+CONSOLE as the SRS specifies."
 
   - id: D-06
-    status: "DRAFT – pending engineer approval"
+    status: "APPROVED – ShreeChem, 2026-11-02 (PR #1)"
     title: "Any fuel trip needs a purge-complete permissive before relight"
     severity: HIGH
     when:
@@ -120,7 +121,7 @@ rules:
     suggested_action: "Add PURGE COMPLETE to the reset permissives for this cause."
 
   - id: D-07
-    status: "DRAFT – pending engineer approval"
+    status: "APPROVED – ShreeChem, 2026-11-02 (PR #1)"
     title: "A 2oo3 trip resets only when at least 2 of 3 transmitters are healthy"
     severity: MEDIUM
     when:
@@ -133,7 +134,7 @@ rules:
     suggested_action: "Add 2OO3 HEALTHY to the reset permissives, or document degraded-mode voting."
 
   - id: D-08
-    status: "DRAFT – pending engineer approval"
+    status: "APPROVED – ShreeChem, 2026-11-02 (PR #1)"
     title: "Bypassed or overridden initiators are flagged for review"
     severity: MEDIUM
     when:
@@ -146,7 +147,7 @@ rules:
     suggested_action: "Confirm the bypass permit, its compensating measures and expiry; remove the bypass when done."
 
   - id: D-09
-    status: "DRAFT – pending engineer approval"
+    status: "APPROVED – ShreeChem, 2026-11-02 (PR #1)"
     title: "SIL 2 and higher trips must not rely on a single sensor (1oo1)"
     severity: MEDIUM
     when:

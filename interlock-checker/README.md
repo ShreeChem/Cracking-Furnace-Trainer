@@ -140,7 +140,7 @@ check 4. It is written so a non-programmer can edit it. See GUIDE.md, Step 6.
 | 3 | **Valve fail position contradicts the trip action**: CLOSE on a fail-open valve, OPEN on a fail-close valve | HIGH | On loss of air or power the valve goes the wrong way. |
 | 3 | Trip action on a **fail-last (FL)** valve | MEDIUM | It only trips while the actuator still has energy; not fail-safe. |
 | 3 | Trip action on a valve with **no fail position** on the P&ID | LOW | The fail-safe direction cannot be checked. |
-| 4 | **Latching / reset rules** from the rules file | set per rule | Nine DRAFT rules for now, awaiting your approval. |
+| 4 | **Latching / reset rules** from the rules file | set per rule | Nine approved rules (D-01 to D-09) for the synthetic furnace. |
 
 Check 3 also notes when the C&E disagrees with itself: an intersection says OPEN while the
 column's required safe position says CLOSED.
@@ -155,7 +155,7 @@ high-high and steam drum level low-low. Four typical furnace trips the trainer d
 model were added: fuel gas pressure low-low, flame failure, tube metal temperature (TMT)
 high-high and a manual emergency shutdown button. All values are invented.
 
-Mistakes were planted on purpose so that every check and every draft rule has something to
+Mistakes were planted on purpose so that every check and every rule has something to
 find. Each one is marked `SEEDED` in `interlock_checker/synthetic.py`. A clean variant
 (`*_clean.xml` / `*_clean.xlsx`) fixes them all and gives **zero findings**.
 
@@ -184,12 +184,13 @@ checks that exactly these are found.
 
 ---
 
-## Latching and reset rules: DRAFT, waiting for your approval
+## Latching and reset rules: approved
 
-`rules/rules.yaml` holds nine **draft** rules for the synthetic furnace. They follow common
-IEC 61511 and burner-management practice, but no engineer has approved them. Each carries
-`status: "DRAFT – pending engineer approval"` and a plain-language `why_this_matters` line.
-The report labels their findings with the status and lists every rule still in draft.
+`rules/rules.yaml` holds nine rules for the synthetic furnace. They follow common IEC 61511
+and burner-management practice. They were proposed as drafts and **approved by ShreeChem on
+2026-11-02** (PR #1). Each carries `status: "APPROVED – ShreeChem, 2026-11-02 (PR #1)"` and a plain-language `why_this_matters`
+line. The report labels each finding with its rule's status. If a rule is set back to a
+status containing DRAFT, the report lists it again as awaiting approval.
 
 | Rule | In plain words | Severity |
 |---|---|---|
@@ -208,7 +209,7 @@ prove the logic solver really blocks a reset or really waits for the purge; that
 of the FAT, SAT and proof tests. The rules also overlap on purpose: one wrong cell can break
 two rules (FZT-110 breaks D-02 and D-03).
 
-To accept, change or delete a draft rule, see GUIDE.md, "How to accept, change or delete a
+To change or delete a rule, or to review a new draft, see GUIDE.md, "How to accept, change or delete a
 draft rule". To write new rules, see GUIDE.md, Step 6. No Python is needed for rules that test
 C&E columns. If a rule needs a new kind of test, one small function is added to `OPERATORS`
 in `interlock_checker/rules.py`.
@@ -225,7 +226,7 @@ python -m pytest --cov --cov-report=term-missing
 - parsing tests for the C&E reader (layout, alternative headings, every error message) and
   the P&ID reader (synthetic file, public DEXPI example, broken and non-DEXPI files);
 - rule framework tests (every test operator, every rules-file mistake message);
-- one test per draft rule that breaks only that rule and checks that exactly that rule fires;
+- one test per rule (D-01 to D-09) that breaks only that rule and checks that exactly that rule fires;
 - end-to-end tests on the synthetic example (all 18 expected findings, clean variant
   gives zero, CLI exit codes, all three report formats).
 
@@ -248,7 +249,7 @@ interlock-checker/
 │   ├── cli.py               Step 8: command line
 │   ├── synthetic.py         Step 9: makes the SYNTHETIC example files
 │   └── models.py            shared data containers
-├── rules/rules.yaml         settings + DRAFT latching/reset rules (edit this)
+├── rules/rules.yaml         settings + approved latching/reset rules (edit this)
 ├── examples/                SYNTHETIC P&ID and C&E (seeded and clean)
 │   └── output/              sample report from the seeded example
 ├── scripts/fetch_public_example.py
@@ -259,8 +260,9 @@ interlock-checker/
 
 ## Known limits and open points
 
-- **Latching/reset rules are drafts** until an engineer approves them (see above).
-- The draft rules recognise permissives by keyword (`CAUSE CLEAR`, `PURGE COMPLETE`,
+- The latching/reset rules were approved for the **synthetic** example. Before using the tool
+  on a real plant, check them against that plant's SRS and SIS philosophy.
+- The rules recognise permissives by keyword (`CAUSE CLEAR`, `PURGE COMPLETE`,
   `2OO3 HEALTHY`). If your C&E words them differently, change the words in the rules.
 - Latching and reset are read **per cause row**. Some C&Es put reset per effect (e.g. local
   reset at a valve); that layout is not read yet.

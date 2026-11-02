@@ -9,25 +9,26 @@ from interlock_checker.rules import RulesError, check_rules, load_rules, parse_r
 from conftest import RULES
 
 
-DRAFT_IDS = [f"D-0{i}" for i in range(1, 10)]
+RULE_IDS = [f"D-0{i}" for i in range(1, 10)]
+APPROVED = "APPROVED – ShreeChem, 2026-11-02 (PR #1)"
 
 
-def test_draft_file_loads():
+def test_rules_file_loads():
     rs = load_rules(RULES)
-    assert [r.rule_id for r in rs.rules] == DRAFT_IDS
-    assert all(r.status == "DRAFT – pending engineer approval" for r in rs.rules)
+    assert [r.rule_id for r in rs.rules] == RULE_IDS
+    assert all(r.status == APPROVED for r in rs.rules)
     assert all(r.explanation for r in rs.rules)            # every rule says why it matters
-    assert [r.rule_id for r in rs.drafts] == DRAFT_IDS
+    assert rs.drafts == []                                 # all approved
     assert rs.placeholders == []
     assert rs.settings.action_to_fail_position == {"CLOSE": "FC", "OPEN": "FO"}
 
 
-def test_draft_rules_pass_on_clean_pair(clean_pair):
+def test_rules_pass_on_clean_pair(clean_pair):
     _, ce = clean_pair
     assert check_rules(ce, load_rules(RULES)) == []
 
 
-# One change to the clean C&E row per case; exactly the named draft rule must fire.
+# One change to the clean C&E row per case; exactly the named rule must fire.
 @pytest.mark.parametrize("rule_id, changes, fuel_valve", [
     ("D-01", {"latching": "NO"}, False),
     ("D-02", {"reset": "AUTO"}, False),
@@ -39,7 +40,7 @@ def test_draft_rules_pass_on_clean_pair(clean_pair):
     ("D-08", {"bypass": "OVERRIDDEN – PTW 12"}, False),
     ("D-09", {"voting": "1oo1"}, False),
 ])
-def test_each_draft_rule_fires_alone(clean_pair, rule_id, changes, fuel_valve):
+def test_each_rule_fires_alone(clean_pair, rule_id, changes, fuel_valve):
     _, ce = clean_pair
     if fuel_valve:
         ce.effects[0].tag = "XV-170"
@@ -47,7 +48,7 @@ def test_each_draft_rule_fires_alone(clean_pair, rule_id, changes, fuel_valve):
         setattr(ce.causes[0], name, value)
     found = check_rules(ce, load_rules(RULES))
     assert [f.check.split()[5] for f in found] == [rule_id]
-    assert "[DRAFT – pending engineer approval]" in found[0].check
+    assert f"[{APPROVED}]" in found[0].check
 
 
 def test_fuel_rules_only_apply_to_fuel_valves(clean_pair):
