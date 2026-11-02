@@ -40,7 +40,9 @@ def clean_pair():
     )
     ce = CeMatrix(source="test")
     ce.causes.append(Cause("C01", "PZT-1", "Pressure low-low", voting="2oo3", sil="SIL2",
-                           latching="YES", reset="MANUAL"))
+                           latching="YES", reset="MANUAL", reset_location="CONSOLE",
+                           reset_permissive="CAUSE CLEAR; PURGE COMPLETE; 2OO3 HEALTHY",
+                           bypass="NONE"))
     ce.effects += [Effect("E01", "XV-1", "Shutoff", "CLOSE", "CLOSED"),
                    Effect("E02", "XV-2", "Vent", "OPEN", "OPEN")]
     ce.links[("C01", "E01")] = "CLOSE"

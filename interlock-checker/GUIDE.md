@@ -260,33 +260,32 @@ This step is built so that **you write the rules**, not a programmer.
 
 A rule in your site's safety philosophy reads like:
 
-> "For every C&E row that closes a fuel gas shutoff valve, latching must be YES and reset
-> must be MANUAL."
+> "For every C&E row that closes a fuel gas shutoff valve, the reset permissives must
+> include a completed purge."
 
-In `rules/rules.yaml` the same rule is:
+In `rules/rules.yaml` the same rule (draft rule D-06) is:
 
 ```yaml
-  - id: R-PH-01
-    placeholder: true
-    title: "Every trip of a fuel gas shutoff valve must be latched with manual reset"
+  - id: D-06
+    status: "DRAFT – pending engineer approval"
+    title: "Any fuel trip needs a purge-complete permissive before relight"
     severity: HIGH
     when:                       # WHICH rows the rule looks at
       acts_on:
         tag_matches: "^XV-17\\d$"
         action: CLOSE
     require:                    # WHAT must be true for those rows
-      latching: "YES"
-      reset: MANUAL
-    explanation: >-
-      If the trip clears by itself ... (shown in the report)
-    suggested_action: >-
-      Set Latching = YES and Reset = MANUAL ... (shown in the report)
+      reset_permissive: {contains: "PURGE COMPLETE"}
+    why_this_matters: >-
+      After a fuel trip, unburnt gas can sit in the firebox ... (shown in the report)
+    suggested_action: "Add PURGE COMPLETE to the reset permissives for this cause."
 ```
 
 **What it does.** For each C&E row, the tool first asks whether the `when` part applies.
 If it does, every line under `require` must hold. If one fails, the tool writes a finding
-using your title, explanation, suggested action and severity. It also says exactly which
-field failed, for example *"latching is 'NO' but must be 'YES'"*.
+using your title, why-this-matters text, suggested action and severity. It also says exactly
+which field failed, for example *"reset permissive is 'CAUSE CLEAR; 2OO3 HEALTHY' but must
+contain 'PURGE COMPLETE'"*.
 
 **Why you care.** Latching and reset philosophy varies between sites and licensors. Keeping
 it in a plain file means you can maintain it the way you maintain a C&E: under MOC, with
@@ -301,15 +300,17 @@ revisions and without touching code.
 | `severity` | no (default MEDIUM) | `HIGH`, `MEDIUM`, `LOW` or `INFO` |
 | `when` | no (default: all rows) | which C&E rows the rule looks at |
 | `require` | yes | what must be true for those rows |
-| `explanation` | recommended | why the rule exists |
+| `why_this_matters` | recommended | why the rule exists, in plain words (`explanation` also works) |
 | `suggested_action` | recommended | what to do when it is broken |
+| `status` | no | e.g. `"DRAFT – pending engineer approval"`. Any status containing DRAFT is listed in the report as awaiting approval |
 | `placeholder` | no | `true` marks it as an example in the report |
 | `enabled` | no (default true) | `false` switches the rule off without deleting it |
 
 ### Fields you can test (in `when` and `require`)
 
 These are the C&E columns: `cause_id`, `tag`, `description`, `setpoint`, `units`,
-`trip_type`, `voting`, `sil`, `latching`, `reset`, `notes`.
+`trip_type`, `voting`, `sil`, `latching`, `reset`, `reset_location`, `reset_permissive`,
+`bypass`, `notes`.
 
 In `when` only, `acts_on` selects rows by the effects they drive:
 `tag_matches` (a pattern on the final element tag) and/or `action` (e.g. `CLOSE`).
@@ -327,6 +328,8 @@ In `when` only, `acts_on` selects rows by the effects they drive:
 | `field: {min: N}` | first number in the text is at least N | `sil: {min: 2}` (SIL2, SIL3) |
 | `field: {max: N}` | first number is at most N | `sil: {max: 1}` |
 | `field: {empty: true}` / `{empty: false}` | blank / filled in | `notes: {empty: false}` |
+| `field: {contains: "text"}` | the text appears anywhere in the cell | `reset_permissive: {contains: "PURGE COMPLETE"}` |
+| `field: {not_contains: "text"}` | the text does not appear | `reset_location: {not_contains: "DCS"}` |
 
 Several lines under `require` must **all** hold. Several lines under `when` must **all**
 match for the rule to apply.
@@ -337,14 +340,58 @@ match for the rule to apply.
 2. Scroll to the **TEMPLATE** at the bottom. Copy the block and paste it under the last rule.
 3. Remove the `#` at the start of each line of your copy. Keep the indentation exactly:
    the `-` of each rule sits two spaces in from `rules:`.
-4. Fill in `id`, `title`, `severity`, `when`, `require`, `explanation` and
-   `suggested_action`. Set `placeholder: false`.
+4. Fill in `id`, `title`, `severity`, `when`, `require`, `why_this_matters` and
+   `suggested_action`. Leave out `status` for an approved rule (or write `status: "APPROVED"`).
 5. Run the checker. If the file has a mistake, the tool stops and names the rule and the
    field, for example *"Rule R-SITE-01 'require': unknown C&E field 'resett'"*.
 6. Prove the rule works, like a trip test: change one cell in a **copy** of the C&E so that
    it breaks the rule, run again, and check that the finding appears.
-7. When your own rules are in place, delete the placeholder rules or set
-   `enabled: false` on them. The report stops printing "placeholder rules still in use".
+7. Record the change the way you record a C&E revision: who changed which rule, and why.
+
+### How to accept, change or delete a draft rule
+
+The file starts with nine rules, D-01 to D-09. Each one is marked
+`status: "DRAFT – pending engineer approval"`. Treat them like a proposed C&E markup: nothing
+in them is agreed until you or your SIS engineer has reviewed each one. While a rule is in
+draft, its findings carry the label `[DRAFT – pending engineer approval]`, and the report
+summary lists it under "DRAFT rules awaiting engineer approval".
+
+Work through the rules one at a time. For each rule, read its `title` and `why_this_matters`
+and compare them with your site's SIS philosophy or SRS. Then do one of the following.
+
+**To accept it unchanged:** change its status line to
+
+```yaml
+    status: "APPROVED – J. Smith, 2026-11-10, MOC-1234"
+```
+
+Any wording works, as long as it no longer contains the word DRAFT. Writing who approved it,
+when, and under which MOC gives you an audit trail in the file itself. The rule stops
+appearing in the "awaiting approval" list.
+
+**To change it:** edit the part that is wrong, then set the status as above. Typical changes:
+
+- *A different keyword.* If your C&E writes "PURGE OK" instead of "PURGE COMPLETE", change
+  `{contains: "PURGE COMPLETE"}` to `{contains: "PURGE OK"}`.
+- *Different valves.* D-03 and D-06 pick the valves with a pattern on the tag, e.g.
+  `"^XV-17\\d$"` means "XV-17 followed by one digit". Change it to match your fuel valve tags.
+- *A different severity.* Change `severity: HIGH` to `MEDIUM`, for example.
+- *A narrower scope.* Add a line under `when`. For example, `sil: {min: 2}` applies the
+  rule only to SIL 2 and above.
+
+Then rerun the checker on a C&E that you know breaks the rule, and check the finding appears.
+
+**To delete it:** if the rule does not apply to your site, either
+
+- remove the whole block, from its `- id:` line down to the line before the next `- id:`, or
+- keep it for the record and switch it off by adding `enabled: false`, with a comment saying
+  why, for example `# Not used: flame failure handled by the vendor BMS, see SRS 4.2`.
+
+A disabled rule is never applied and is not listed as awaiting approval.
+
+**When every draft rule is done:** the report no longer shows the "DRAFT rules awaiting
+engineer approval" line. From then on, rule findings are measured against your approved
+philosophy, not against a proposal.
 
 ### YAML traps to avoid
 
@@ -436,7 +483,7 @@ mistake is marked `SEEDED` and controlled by one switch. `seeded=False` gives a 
 
 **Why you care.** A checker is only trustworthy if you have seen it catch known faults
 *and* stay quiet on good data. It is the same idea as a proof test with a simulated input.
-The README lists all 11 seeded mismatches.
+The README lists all 17 seeded mistakes, which give 18 findings. One cell breaks two rules.
 
 Why hand-written XML? pyDEXPI 1.2 can *read* instrumentation from DEXPI files, but its
 exporter only *writes* equipment and metadata. So the generator writes the XML in the same
@@ -459,15 +506,16 @@ def test_clean_example_has_zero_findings(clean_files):
 ```
 
 **What it does.** Each test sets up an input, runs part of the tool and checks the result.
-This is a FAT for the software. There are 88 tests:
+This is a FAT for the software. There are 103 tests:
 
 - `test_pid_reader.py`: reads the synthetic P&ID and the public DEXPI example; broken,
   non-DEXPI and empty files give clear errors;
 - `test_ce_reader.py`: the C&E layout, alternative headings and every error message;
 - `test_checks.py`: each check on a tiny clean case (zero findings), then with one fault
   added at a time;
-- `test_rules.py`: every test operator and every rules-file mistake message;
-- `test_end_to_end.py`: the full synthetic example. All 11 seeded mismatches are found, the
+- `test_rules.py`: every test operator, every rules-file mistake message, and one test per
+  draft rule that breaks only that rule and checks that exactly that rule fires;
+- `test_end_to_end.py`: the full synthetic example. All 18 expected findings appear, the
   clean variant gives zero, and the CLI exit codes and all three report formats work.
 
 Run them with:

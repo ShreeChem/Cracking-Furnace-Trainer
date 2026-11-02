@@ -10,6 +10,9 @@ def test_synthetic_ce(seeded_files):
     assert [e.tag for e in ce.effects][:3] == ["XV-100", "FV-100", "FV-110"]
     c = next(c for c in ce.causes if c.tag == "FZT-110")
     assert (c.voting, c.sil, c.latching, c.reset, c.setpoint) == ("2oo3", "SIL2", "YES", "AUTO", "0.20")
+    assert (c.reset_location, c.reset_permissive, c.bypass) == ("CONSOLE", "CAUSE CLEAR; 2OO3 HEALTHY", "NONE")
+    b = next(c for c in ce.causes if c.tag == "FZT-101B")
+    assert b.bypass.startswith("BYPASSED")
     xv172 = next(e for e in ce.effects if e.tag == "XV-172")
     assert (xv172.action, xv172.safe_position) == ("OPEN", "OPEN")
     # 'X' takes the column action; an explicit word is kept as written

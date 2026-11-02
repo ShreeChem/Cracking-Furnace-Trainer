@@ -141,12 +141,41 @@ def ce_causes(seeded: bool = True) -> list[dict]:
         # SEEDED: TZT-160 is on the C&E but not on the P&ID (added after a HAZOP, MOC not closed)
         dict(tag="TZT-160", desc="Tube metal temperature high-high", sp="1080", units="°C", type="HH",
              voting="1oo2", sil="SIL1", latch="YES", reset="MANUAL", group="combustion"),
+        # SEEDED (D-03): manual ESD button not SIL-credited in this example and set to AUTO reset,
+        # e.g. a spring-return button that clears the trip when released.
         dict(tag="HS-199", desc="Emergency shutdown push button", sp="—", units="—", type="MAN",
-             voting="1oo1", sil="SIL1", latch="YES", reset="MANUAL", group="esd"),
+             voting="1oo1", sil="" if seeded else "SIL1", latch="YES",
+             reset="AUTO" if seeded else "MANUAL", group="esd"),
     ]
     if not seeded:
         rows.append(dict(tag="PT-172", desc="Fuel gas pressure high-high", sp="3.5", units="barg", type="HH",
                          voting="2oo3", sil="SIL2", latch="YES", reset="MANUAL", group="combustion"))
+
+    # Reset location, reset permissives and bypass status (used by the DRAFT rules D-01..D-09).
+    for r in rows:
+        perms = ["CAUSE CLEAR"]
+        if r["group"] in ("combustion", "flame", "esd"):
+            perms.append("PURGE COMPLETE")          # any fuel trip: purge before relight
+        if r["voting"] == "2oo3":
+            perms.append("2OO3 HEALTHY")            # at least 2 of 3 transmitters healthy
+        r["perm"] = "; ".join(perms)
+        r["loc"] = "FIELD+CONSOLE" if r["group"] in ("flame", "esd") else "CONSOLE"
+        r["bypass"] = "NONE"
+    if seeded:
+        seeds = {
+            # SEEDED (D-04): COT trip can be reset while the high temperature is still present.
+            "TZT-150": dict(perm="2OO3 HEALTHY"),
+            # SEEDED (D-05): O2 trip reset by a DCS auto-sequence.
+            "AZT-140": dict(loc="DCS-AUTO"),
+            # SEEDED (D-06): fuel gas low-pressure trip has no purge-complete permissive.
+            "PZT-170": dict(perm="CAUSE CLEAR; 2OO3 HEALTHY"),
+            # SEEDED (D-07): 2oo3 drum level trip resets without the 2-of-3-healthy check.
+            "LZT-130": dict(perm="CAUSE CLEAR"),
+            # SEEDED (D-08): pass B transmitter is bypassed under a (synthetic) maintenance override.
+            "FZT-101B": dict(bypass="BYPASSED – MOS-0423 (synthetic)"),
+        }
+        for r in rows:
+            r.update(seeds.get(r["tag"], {}))
     for i, r in enumerate(rows, start=1):
         r["id"] = f"C{i:02d}"
     return rows
@@ -281,7 +310,8 @@ def build_pid_xml(seeded: bool = True) -> bytes:
 # ---------------------------------------------------------------------------
 
 CAUSE_HEADERS = ["Cause ID", "Initiator tag", "Description", "Trip setpoint", "Units",
-                 "Trip type", "Voting", "SIL", "Latching", "Reset", "Notes"]
+                 "Trip type", "Voting", "SIL", "Latching", "Reset", "Reset location",
+                 "Reset permissive", "Bypass / override", "Notes"]
 EFFECT_LABELS = ["Effect ID", "Final element tag", "Description", "Action on trip",
                  "Required safe position"]
 HEADER_ROW = 10          # row with the cause column headings
@@ -338,7 +368,8 @@ def build_ce_workbook(seeded: bool = True) -> Workbook:
 
     for r, cause in enumerate(causes, start=HEADER_ROW + 1):
         values = [cause["id"], cause["tag"], cause["desc"], cause["sp"], cause["units"], cause["type"],
-                  cause["voting"], cause["sil"], cause["latch"], cause["reset"], ""]
+                  cause["voting"], cause["sil"], cause["latch"], cause["reset"], cause["loc"],
+                  cause["perm"], cause["bypass"], ""]
         for k, v in enumerate(values, start=1):
             ws.cell(row=r, column=k, value=v).border = _BOX
         links = groups[cause["group"]]
@@ -348,7 +379,7 @@ def build_ce_workbook(seeded: bool = True) -> Workbook:
             if c.value:
                 c.fill = _LINK
 
-    widths = [9, 14, 34, 12, 12, 9, 8, 7, 10, 10, 24]
+    widths = [9, 14, 34, 12, 12, 9, 8, 7, 10, 10, 15, 36, 26, 24]
     for k, w in enumerate(widths, start=1):
         ws.column_dimensions[get_column_letter(k)].width = w
     for j in range(len(CE_EFFECTS)):
@@ -365,6 +396,10 @@ def build_ce_workbook(seeded: bool = True) -> Workbook:
         ("Voting", "e.g. 2oo3 = two out of three transmitters must agree before the trip acts."),
         ("Latching", "YES = the trip stays active after the process returns to normal."),
         ("Reset", "MANUAL = an operator must reset the trip; AUTO = it clears by itself."),
+        ("Reset location", "FIELD, CONSOLE, FIELD+CONSOLE, or DCS-AUTO (reset by a DCS sequence)."),
+        ("Reset permissive", "Conditions before reset is allowed, separated by ';' "
+                             "(CAUSE CLEAR, PURGE COMPLETE, 2OO3 HEALTHY)."),
+        ("Bypass / override", "NONE, or BYPASSED / OVERRIDDEN with the permit or MOS reference."),
         ("Source", "Trips follow the trainer in this repository (src/engine.js); four typical "
                    "furnace trips were added. All values are invented."),
     ]

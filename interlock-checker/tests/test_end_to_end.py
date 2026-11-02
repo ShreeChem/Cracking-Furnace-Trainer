@@ -14,18 +14,26 @@ EXPECTED = {
     ("1", "TZT-160"), ("1", "XV-176"),
     ("2", "FZT-101D"), ("2", "PT-172"),
     ("3", "FV-110"), ("3", "TV-150"), ("3", "XV-172"), ("3", "XV-100"),
-    ("4", "PZT-141"), ("4", "FZT-110"), ("4", "BZS-171"),
+}
+# Draft latching/reset rules: (rule id, tag). FZT-110 breaks both D-02 and D-03.
+EXPECTED_RULES = {
+    ("D-01", "PZT-141"), ("D-02", "FZT-110"), ("D-03", "FZT-110"), ("D-03", "HS-199"),
+    ("D-04", "TZT-150"), ("D-05", "AZT-140"), ("D-06", "PZT-170"), ("D-07", "LZT-130"),
+    ("D-08", "FZT-101B"), ("D-09", "BZS-171"),
 }
 
 
 def test_seeded_example_finds_every_planted_mismatch(seeded_files):
     findings, ctx = cli.run(*seeded_files, RULES)
-    got = {(f.check.split(".")[0], f.tags[0]) for f in findings}
+    got = {(f.check.split(".")[0], f.tags[0]) for f in findings if not f.check.startswith("4.")}
     assert got == EXPECTED
-    assert [f.finding_id for f in findings] == [f"F-{i:03d}" for i in range(1, 12)]
+    rules = {(f.check.split()[5], f.tags[0]) for f in findings if f.check.startswith("4.")}
+    assert rules == EXPECTED_RULES
+    assert [f.finding_id for f in findings] == [f"F-{i:03d}" for i in range(1, 19)]
     assert {f.check.split(".")[0] for f in findings} == {"1", "2", "3", "4"}
     assert ctx.banner.startswith("SYNTHETIC")
-    assert ctx.placeholder_rules == ["R-PH-01", "R-PH-02", "R-PH-03"]
+    assert ctx.placeholder_rules == []
+    assert ctx.draft_rules == [f"D-0{i}" for i in range(1, 10)]
 
 
 def test_clean_example_has_zero_findings(clean_files):
@@ -38,18 +46,21 @@ def test_cli_writes_three_reports(seeded_files, tmp_path, capsys):
                      "--rules", str(RULES), "--out", str(tmp_path)])
     assert code == 0
     out = capsys.readouterr().out
-    assert "11 findings: 9 HIGH, 2 MEDIUM" in out and "placeholder" in out
+    assert "18 findings: 14 HIGH, 4 MEDIUM" in out and "DRAFT rules awaiting" in out
     md = (tmp_path / "interlock_report.md").read_text(encoding="utf-8")
     html = (tmp_path / "interlock_report.html").read_text(encoding="utf-8")
-    assert "SYNTHETIC – FOR TRAINING ONLY" in md and "F-011" in md
+    assert "SYNTHETIC – FOR TRAINING ONLY" in md and "F-018" in md
+    assert "DRAFT rules awaiting engineer approval" in md and "DRAFT rules awaiting" in html
     assert "SYNTHETIC – FOR TRAINING ONLY" in html and "XV-172" in html
     wb = load_workbook(tmp_path / "interlock_report.xlsx")
     ws = wb["Findings"]
     assert ws["A1"].value.startswith("SYNTHETIC")
     assert [c.value for c in ws[5]] == ["Finding ID", "Check", "Tag(s)", "Severity",
                                         "Explanation", "Suggested action"]
-    assert ws.max_row == 5 + 11
-    assert wb["Summary"]["B2"].value == 11
+    assert ws.max_row == 5 + 18
+    assert wb["Summary"]["B2"].value == 18
+    summary = [c.value for c in wb["Summary"]["A"]]
+    assert "DRAFT rules awaiting engineer approval" in summary
 
 
 def test_cli_fail_on(seeded_files, clean_files, tmp_path):
@@ -70,7 +81,7 @@ def test_cli_input_errors_exit_2(seeded_files, tmp_path, capsys, which):
 def test_cli_without_rules_file(seeded_files, tmp_path):
     findings, ctx = cli.run(*seeded_files)
     assert not any(f.check.startswith("4.") for f in findings)
-    assert ctx.placeholder_rules == []
+    assert ctx.placeholder_rules == [] and ctx.draft_rules == []
 
 
 def test_empty_report_and_warnings(tmp_path):

@@ -84,6 +84,9 @@ class Cause:
     sil: str = ""            # e.g. SIL2
     latching: str = ""       # e.g. YES / NO
     reset: str = ""          # e.g. MANUAL / AUTO
+    reset_location: str = ""     # e.g. FIELD / CONSOLE / FIELD+CONSOLE / DCS-AUTO
+    reset_permissive: str = ""   # conditions before reset, e.g. CAUSE CLEAR; PURGE COMPLETE
+    bypass: str = ""             # NONE, or BYPASSED / OVERRIDDEN with the permit reference
     notes: str = ""
     row: int = 0             # Excel row number, so findings can point back to the sheet
 

@@ -8,32 +8,70 @@ from interlock_checker.rules import RulesError, check_rules, load_rules, parse_r
 from conftest import RULES
 
 
-def test_placeholder_file_loads():
+DRAFT_IDS = [f"D-0{i}" for i in range(1, 10)]
+
+
+def test_draft_file_loads():
     rs = load_rules(RULES)
-    assert [r.rule_id for r in rs.rules] == ["R-PH-01", "R-PH-02", "R-PH-03"]
-    assert all(r.placeholder for r in rs.rules)
-    assert [r.rule_id for r in rs.placeholders] == ["R-PH-01", "R-PH-02", "R-PH-03"]
+    assert [r.rule_id for r in rs.rules] == DRAFT_IDS
+    assert all(r.status == "DRAFT – pending engineer approval" for r in rs.rules)
+    assert all(r.explanation for r in rs.rules)            # every rule says why it matters
+    assert [r.rule_id for r in rs.drafts] == DRAFT_IDS
+    assert rs.placeholders == []
     assert rs.settings.action_to_fail_position == {"CLOSE": "FC", "OPEN": "FO"}
 
 
-def test_placeholder_rules_pass_on_clean_pair(clean_pair):
+def test_draft_rules_pass_on_clean_pair(clean_pair):
     _, ce = clean_pair
     assert check_rules(ce, load_rules(RULES)) == []
 
 
-def test_each_placeholder_rule_fires(clean_pair):
+# One change to the clean C&E row per case; exactly the named draft rule must fire.
+@pytest.mark.parametrize("rule_id, changes, fuel_valve", [
+    ("D-01", {"latching": "NO"}, False),
+    ("D-02", {"reset": "AUTO"}, False),
+    ("D-03", {"sil": "", "reset": "AUTO"}, True),
+    ("D-04", {"reset_permissive": "PURGE COMPLETE; 2OO3 HEALTHY"}, False),
+    ("D-05", {"reset_location": "DCS-AUTO"}, False),
+    ("D-06", {"reset_permissive": "CAUSE CLEAR; 2OO3 HEALTHY"}, True),
+    ("D-07", {"reset_permissive": "CAUSE CLEAR; PURGE COMPLETE"}, False),
+    ("D-08", {"bypass": "OVERRIDDEN – PTW 12"}, False),
+    ("D-09", {"voting": "1oo1"}, False),
+])
+def test_each_draft_rule_fires_alone(clean_pair, rule_id, changes, fuel_valve):
     _, ce = clean_pair
-    ce.effects[0].tag = "XV-170"                 # make it a fuel gas shutoff for R-PH-01
-    c = ce.causes[0]
-    c.latching, c.reset, c.voting = "NO", "AUTO", "1oo1"
+    if fuel_valve:
+        ce.effects[0].tag = "XV-170"
+    for name, value in changes.items():
+        setattr(ce.causes[0], name, value)
     found = check_rules(ce, load_rules(RULES))
-    ids = sorted(f.check.split()[5] for f in found)
-    assert ids == ["R-PH-01", "R-PH-02", "R-PH-03"]
-    r1 = next(f for f in found if "R-PH-01" in f.check)
-    assert "PLACEHOLDER" in r1.check
-    assert "latching is 'NO' but must be 'YES'" in r1.explanation
-    assert "reset is 'AUTO' but must be 'MANUAL'" in r1.explanation
-    assert "It acts on XV-170" in r1.explanation
+    assert [f.check.split()[5] for f in found] == [rule_id]
+    assert "[DRAFT – pending engineer approval]" in found[0].check
+
+
+def test_fuel_rules_only_apply_to_fuel_valves(clean_pair):
+    _, ce = clean_pair
+    ce.causes[0].reset_permissive = "CAUSE CLEAR; 2OO3 HEALTHY"     # no purge, but XV-1 is not fuel
+    assert check_rules(ce, load_rules(RULES)) == []
+
+
+def test_blank_bypass_is_not_flagged(clean_pair):
+    _, ce = clean_pair
+    ce.causes[0].bypass = ""
+    assert check_rules(ce, load_rules(RULES)) == []
+
+
+def test_placeholder_and_status_labels(clean_pair):
+    _, ce = clean_pair
+    ce.causes[0].latching = "NO"
+    rs = parse_rules({"rules": [{"id": "P1", "placeholder": True, "status": "DRAFT x",
+                                 "require": {"latching": "YES"}, "explanation": "old key works"}]})
+    (f,) = check_rules(ce, rs)
+    assert "[PLACEHOLDER RULE" in f.check and "[DRAFT x]" in f.check
+    assert "old key works" in f.explanation
+    assert [r.rule_id for r in rs.placeholders] == ["P1"] and [r.rule_id for r in rs.drafts] == ["P1"]
+    approved = parse_rules({"rules": [{"id": "A1", "status": "APPROVED", "require": {"latching": "YES"}}]})
+    assert approved.drafts == []
 
 
 def _one_rule(**kw):
@@ -56,6 +94,8 @@ def _cause(**kw):
     ({"matches": "^SIL"}, "SIL3", True), ({"not_matches": "^SIL"}, "SIL3", False),
     ({"min": 2}, "SIL2", True), ({"min": 2}, "SIL1", False), ({"max": 1}, "SIL1", True),
     ({"min": 2}, "", False), ({"empty": True}, "", True), ({"empty": False}, "", False),
+    ({"contains": "purge"}, "CAUSE CLEAR; PURGE COMPLETE", True), ({"contains": "PURGE"}, "CAUSE CLEAR", False),
+    ({"not_contains": "AUTO"}, "DCS-AUTO", False), ({"not_contains": "AUTO"}, "CONSOLE", True),
 ])
 def test_operators(clean_pair, test, value, ok):
     _, ce = clean_pair

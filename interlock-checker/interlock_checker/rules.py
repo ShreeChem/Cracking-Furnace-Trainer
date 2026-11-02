@@ -24,7 +24,8 @@ CHECK_4 = "4. Latching / reset rule"
 
 # C&E cause fields a rule may test (the column names of the C&E, in snake_case).
 CAUSE_FIELDS = ("cause_id", "tag", "description", "setpoint", "units", "trip_type",
-                "voting", "sil", "latching", "reset", "notes")
+                "voting", "sil", "latching", "reset", "reset_location", "reset_permissive",
+                "bypass", "notes")
 
 
 class RulesError(Exception):
@@ -62,6 +63,8 @@ OPERATORS = {
     "min": lambda v, a: _number(v) is not None and _number(v) >= float(a),
     "max": lambda v, a: _number(v) is not None and _number(v) <= float(a),
     "empty": lambda v, a: (v.strip() == "") == bool(a),
+    "contains": lambda v, a: _word(a).upper() in v.upper(),
+    "not_contains": lambda v, a: _word(a).upper() not in v.upper(),
 }
 
 _OPERATOR_WORDS = {
@@ -69,6 +72,7 @@ _OPERATOR_WORDS = {
     "not_one_of": "not be any of {a}", "matches": "match the pattern '{a}'",
     "not_matches": "not match the pattern '{a}'", "min": "be at least {a}",
     "max": "be at most {a}", "empty": "be empty",
+    "contains": "contain '{a}'", "not_contains": "not contain '{a}'",
 }
 
 
@@ -109,6 +113,7 @@ class Rule:
     suggested_action: str = ""
     placeholder: bool = False
     enabled: bool = True
+    status: str = ""          # e.g. "DRAFT – pending engineer approval"
 
 
 @dataclass
@@ -120,6 +125,11 @@ class RuleSet:
     @property
     def placeholders(self) -> list[Rule]:
         return [r for r in self.rules if r.placeholder and r.enabled]
+
+    @property
+    def drafts(self) -> list[Rule]:
+        """Enabled rules whose status still says DRAFT (not yet approved by an engineer)."""
+        return [r for r in self.rules if r.enabled and "DRAFT" in r.status.upper()]
 
 
 def _check_tests(where: str, tests: dict) -> dict[str, dict]:
@@ -171,8 +181,8 @@ def parse_rules(data: dict, source: str = "") -> RuleSet:
         if rid in seen:
             raise RulesError(f"{where}: the id is used twice.")
         seen.add(rid)
-        allowed = {"id", "title", "severity", "when", "require", "explanation",
-                   "suggested_action", "placeholder", "enabled"}
+        allowed = {"id", "title", "severity", "when", "require", "explanation", "why_this_matters",
+                   "suggested_action", "placeholder", "enabled", "status"}
         extra = set(raw) - allowed
         if extra:
             raise RulesError(f"{where}: unknown key(s) {', '.join(sorted(extra))}. "
@@ -200,10 +210,12 @@ def parse_rules(data: dict, source: str = "") -> RuleSet:
             when=_check_tests(f"{where} 'when'", when),
             acts_on=acts_on,
             require=_check_tests(f"{where} 'require'", raw["require"]),
-            explanation=str(raw.get("explanation") or "").strip(),
+            # 'why_this_matters' is the plain-language name; 'explanation' still works.
+            explanation=str(raw.get("why_this_matters") or raw.get("explanation") or "").strip(),
             suggested_action=str(raw.get("suggested_action") or "").strip(),
             placeholder=bool(raw.get("placeholder", False)),
             enabled=bool(raw.get("enabled", True)),
+            status=str(raw.get("status") or "").strip(),
         ))
     return RuleSet(settings=settings, rules=rules, source=source)
 
@@ -271,6 +283,8 @@ def check_rules(ce: CeMatrix, ruleset: RuleSet) -> list[Finding]:
                 for f in failed)
             via = f" It acts on {', '.join(targets)}." if targets else ""
             label = " [PLACEHOLDER RULE – replace with your own]" if rule.placeholder else ""
+            if rule.status:
+                label += f" [{rule.status}]"
             findings.append(Finding(
                 check=f"{CHECK_4} {rule.rule_id}{label}",
                 tags=[cause.tag],

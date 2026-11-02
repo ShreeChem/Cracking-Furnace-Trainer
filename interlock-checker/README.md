@@ -107,7 +107,10 @@ test always runs.
 ONLY" in cell A1 and in the print header and footer.
 
 - **Rows = causes**: Cause ID, Initiator tag, Description, Trip setpoint, Units, Trip type,
-  Voting (e.g. `2oo3`), SIL, **Latching**, **Reset**, Notes.
+  Voting (e.g. `2oo3`), SIL, **Latching** (YES/NO), **Reset** (MANUAL/AUTO), **Reset location**
+  (FIELD / CONSOLE / FIELD+CONSOLE / DCS-AUTO), **Reset permissive** (conditions separated by
+  `;`, e.g. `CAUSE CLEAR; PURGE COMPLETE; 2OO3 HEALTHY`), **Bypass / override** (NONE, or the
+  bypass with its permit reference), Notes.
 - **Columns = effects**: above the cause headings, five label rows give Effect ID, Final
   element tag, Description, Action on trip (CLOSE / OPEN / STOP) and Required safe position.
 - **Intersections**: `X` means "use the column's action". An action word (e.g. `OPEN`)
@@ -133,7 +136,7 @@ check 4. It is written so a non-programmer can edit it. See GUIDE.md, Step 6.
 | 3 | **Valve fail position contradicts the trip action**: CLOSE on a fail-open valve, OPEN on a fail-close valve | HIGH | On loss of air or power the valve goes the wrong way. |
 | 3 | Trip action on a **fail-last (FL)** valve | MEDIUM | It only trips while the actuator still has energy; not fail-safe. |
 | 3 | Trip action on a valve with **no fail position** on the P&ID | LOW | The fail-safe direction cannot be checked. |
-| 4 | **Latching / reset rules** from the rules file | set per rule | Placeholder rules for now: your site rules go here. |
+| 4 | **Latching / reset rules** from the rules file | set per rule | Nine DRAFT rules for now, awaiting your approval. |
 
 Check 3 also notes when the C&E disagrees with itself: an intersection says OPEN while the
 column's required safe position says CLOSED.
@@ -148,8 +151,8 @@ high-high and steam drum level low-low. Four typical furnace trips the trainer d
 model were added: fuel gas pressure low-low, flame failure, tube metal temperature (TMT)
 high-high and a manual emergency shutdown button. All values are invented.
 
-Mistakes were planted on purpose so that every check has something to find. Each one is
-marked `SEEDED` in `interlock_checker/synthetic.py`. A clean variant
+Mistakes were planted on purpose so that every check and every draft rule has something to
+find. Each one is marked `SEEDED` in `interlock_checker/synthetic.py`. A clean variant
 (`*_clean.xml` / `*_clean.xlsx`) fixes them all and gives **zero findings**.
 
 | # | Check | Tag | What was planted |
@@ -162,29 +165,49 @@ marked `SEEDED` in `interlock_checker/synthetic.py`. A clean variant
 | 6 | 3 | XV-172 | Fuel gas vent (bleed) valve: the C&E says OPEN, but the P&ID shows it fail-close. |
 | 7 | 3 | TV-150 | COT high-high row says OPEN on the fail-close fuel gas control valve; the column's safe position is CLOSED. |
 | 8 | 3 | XV-100 | Ethane feed shutoff valve drawn fail-last (FL) while the C&E needs CLOSE. MEDIUM. |
-| 9 | 4 (R-PH-01) | PZT-141 | Firebox pressure high-high closes the fuel gas shutoffs but is not latched. |
-| 10 | 4 (R-PH-02) | FZT-110 | Steam/ethane ratio low-low is a SIL2 trip with AUTO reset. |
-| 11 | 4 (R-PH-03) | BZS-171 | Flame failure is SIL2 with 1oo1 voting. MEDIUM. |
+| 9 | 4 (D-01) | PZT-141 | Firebox pressure high-high (SIL2) is not latched. |
+| 10 | 4 (D-02, D-03) | FZT-110 | Steam/ethane ratio low-low is a SIL2 trip with AUTO reset. It also closes the feed shutoff, so D-03 fires too. |
+| 11 | 4 (D-03) | HS-199 | ESD push button (not SIL-credited in this example) has AUTO reset although it closes feed and fuel. |
+| 12 | 4 (D-04) | TZT-150 | COT trip reset permissive lacks CAUSE CLEAR: reset is possible while COT is still high. |
+| 13 | 4 (D-05) | AZT-140 | O2 trip is reset by a DCS auto-sequence. |
+| 14 | 4 (D-06) | PZT-170 | Fuel gas low-pressure trip has no PURGE COMPLETE permissive before relight. |
+| 15 | 4 (D-07) | LZT-130 | 2oo3 drum level trip resets without the 2-of-3-healthy check. MEDIUM. |
+| 16 | 4 (D-08) | FZT-101B | Pass B transmitter is bypassed (synthetic MOS-0423). MEDIUM. |
+| 17 | 4 (D-09) | BZS-171 | Flame failure is SIL2 with 1oo1 voting. MEDIUM. |
 
-Result: **11 findings (9 HIGH, 2 MEDIUM)**. The end-to-end test checks that exactly these 11
-are found.
+Result: **18 findings (14 HIGH, 4 MEDIUM)** from 17 planted mistakes. The end-to-end test
+checks that exactly these are found.
 
 ---
 
-## Latching and reset rules: waiting for your definitions
+## Latching and reset rules: DRAFT, waiting for your approval
 
-The three rules in `rules/rules.yaml` are **placeholders**, not a recommendation:
+`rules/rules.yaml` holds nine **draft** rules for the synthetic furnace. They follow common
+IEC 61511 and burner-management practice, but no engineer has approved them. Each carries
+`status: "DRAFT – pending engineer approval"` and a plain-language `why_this_matters` line.
+The report labels their findings with the status and lists every rule still in draft.
 
-- `R-PH-01`: every trip of a fuel gas shutoff valve must be latched with manual reset;
-- `R-PH-02`: no auto-reset on any SIF;
-- `R-PH-03`: SIL 2 and higher trips must not use 1oo1 voting.
+| Rule | In plain words | Severity |
+|---|---|---|
+| D-01 | Every SIF trip must latch. | HIGH |
+| D-02 | No automatic reset on any SIF. | HIGH |
+| D-03 | No automatic reset on anything that closes the ethane feed or fuel gas shutoffs, SIL-rated or not. | HIGH |
+| D-04 | A SIF can only be reset once its cause has cleared (`CAUSE CLEAR` permissive). | HIGH |
+| D-05 | A SIF is reset at field or console, never by a DCS auto-sequence. | HIGH |
+| D-06 | Any fuel trip needs `PURGE COMPLETE` before relight. | HIGH |
+| D-07 | A 2oo3 trip resets only when at least 2 of 3 transmitters are healthy. | MEDIUM |
+| D-08 | Any bypassed or overridden initiator is flagged. | MEDIUM |
+| D-09 | SIL 2 and higher must not rely on one sensor (1oo1). | MEDIUM |
 
-Each is marked `placeholder: true`. In the report they appear as
-"[PLACEHOLDER RULE – replace with your own]", and the summary lists placeholders still in
-use. To add your own rules, follow GUIDE.md, Step 6. Copy the template at the bottom of the
-file and fill in `when` (which C&E rows) and `require` (what must be true). No Python is
-needed for rules that test C&E columns. If a rule needs a new kind of test, one small
-function is added to `OPERATORS` in `interlock_checker/rules.py`.
+**What these rules can and cannot do.** They check what the C&E *documents*. They cannot
+prove the logic solver really blocks a reset or really waits for the purge; that is the job
+of the FAT, SAT and proof tests. The rules also overlap on purpose: one wrong cell can break
+two rules (FZT-110 breaks D-02 and D-03).
+
+To accept, change or delete a draft rule, see GUIDE.md, "How to accept, change or delete a
+draft rule". To write new rules, see GUIDE.md, Step 6. No Python is needed for rules that test
+C&E columns. If a rule needs a new kind of test, one small function is added to `OPERATORS`
+in `interlock_checker/rules.py`.
 
 ---
 
@@ -198,10 +221,11 @@ python -m pytest --cov --cov-report=term-missing
 - parsing tests for the C&E reader (layout, alternative headings, every error message) and
   the P&ID reader (synthetic file, public DEXPI example, broken and non-DEXPI files);
 - rule framework tests (every test operator, every rules-file mistake message);
-- end-to-end tests on the synthetic example (all 11 seeded mismatches found, clean variant
+- one test per draft rule that breaks only that rule and checks that exactly that rule fires;
+- end-to-end tests on the synthetic example (all 18 expected findings, clean variant
   gives zero, CLI exit codes, all three report formats).
 
-Last local run: **88 passed, 99 % line coverage** (Python 3.13, pyDEXPI 1.2.0). CI runs the same
+Last local run: **103 passed, 99 % line coverage** (Python 3.13, pyDEXPI 1.2.0). CI runs the same
 suite on Python 3.12 and 3.13 and fails below 80 % coverage.
 
 ---
@@ -220,7 +244,7 @@ interlock-checker/
 │   ├── cli.py               Step 8: command line
 │   ├── synthetic.py         Step 9: makes the SYNTHETIC example files
 │   └── models.py            shared data containers
-├── rules/rules.yaml         settings + placeholder rules (edit this)
+├── rules/rules.yaml         settings + DRAFT latching/reset rules (edit this)
 ├── examples/                SYNTHETIC P&ID and C&E (seeded and clean)
 │   └── output/              sample report from the seeded example
 ├── scripts/fetch_public_example.py
@@ -231,7 +255,9 @@ interlock-checker/
 
 ## Known limits and open points
 
-- **Latching/reset rules are placeholders** until you supply your own (see above).
+- **Latching/reset rules are drafts** until an engineer approves them (see above).
+- The draft rules recognise permissives by keyword (`CAUSE CLEAR`, `PURGE COMPLETE`,
+  `2OO3 HEALTHY`). If your C&E words them differently, change the words in the rules.
 - Latching and reset are read **per cause row**. Some C&Es put reset per effect (e.g. local
   reset at a valve); that layout is not read yet.
 - Voting and SIL are read from both the P&ID and the C&E, but **not compared with each

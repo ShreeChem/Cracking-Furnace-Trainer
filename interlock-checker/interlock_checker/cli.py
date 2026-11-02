@@ -30,6 +30,7 @@ def run(pid_path, ce_path, rules_path=None, sheet=None) -> tuple[list[Finding], 
         pid_source=str(pid_path), ce_source=str(ce_path), rules_source=str(rules_path or ""),
         banner=SYNTHETIC_LABEL if synthetic else "",
         placeholder_rules=[r.rule_id for r in ruleset.placeholders],
+        draft_rules=[r.rule_id for r in ruleset.drafts],
         warnings=list(pid.warnings),
     )
     return number_findings(findings), ctx
@@ -64,6 +65,8 @@ def main(argv: list[str] | None = None) -> int:
         print(f"WARNING: {w}", file=sys.stderr)
     if ctx.placeholder_rules:
         print(f"NOTE: placeholder rules still in use: {', '.join(ctx.placeholder_rules)}")
+    if ctx.draft_rules:
+        print(f"NOTE: DRAFT rules awaiting engineer approval: {', '.join(ctx.draft_rules)}")
 
     if args.fail_on:
         worst = SEVERITIES[: SEVERITIES.index(args.fail_on) + 1]

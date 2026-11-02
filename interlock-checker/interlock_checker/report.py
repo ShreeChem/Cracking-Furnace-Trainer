@@ -32,6 +32,7 @@ class ReportContext:
     rules_source: str = ""
     banner: str = ""                                   # e.g. SYNTHETIC – FOR TRAINING ONLY
     placeholder_rules: list[str] = field(default_factory=list)
+    draft_rules: list[str] = field(default_factory=list)   # rules still marked DRAFT
     warnings: list[str] = field(default_factory=list)
     created: str = field(default_factory=lambda: datetime.now().strftime("%Y-%m-%d %H:%M"))
 
@@ -96,6 +97,8 @@ def write_excel(findings: list[Finding], ctx: ReportContext, path: Path) -> Path
     lines += [("By check", "")] + _by_check(findings)
     if ctx.placeholder_rules:
         lines += [("", ""), ("Placeholder rules still in use", ", ".join(ctx.placeholder_rules))]
+    if ctx.draft_rules:
+        lines += [("", ""), ("DRAFT rules awaiting engineer approval", ", ".join(ctx.draft_rules))]
     for w in ctx.warnings:
         lines.append(("Reader warning", w))
     for r, (a, b) in enumerate(lines, start=1):
@@ -125,6 +128,9 @@ def write_markdown(findings: list[Finding], ctx: ReportContext, path: Path) -> P
     if ctx.placeholder_rules:
         out += ["", f"**Placeholder rules still in use:** {', '.join(ctx.placeholder_rules)}. "
                     "Replace them with your site's latching and reset rules."]
+    if ctx.draft_rules:
+        out += ["", f"**DRAFT rules awaiting engineer approval:** {', '.join(ctx.draft_rules)}. "
+                    "Findings from these rules are proposals until the rules are approved."]
     if ctx.warnings:
         out += ["", "**Reader warnings:**", ""] + [f"- {w}" for w in ctx.warnings]
     out += ["", "## Findings", "", "| " + " | ".join(COLUMNS) + " |", "|" + "---|" * len(COLUMNS)]
@@ -148,6 +154,9 @@ def write_html(findings: list[Finding], ctx: ReportContext, path: Path) -> Path:
     if ctx.placeholder_rules:
         extra += (f"<p class='warn'><b>Placeholder rules still in use:</b> {e(', '.join(ctx.placeholder_rules))}. "
                   "Replace them with your site's latching and reset rules.</p>")
+    if ctx.draft_rules:
+        extra += (f"<p class='warn'><b>DRAFT rules awaiting engineer approval:</b> {e(', '.join(ctx.draft_rules))}. "
+                  "Findings from these rules are proposals until the rules are approved.</p>")
     if ctx.warnings:
         extra += "<p><b>Reader warnings:</b></p><ul>" + "".join(f"<li>{e(w)}</li>" for w in ctx.warnings) + "</ul>"
     banner = f"<div class='banner'>{e(ctx.banner)}</div>" if ctx.banner else ""

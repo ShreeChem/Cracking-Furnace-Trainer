@@ -44,6 +44,9 @@ CAUSE_COLUMNS = {
     "sil": ["SIL", "SIL rating", "Integrity level"],
     "latching": ["Latching", "Latched", "Latch"],
     "reset": ["Reset", "Reset type", "Reset mode"],
+    "reset_location": ["Reset location", "Reset at", "Reset point"],
+    "reset_permissive": ["Reset permissive", "Reset permissives", "Reset conditions"],
+    "bypass": ["Bypass / override", "Bypass", "Bypass status", "Override", "MOS"],
     "notes": ["Notes", "Remarks", "Comment", "Comments"],
 }
 
@@ -181,6 +184,9 @@ def read_ce(path: str | Path, sheet: str | None = None) -> CeMatrix:
             sil=values.get("sil", "").upper(),
             latching=values.get("latching", "").upper(),
             reset=values.get("reset", "").upper(),
+            reset_location=values.get("reset_location", "").upper(),
+            reset_permissive=values.get("reset_permissive", "").upper(),
+            bypass=values.get("bypass", ""),
             notes=values.get("notes", ""),
             row=r,
         )
